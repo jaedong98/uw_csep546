@@ -25,7 +25,7 @@ class LogisticRegressionModel(object):
 
             iterations -= 1
 
-        print("UPDATED: {}".format(self.weights))
+            
 
     def loss(self, xTest, yTest):
 
@@ -53,14 +53,3 @@ class LogisticRegressionModel(object):
         predictions = self.predict_prob(x)
         
         return [1 if x > self.threshold else 0 for x in predictions]
-        for example in x:
-            scores = [example[i] * self.weights[i]
-                      for i in range(len(example))]
-            z = self.weights[0] + sum(scores)
-            prediction = 1.0 / (1.0 + math.exp(-z))
-            if prediction > 0.5:
-                predictions.append(1)
-            else:
-                predictions.append(0)
-
-        return predictions

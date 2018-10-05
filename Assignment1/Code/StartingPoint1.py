@@ -49,7 +49,7 @@ training_set_loss_vs_iterations = []
 test_set_loss_vs_iterations = []
 test_set_accuracy_vs_iterations = []
 w1_vs_iterations = []
-for i in [100, 200, 300, 400, 500]:
+for i in [100, 200, 300]:
     model.fit(xTrain, yTrain, iterations=i, step=0.01)
     training_set_loss_vs_iterations.append((model.loss(xTrain, yTrain), i))
 
