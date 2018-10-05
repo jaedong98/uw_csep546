@@ -1,5 +1,6 @@
 import collections
 
+
 class MostCommonModel(object):
     """A model that predicts the most common label from the training data."""
 
@@ -14,7 +15,7 @@ class MostCommonModel(object):
 
         self.prediction = count.most_common(1)[0][0]
 
-        print(self.predict)
+        print(self.prediction)
 
     def predict(self, x):
         return [self.prediction for example in x]
