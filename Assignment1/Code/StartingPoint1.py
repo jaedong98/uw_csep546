@@ -45,11 +45,11 @@ import LogisticRegressionModel
 model = LogisticRegressionModel.LogisticRegressionModel()
 
 print("Logistic regression model")
-for i in [10]:
+for i in [10, 20, 30]:
     model.fit(xTrain, yTrain, iterations=i, step=0.01)
     yTestPredicted = model.predict(xTest)
 
     print("%d, %f, %f, %f" % (i, model.weights[1], model.loss(
-        xTest, yTest), EvaluationStub.Accuracy(yTest, yTestPredicted)))
+          xTest, yTest), EvaluationsStub.Accuracy(yTest, yTestPredicted)))
 
-EvaluationsStub.ExecuteAll(yTest, yTestPredicted)
+#EvaluationsStub.ExecuteAll(yTest, yTestPredicted)
