@@ -6,11 +6,12 @@ class LogisticRegressionModel(object):
 
     def __init__(self, threshold=0.5):
         self.threshold = threshold
-        self.w1_vs_iterations = []
-        self.training_set_los_vs_iterations = []
+        
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
         self.weights = [.05, .05, .05, .05, .05]
+        self.w1_vs_iterations = []
+        self.training_set_loss_vs_iterations = []
         print("Fitting training dataset with {} iteration".format(iterations))
         print("Initial: {}".format(self.weights))
         cnt = 0
@@ -31,7 +32,7 @@ class LogisticRegressionModel(object):
             
             if cnt % 1000:
                 training_loss = self.loss_calculator(yTrainPredicted, yTrain)
-                self.training_set_los_vs_iterations.append((cnt, training_loss))
+                self.training_set_loss_vs_iterations.append((cnt, training_loss))
 
             cnt += 1
 

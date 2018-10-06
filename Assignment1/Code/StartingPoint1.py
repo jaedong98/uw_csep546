@@ -65,18 +65,32 @@ import LogisticRegressionModel
 model = LogisticRegressionModel.LogisticRegressionModel()
 
 #w1_vs_iterations = []
-iters = 50000
+max_iters = 50000
 tic = time.time()
-for i in [iters]:
-    model.fit(xTrain, yTrain, iterations=i, step=0.01)
+loss_vs_iters = []
+test_accuracy_vs_iters = []
+for iters in [10000, 20000, 30000, 40000, max_iters]:
+    fit_tic = time.time()
+    model.fit(xTrain, yTrain, iterations=iters, step=0.01)
+    fit_toc = time.time() - fit_tic
+    print("Took {} sec. Fitted data with {} iterations".format(fit_toc, iters))
     yTestPredicted = model.predict(xTest)
-    
-    print("%d, %f, %f, %f" % (i, model.weights[1], model.loss(
-          xTest, yTest), EvaluationsStub.Accuracy(yTest, yTestPredicted)))
-w1_png = os.path.join(report_path, 'w1_{}.png'.format(iters))
+    test_loss = model.loss(xTest, yTest)
+    test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+    print("%d, %f, %f, %f" % (iters, model.weights[1], test_loss, test_accuracy))
+    loss_vs_iters.append((iters, test_loss))
+    test_accuracy_vs_iters.append((iters, test_accuracy))
+
+w1_png = os.path.join(report_path, 'w1_{}.png'.format(max_iters))
 draw_single_plot(model.w1_vs_iterations, 'Iterations', 'Weight[1]', 'Weight[1]s', w1_png)
 
-training_set_loss_png = os.path.join(report_path, 'training_set_loss_{}.png'.format(iters))
+test_loss_png = os.path.join(report_path, 'test_loss_{}.png'.format(max_iters))
+draw_single_plot(loss_vs_iters, 'Iterations', 'Test loss', 'Test Loss', test_loss_png)
+
+test_accuracy_vs_iters_png = os.path.join(report_path, 'test_accuracy_vs_iters_{}.png'.format(max_iters))
+draw_single_plot(test_accuracy_vs_iters, 'Iterations', 'Test Accuracy', 'Test Accuracy', test_accuracy_vs_iters_png)
+
+training_set_loss_png = os.path.join(report_path, 'training_set_loss_{}.png'.format(max_iters))
 draw_single_plot(model.training_set_los_vs_iterations, 'Iterations', 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
 print("++++++++++++++++++++++++++++++++")
 
