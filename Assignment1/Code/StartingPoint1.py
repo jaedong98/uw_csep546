@@ -44,37 +44,36 @@ print("### Heuristic model")
 EvaluationsStub.ExecuteAll(yTest, yTestPredicted)
 
 ############################
-import LogisticRegressionModel
-model = LogisticRegressionModel.LogisticRegressionModel()
 print("#############################")
 print("### Logistic regression model")
-training_set_loss_vs_iterations = []
-test_set_loss_vs_iterations = []
-test_set_accuracy_vs_iterations = []
-w1_vs_iterations = []
-for i in range(1000, 50000, 1000):
+def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
+    t, s = zip(*tuples)
+    fig, ax = plt.subplots()
+    ax.plot(t, s)
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    ax.grid()
+    fig.savefig(img_fname)
+    print("Saved/Updated image {}".format(img_fname))
+    
+
+img_path = os.path.join(os.path.dirname(
+    os.path.dirname(__file__)), r"Report")
+
+
+import LogisticRegressionModel
+model = LogisticRegressionModel.LogisticRegressionModel()
+
+#w1_vs_iterations = []
+for i in [500]:
     model.fit(xTrain, yTrain, iterations=i, step=0.01)
-    training_set_loss_vs_iterations.append((model.loss(xTrain, yTrain), i))
-
     yTestPredicted = model.predict(xTest)
-    test_set_loss_vs_iterations.append((model.loss(xTest, yTest), i))
-    test_set_accuracy_vs_iterations.append((EvaluationsStub.Accuracy(yTest, yTestPredicted), i))
-    w1_vs_iterations.append((model.weights[1], i))
-
+    
     print("%d, %f, %f, %f" % (i, model.weights[1], model.loss(
           xTest, yTest), EvaluationsStub.Accuracy(yTest, yTestPredicted)))
+w1_png = os.path.join(img_path, 'w1.png')
+draw_single_plot(model.w1_vs_iterations, 'Iterations', 'Weight[1]', 'Weight[1]s', w1_png)
 
-print("Training set loss vs iterations: {}".format(training_set_loss_vs_iterations))
-s, t = zip(*training_set_loss_vs_iterations)
-fig, ax = plt.subplots()
-ax.plot(t, s)
-ax.set(xlabel='Iterations', ylabel='Loss',
-       title='Training set loss vs. iterations')
-ax.grid()
-plt.show()
-print("Test set loss vs iterations: {}".format(test_set_loss_vs_iterations))
-print("Test set accuracy vs. iterations: {}".format(test_set_accuracy_vs_iterations))
-print("W1 vs. iterations: {}".format(w1_vs_iterations))
-
+training_set_loss_png = os.path.join(img_path, 'training_set_loss.png')
+draw_single_plot(model.training_set_los_vs_iterations, 'Iterations', 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
 print("++++++++++++++++++++++++++++++++")
 EvaluationsStub.ExecuteAll(yTest, yTestPredicted)

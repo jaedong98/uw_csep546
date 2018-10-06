@@ -6,50 +6,67 @@ class LogisticRegressionModel(object):
 
     def __init__(self, threshold=0.5):
         self.threshold = threshold
+        self.w1_vs_iterations = []
+        self.training_set_los_vs_iterations = []
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
-        self.weights = [.75, .75, .75, .25, .25]
+        self.weights = [.05, .05, .05, .05, .05]
         print("Fitting training dataset with {} iteration".format(iterations))
         print("Initial: {}".format(self.weights))
-        while iterations > 0:
-            yTrainPredicted = self.predict_prob(xTrain)
+        cnt = 0
+        while cnt < iterations:
+            yTrainPredicted = self.sigmoid(xTrain)
             for i in range(len(self.weights)):
                 partial_loss = 0.0
-                j = 0
+                n = 0
                 for x, yhat_j, y_j in zip(xTrain, yTrainPredicted, yTrain):
                     partial_loss += (yhat_j - y_j) * x[i]
-                    j += 1
+                    n += 1
 
-                partial_derv = partial_loss / len(yTrain)
-                self.weights[i] = self.weights[i] - step * partial_derv
-
-            iterations -= 1
-
+                partial_derv_loss = partial_loss / n
+                self.weights[i] = self.weights[i] - step * partial_derv_loss
             
+            if cnt % 10000:
+                self.w1_vs_iterations.append((cnt, self.weights[1]))
+            
+            if cnt % 1000:
+                training_loss = self.loss_calculator(yTrainPredicted, yTrain)
+                self.training_set_los_vs_iterations.append((cnt, training_loss))
+
+            cnt += 1
+
+    def loss_calculator(self, yPredicted, ys):
+        loss = 0
+        for y_hat, y in zip(yPredicted, ys):
+            loss += (-y * math.log(y_hat)) - ((1 - y) * (math.log(1.0-y_hat)))
+        return loss / len(ys)
 
     def loss(self, xTest, yTest):
 
-        yTestPredicted = self.predict_prob(xTest)
-        loss = 0
-        for y_hat, y in zip(yTestPredicted, yTest):
-            loss += (-y * math.log(y_hat)) - ((1 - y) * (math.log(1.0-y_hat)))
-        return loss
+        yTestPredicted = self.sigmoid(xTest)
+        return self.loss_calculator(yTestPredicted, yTest)
 
-    def predict_prob(self, x):
+    def sigmoid(self, x):
 
-        predictions = []
+        sigmoids = []
 
         for example in x:
             scores = [example[i] * self.weights[i]
                       for i in range(len(example))]
             z = self.weights[0] + sum(scores)
-            prediction = 1.0 / (1.0 + math.exp(-z))
-            predictions.append(prediction)
+            sigmoid = 1.0 / (1.0 + math.exp(-z))
+            sigmoids.append(sigmoid)
 
-        return predictions
+        return sigmoids
 
     def predict(self, x):
 
-        predictions = self.predict_prob(x)
+        sigmoids = self.sigmoid(x)
+        predictions = []
+        for s in sigmoids:
+            if s > self.threshold:
+                predictions.append(1)
+            else:
+                predictions.append(0)
         
-        return [1 if x > self.threshold else 0 for x in predictions]
+        return predictions
