@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 import Assignment1Support
 import EvaluationsStub
@@ -56,7 +57,7 @@ def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
     print("Saved/Updated image {}".format(img_fname))
     
 
-img_path = os.path.join(os.path.dirname(
+report_path = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Report")
 
 
@@ -64,16 +65,26 @@ import LogisticRegressionModel
 model = LogisticRegressionModel.LogisticRegressionModel()
 
 #w1_vs_iterations = []
-for i in [50000]:
+iters = 50000
+tic = time.time()
+for i in [iters]:
     model.fit(xTrain, yTrain, iterations=i, step=0.01)
     yTestPredicted = model.predict(xTest)
     
     print("%d, %f, %f, %f" % (i, model.weights[1], model.loss(
           xTest, yTest), EvaluationsStub.Accuracy(yTest, yTestPredicted)))
-w1_png = os.path.join(img_path, 'w1.png')
+w1_png = os.path.join(report_path, 'w1_{}.png'.format(iters))
 draw_single_plot(model.w1_vs_iterations, 'Iterations', 'Weight[1]', 'Weight[1]s', w1_png)
 
-training_set_loss_png = os.path.join(img_path, 'training_set_loss.png')
+training_set_loss_png = os.path.join(report_path, 'training_set_loss_{}.png'.format(iters))
 draw_single_plot(model.training_set_los_vs_iterations, 'Iterations', 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
 print("++++++++++++++++++++++++++++++++")
-EvaluationsStub.ExecuteAll(yTest, yTestPredicted)
+
+statistic_md = os.path.join(report_path, 'statictics.md')
+results = EvaluationsStub.EvaluateAll(yTest, yTestPredicted)
+
+with open(statistic_md, 'w') as f:
+    f.write(results)
+    f.writelines("\n")
+    f.writelines("\n{} iterations".format(iters))
+    f.writelines("\nTook: {} sec.".format(time.time() - tic))

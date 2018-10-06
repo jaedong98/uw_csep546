@@ -74,7 +74,7 @@ def _cm_calculator(y, yPredicted):
         elif y_yhat == (0, 0):
             tn += 1
         else:
-            raise ValueError("Unexpected pair value {}".format(pair))
+            raise ValueError("Unexpected pair value {}".format(y_yhat))
 
     return tp, fp, fn, tn
 
@@ -100,3 +100,15 @@ def ExecuteAll(y, yPredicted):
     print("Recall:", Recall(y, yPredicted))
     print("FPR:", FalsePositiveRate(y, yPredicted))
     print("FNR:", FalseNegativeRate(y, yPredicted))
+
+def EvaluateAll(y, yPredicted):
+
+    results = "* Statistics: "
+    results += "\n{}".format(ConfusionMatrix(y, yPredicted))
+    results += "\nAccuracy: {}".format(Accuracy(y, yPredicted))
+    results += "\nPrecision: {}".format(Precision(y, yPredicted))
+    results += "\nRecall: {}".format(Recall(y, yPredicted))
+    results += "\nFPR: {}".format(FalsePositiveRate(y, yPredicted))
+    results += "\nFNR: {}".format(FalseNegativeRate(y, yPredicted))
+
+    return results

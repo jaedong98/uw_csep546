@@ -12,12 +12,12 @@
 ### Problem1.
 Run for 50,000 iterations with step size 0.01 and plot the training set loss vs iteration every 1000 iterations.
 
-![Loss Function](training_set_loss.png)
+![Loss Function](training_set_loss_50000.png)
 
 ### Problem2.
 Plot the test set loss, test set accuracy, and value of weight[1] after every 10,000 iterations.
 
-![w1](w1.png)
+![w1](w1_50000.png)
 
 ### Problem3.
 Calculate all the statistics from the evaluation framework on the 50,000 iteration run, including the confusion matrix, precision, recall, etc.
