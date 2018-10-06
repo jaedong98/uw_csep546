@@ -91,7 +91,7 @@ test_accuracy_vs_iters_png = os.path.join(report_path, 'test_accuracy_vs_iters_{
 draw_single_plot(test_accuracy_vs_iters, 'Iterations', 'Test Accuracy', 'Test Accuracy', test_accuracy_vs_iters_png)
 
 training_set_loss_png = os.path.join(report_path, 'training_set_loss_{}.png'.format(max_iters))
-draw_single_plot(model.training_set_los_vs_iterations, 'Iterations', 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
+draw_single_plot(model.training_set_loss_vs_iterations, 'Iterations', 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
 print("++++++++++++++++++++++++++++++++")
 
 statistic_md = os.path.join(report_path, 'statictics.md')
