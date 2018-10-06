@@ -39,7 +39,7 @@ class LogisticRegressionModel(object):
         loss = 0
         for y_hat, y in zip(yPredicted, ys):
             loss += (-y * math.log(y_hat)) - ((1 - y) * (math.log(1.0-y_hat)))
-        return loss / len(ys)
+        return loss
 
     def loss(self, xTest, yTest):
 

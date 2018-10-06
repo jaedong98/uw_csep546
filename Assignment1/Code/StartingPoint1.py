@@ -64,7 +64,7 @@ import LogisticRegressionModel
 model = LogisticRegressionModel.LogisticRegressionModel()
 
 #w1_vs_iterations = []
-for i in [500]:
+for i in [50000]:
     model.fit(xTrain, yTrain, iterations=i, step=0.01)
     yTestPredicted = model.predict(xTest)
     
