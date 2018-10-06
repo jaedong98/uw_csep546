@@ -1,3 +1,6 @@
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
 import Assignment1Support
 import EvaluationsStub
@@ -49,7 +52,7 @@ training_set_loss_vs_iterations = []
 test_set_loss_vs_iterations = []
 test_set_accuracy_vs_iterations = []
 w1_vs_iterations = []
-for i in [100, 200, 300]:
+for i in range(1000, 50000, 1000):
     model.fit(xTrain, yTrain, iterations=i, step=0.01)
     training_set_loss_vs_iterations.append((model.loss(xTrain, yTrain), i))
 
@@ -62,6 +65,13 @@ for i in [100, 200, 300]:
           xTest, yTest), EvaluationsStub.Accuracy(yTest, yTestPredicted)))
 
 print("Training set loss vs iterations: {}".format(training_set_loss_vs_iterations))
+s, t = zip(*training_set_loss_vs_iterations)
+fig, ax = plt.subplots()
+ax.plot(t, s)
+ax.set(xlabel='Iterations', ylabel='Loss',
+       title='Training set loss vs. iterations')
+ax.grid()
+plt.show()
 print("Test set loss vs iterations: {}".format(test_set_loss_vs_iterations))
 print("Test set accuracy vs. iterations: {}".format(test_set_accuracy_vs_iterations))
 print("W1 vs. iterations: {}".format(w1_vs_iterations))
