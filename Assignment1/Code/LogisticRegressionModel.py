@@ -35,8 +35,6 @@ class LogisticRegressionModel(object):
                 training_loss = self.loss_calculator(yTrainPredicted, yTrain)
                 self.training_set_loss_vs_iterations.append((cnt, training_loss))
 
-
-            
             cnt += 1
 
     def loss_calculator(self, yPredicted, ys):
