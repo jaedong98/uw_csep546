@@ -24,6 +24,16 @@ Plot the test set loss, test set accuracy, and value of weight[1] after every 10
 ### Problem3.
 Calculate all the statistics from the evaluation framework on the 50,000 iteration run, including the confusion matrix, precision, recall, etc.
 
+|          |    1     |    0     |
+|----------|----------|----------|
+|    1     | (TP) 80  | (FN) 122 |
+|    0     | (FP) 46  |(TN) 1146 |
+Accuracy: 0.8794835007173601
+Precision: 0.6349206349206349
+Recall: 0.39603960396039606
+FPR: 0.03859060402684564
+FNR: 0.6039603960396039
+
 ### Questions.
 * What do these measurements tell you about logistic regression compared to the straw-men?
 * How did the gradient descent converge?
