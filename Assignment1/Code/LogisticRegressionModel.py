@@ -1,11 +1,15 @@
+from collections import OrderedDict
 import math
+import numpy as np
 
 
 class LogisticRegressionModel(object):
     """A logistic regression spam filter"""
 
-    def __init__(self, threshold=0.5):
+    def __init__(self, threshold=0.5, cnt_to_log=[]):
         self.threshold = threshold
+        self.weights_logs = OrderedDict()
+        self.cnt_to_log = cnt_to_log
         
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
@@ -15,15 +19,12 @@ class LogisticRegressionModel(object):
         print("Fitting training dataset with {} iteration".format(iterations))
         print("Initial: {}".format(self.weights))
         cnt = 0
+        n = len(xTrain)
         while cnt < iterations:
-            yTrainPredicted = self.sigmoid(xTrain)
-            for i in range(len(self.weights)):
-                partial_loss = 0.0
-                n = 0
-                for x, yhat_j, y_j in zip(xTrain, yTrainPredicted, yTrain):
-                    partial_loss += (yhat_j - y_j) * x[i]
-                    n += 1
-
+            yTrainPredicted = self.calculate_yhats(xTrain)
+            for i, xs in enumerate(zip(*xTrain)):
+                ys_delta = np.array(yTrainPredicted) - np.array(yTrain)
+                partial_loss = np.dot(ys_delta, xs)
                 partial_derv_loss = partial_loss / n
                 self.weights[i] = self.weights[i] - step * partial_derv_loss
             
@@ -34,6 +35,8 @@ class LogisticRegressionModel(object):
                 training_loss = self.loss_calculator(yTrainPredicted, yTrain)
                 self.training_set_loss_vs_iterations.append((cnt, training_loss))
 
+
+            
             cnt += 1
 
     def loss_calculator(self, yPredicted, ys):
@@ -44,10 +47,10 @@ class LogisticRegressionModel(object):
 
     def loss(self, xTest, yTest):
 
-        yTestPredicted = self.sigmoid(xTest)
+        yTestPredicted = self.calculate_yhats(xTest)
         return self.loss_calculator(yTestPredicted, yTest)
 
-    def sigmoid(self, x):
+    def calculate_yhats(self, x):
 
         sigmoids = []
 
@@ -62,9 +65,9 @@ class LogisticRegressionModel(object):
 
     def predict(self, x):
 
-        sigmoids = self.sigmoid(x)
+        yhats = self.calculate_yhats(x)
         predictions = []
-        for s in sigmoids:
+        for s in yhats:
             if s > self.threshold:
                 predictions.append(1)
             else:
