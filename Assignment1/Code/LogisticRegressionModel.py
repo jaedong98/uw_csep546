@@ -10,10 +10,11 @@ class LogisticRegressionModel(object):
         self.threshold = threshold
         self.weights_logs = OrderedDict()
         self.cnt_to_log = cnt_to_log
-        
+        self.weights = [.0, .0, .0, .0, .0]
+        self.training_loss = 0
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
-        self.weights = [.05, .05, .05, .05, .05]
+        
         self.w1_vs_iterations = []
         self.training_set_loss_vs_iterations = []
         print("Fitting training dataset with {} iteration".format(iterations))
@@ -28,14 +29,16 @@ class LogisticRegressionModel(object):
                 partial_derv_loss = partial_loss / n
                 self.weights[i] = self.weights[i] - step * partial_derv_loss
             
+            training_loss = self.loss_calculator(yTrainPredicted, yTrain)
+                
             if cnt % 10000:
                 self.w1_vs_iterations.append((cnt, self.weights[1]))
             
             if cnt % 1000:
-                training_loss = self.loss_calculator(yTrainPredicted, yTrain)
                 self.training_set_loss_vs_iterations.append((cnt, training_loss))
 
             cnt += 1
+        self.training_loss = training_loss
 
     def loss_calculator(self, yPredicted, ys):
         loss = 0

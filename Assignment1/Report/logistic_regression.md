@@ -31,6 +31,7 @@ Recall: 0.39603960396039606
 FPR: 0.03859060402684564
 FNR: 0.6039603960396039
 
+
 #### Questions.
 * What do these measurements tell you about logistic regression compared to the straw-men?
 
@@ -45,13 +46,13 @@ FNR: 0.6039603960396039
     FPR: 0.06963087248322147
     FNR: 0.16831683168316833
 
-    I used initial weights, [.05, .05, .05, .05, .05] and proved myself that different initial weights makes totoally different graphs over iterations.
+    I used initial zeros weights, [.0, .0, .0, .0, .0], and proved myself that different initial weights makes totoally different graphs over iterations.
 
-    The statistic outputs of logistic regression can can vary depending on the threshold, number of iteration, number of training data. Those configuration determines how fast the loss function can converge and how accurate it can predict output for test data.
+    The statistic outputs of logistic regression can vary depending on the threshold, number of iteration, number of training data. Those configuration determines how fast the loss function can converge and how accurate it can predict output for the given test data.
     
 
 * How did the gradient descent converge?
-  * Weight[1] started from initial value, .05, and converged toward 2.6. The trend became more obvisous starting 20000 iteraions and later. This behavior matches that loss function showing convergence to minimum values near 20000 iterations. 
+  * Weight[1] started from initial value, .0, and converged toward 2.6. The trend became more obvisous starting 20000 iteraions and later. This behavior matches that loss function showing convergence obviously to the minimum values near 20000 iterations. 
 
   
   

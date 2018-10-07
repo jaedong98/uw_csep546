@@ -84,11 +84,11 @@ def ConfusionMatrix(y, yPredicted):
     tp, fp, fn, tn = _cm_calculator(y, yPredicted)
     w = 10
 
-    header = '{}|{}|{}'.format(''.center(w), '1'.center(w), '0'.center(w))
-    splitter = ''.center(w * 3 + 2, '-')
-    yhat1 = '{}|{}|{}'.format('1'.center(w), '(TP) {}'.format(
+    header = '|{}|{}|{}|'.format(''.center(w), '1'.center(w), '0'.center(w))
+    splitter = '|-|-|-|'
+    yhat1 = '|{}|{}|{}|'.format('1'.center(w), '(TP) {}'.format(
         tp).center(w), '(FN) {}'.format(fn).center(w))
-    yhat0 = '{}|{}|{}'.format('0'.center(w), '(FP) {}'.format(
+    yhat0 = '|{}|{}|{}|'.format('0'.center(w), '(FP) {}'.format(
         fp).center(w), '(TN) {}'.format(tn).center(w))
     return '\n'.join([header, splitter, yhat1, yhat0])
 
@@ -104,6 +104,7 @@ def ExecuteAll(y, yPredicted):
 def EvaluateAll(y, yPredicted):
 
     results = "* Statistics: "
+    results += "\n"
     results += "\n{}".format(ConfusionMatrix(y, yPredicted))
     results += "\nAccuracy: {}".format(Accuracy(y, yPredicted))
     results += "\nPrecision: {}".format(Precision(y, yPredicted))
