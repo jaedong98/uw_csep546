@@ -85,7 +85,9 @@ def ConfusionMatrix(y, yPredicted):
     w = 10
 
     header = '|{}|{}|{}|'.format(''.center(w), '1'.center(w), '0'.center(w))
-    splitter = '|-|-|-|'
+    splitter = '|' + '-' * 10
+    splitter += '|' + '-' * 10
+    splitter += '|'
     yhat1 = '|{}|{}|{}|'.format('1'.center(w), '(TP) {}'.format(
         tp).center(w), '(FN) {}'.format(fn).center(w))
     yhat0 = '|{}|{}|{}|'.format('0'.center(w), '(FP) {}'.format(
