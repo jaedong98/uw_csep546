@@ -10,7 +10,7 @@ class LogisticRegressionModel(object):
         self.threshold = threshold
         self.weights_logs = OrderedDict()
         self.cnt_to_log = cnt_to_log
-        self.weights = [.0, .0, .0, .0, .0]
+        self.weights = [.0, .0, .0, .0, .0, .0]
         self.training_loss = 0
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
@@ -28,7 +28,7 @@ class LogisticRegressionModel(object):
                 partial_loss = np.dot(ys_delta, xs)
                 partial_derv_loss = partial_loss / n
                 self.weights[i] = self.weights[i] - step * partial_derv_loss
-            
+
             training_loss = self.loss_calculator(yTrainPredicted, yTrain)
                 
             if cnt % 10000:
@@ -58,7 +58,7 @@ class LogisticRegressionModel(object):
         for example in x:
             scores = [example[i] * self.weights[i]
                       for i in range(len(example))]
-            z = self.weights[0] + sum(scores)
+            z = sum(scores)  # w0 is already in example, self.weights[0] + sum(scores)
             sigmoid = 1.0 / (1.0 + math.exp(-z))
             sigmoids.append(sigmoid)
 

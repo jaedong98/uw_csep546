@@ -62,7 +62,7 @@ def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
     for ws in zip(*weights):
         ax.plot(iter_cnts, ws)
 
-    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4'))
+    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4', 'w5'))
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
@@ -84,6 +84,10 @@ training_set_loss_vs_iters = []
 weights = [list(model.weights)]
 iter_cnts = [0]
 iter_step = 1000
+
+# Extend xTrains and xTest with 1 at [0]
+xTrain = [[1] + x for x in xTrain]
+xTest = [[1] + x for x in xTest]
 
 for i, iters in enumerate([iter_step] * 50):
     fit_tic = time.time()
