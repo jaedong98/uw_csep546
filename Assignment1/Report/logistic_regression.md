@@ -46,15 +46,16 @@ FNR: 0.6039603960396039
     FPR: 0.06963087248322147
     FNR: 0.16831683168316833
 
-    I used initial zeros weights, [.0, .0, .0, .0, .0], and proved myself that different initial weights makes totoally different graphs over iterations.
+  * I used initial zeros weights, [.0, .0, .0, .0, .0], and, thoughout many trials, proved myself that different initial weights makes different graphs over iterations but still converges.
 
-    The statistic outputs of logistic regression can vary depending on the threshold, number of iteration, number of training data. Those configuration determines how fast the loss function can converge and how accurate it can predict output for the given test data.
+  *  I also learned that it's not necessarily true that logistic regression wins heurisitic always. In this case, the logistic regression produced lower accuracy(0.879) than heuristic model(0.91). And it also showed higher number of false negative(FN) and FNR. It caused the 
     
 
 * How did the gradient descent converge?
   * Weight[1] started from initial value, .0, and converged toward 2.6. The trend became more obvisous starting 20000 iteraions and later. This behavior matches that loss function showing convergence obviously to the minimum values near 20000 iterations. 
 
-  
+  * Just to convince myself the weights converge to a certain values respectively, I plotted weights below.
+  ![weights](weights_50000.png)
   
 * What makes you think you implemented logistic regression correctly?
   * Both training and test loss function converges over iterations. 

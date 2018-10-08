@@ -55,7 +55,17 @@ def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
-    
+
+def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
+    fig, ax = plt.subplots()
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    for ws in zip(*weights):
+        ax.plot(iter_cnts, ws)
+
+    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4'))
+    ax.grid()
+    fig.savefig(img_fname)
+    print("Saved/Updated image {}".format(img_fname))
 
 report_path = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Report")
@@ -71,7 +81,10 @@ w1_vs_iters = []
 test_loss_vs_iters = []
 test_accuracy_vs_iters = []
 training_set_loss_vs_iters = []
+weights = [list(model.weights)]
+iter_cnts = [0]
 iter_step = 1000
+
 for i, iters in enumerate([iter_step] * 50):
     fit_tic = time.time()
     model.fit(xTrain, yTrain, iterations=iters, step=0.01)
@@ -86,6 +99,11 @@ for i, iters in enumerate([iter_step] * 50):
     test_loss_vs_iters.append((iter_cnt, test_loss))
     test_accuracy_vs_iters.append((iter_cnt, test_accuracy))
     training_set_loss_vs_iters.append((iter_cnt, model.training_loss))
+    weights.append(list(model.weights))
+    iter_cnts.append(iter_cnt)
+
+weights_png = os.path.join(report_path, 'weights_{}.png'.format(max_iters))
+draw_weights(iter_cnts, weights, 'Iterations', 'Weights', 'Weights', weights_png)
 
 w1_png = os.path.join(report_path, 'w1_{}.png'.format(max_iters))
 draw_single_plot(w1_vs_iters, 'Iterations', 'Weight[1]', 'Weight[1]s', w1_png)
