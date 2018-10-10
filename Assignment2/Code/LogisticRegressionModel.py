@@ -14,7 +14,12 @@ class LogisticRegressionModel(object):
         self.training_loss = 0
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
-        
+
+        if len(self.weights) != len(xTrain[0]):
+            raise ValueError("Not aligned data. We assume feature vector to "
+                             "include x0 = 1. {} vs {}".format(
+                                 len(self.weights), len(xTrain[0])))
+
         self.w1_vs_iterations = []
         self.training_set_loss_vs_iterations = []
         print("Fitting training dataset with {} iteration".format(iterations))
@@ -30,12 +35,13 @@ class LogisticRegressionModel(object):
                 self.weights[i] = self.weights[i] - step * partial_derv_loss
 
             training_loss = self.loss_calculator(yTrainPredicted, yTrain)
-                
+
             if cnt % 10000:
                 self.w1_vs_iterations.append((cnt, self.weights[1]))
-            
+
             if cnt % 1000:
-                self.training_set_loss_vs_iterations.append((cnt, training_loss))
+                self.training_set_loss_vs_iterations.append(
+                    (cnt, training_loss))
 
             cnt += 1
         self.training_loss = training_loss
@@ -58,7 +64,8 @@ class LogisticRegressionModel(object):
         for example in x:
             scores = [example[i] * self.weights[i]
                       for i in range(len(example))]
-            z = sum(scores)  # w0 is already in example, self.weights[0] + sum(scores)
+            # w0 is already in example, self.weights[0] + sum(scores)
+            z = sum(scores)
             sigmoid = 1.0 / (1.0 + math.exp(-z))
             sigmoids.append(sigmoid)
 
@@ -73,5 +80,5 @@ class LogisticRegressionModel(object):
                 predictions.append(1)
             else:
                 predictions.append(0)
-        
+
         return predictions
