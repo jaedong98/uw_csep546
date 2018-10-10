@@ -17,9 +17,10 @@ MutiualInformation(X,Y) = Sum over every value X has and Y has:
 And use smoothing when calculating the probabilities:
 
 P(*) = (# observed + 1) / (total samples + 2)
+![venn](venn.png)
 
 HAND IN:
-
+![iter_cnt_vs_accuracies](iter_cnt_vs_accuracies_50000.png)
 A document that contains the following tables (clearly labeled!)
 
 1 point -- Perform a leave-out-one wrapper search on each of the 5 features provided by the starting framework (50,000 iterations, there are 5 features, you can do this evaluation manually or programmatically). (> 40, contains #, contains ‘call’, contains ‘to’, contains ‘your’). Hand in a table showing the accuracy with each one left out, compared to a model built with all of them.

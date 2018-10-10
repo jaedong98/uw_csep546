@@ -80,5 +80,6 @@ for i in range(len(feature_selection_methods_options)):
 
 iter_cnt_vs_accuracies_png = os.path.join(
     report_path, 'iter_cnt_vs_accuracies_{}.png'.format(max_iters))
+title = 'Accuracy with Leave-Out-One w/ {} Iterations'.format(max_iters)
 utils.draw_accuracies(iter_cnt_vs_accuracies, 'Iterations', 'Accuracy',
-                      'Accuracy with Leave-Out-One', iter_cnt_vs_accuracies_png, legends)
+                      title, iter_cnt_vs_accuracies_png, legends)
