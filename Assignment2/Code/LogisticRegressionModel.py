@@ -6,11 +6,15 @@ import numpy as np
 class LogisticRegressionModel(object):
     """A logistic regression spam filter"""
 
-    def __init__(self, threshold=0.5, cnt_to_log=[]):
+    def __init__(self,
+                 threshold=0.5,
+                 cnt_to_log=[],
+                 initial_weights=[.0, .0, .0, .0, .0],
+                 initial_w0=.0):
         self.threshold = threshold
         self.weights_logs = OrderedDict()
         self.cnt_to_log = cnt_to_log
-        self.weights = [.0, .0, .0, .0, .0, .0]
+        self.weights = [initial_w0] + initial_weights
         self.training_loss = 0
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):

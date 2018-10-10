@@ -1,15 +1,17 @@
 import collections
 
+
 def LoadRawData(path):
     f = open(path, 'r')
-    
+
     lines = f.readlines()
 
     kNumberExamplesExpected = 5574
 
     if(len(lines) != kNumberExamplesExpected):
         message = "Attempting to load %s:\n" % (path)
-        message += "   Expected %d lines, got %d.\n" % (kNumberExamplesExpected, len(lines))
+        message += "   Expected %d lines, got %d.\n" % (
+            kNumberExamplesExpected, len(lines))
         message += "    Check the path to training data and try again."
         raise UserWarning(message)
 
@@ -31,14 +33,17 @@ def LoadRawData(path):
 
     return (x, y)
 
-def TrainTestSplit(x, y, percentTest = .25):
+
+def TrainTestSplit(x, y, percentTest=.25):
     if(len(x) != len(y)):
-        raise UserWarning("Attempting to split into training and testing set.\n\tArrays do not have the same size. Check your work and try again.")
+        raise UserWarning(
+            "Attempting to split into training and testing set.\n\tArrays do not have the same size. Check your work and try again.")
 
     numTest = round(len(x) * percentTest)
 
     if(numTest == 0 or numTest > len(y)):
-        raise UserWarning("Attempting to split into training and testing set.\n\tSome problem with the percentTest or data set size. Check your work and try again.")
+        raise UserWarning(
+            "Attempting to split into training and testing set.\n\tSome problem with the percentTest or data set size. Check your work and try again.")
 
     xTest = x[:numTest]
     xTrain = x[numTest:]
@@ -47,66 +52,29 @@ def TrainTestSplit(x, y, percentTest = .25):
 
     return (xTrain, yTrain, xTest, yTest)
 
-def Featurize(xTrainRaw, xTestRaw):
-    words = ['call', 'to', 'your']
 
+def FeaturizeTraining(xTrainRaw, feature_selection_functions):
+    """
+    xTrainRaw: a list of spam messages.
+    feature_section_functions: a list of f(msg)s
+    """
     # featurize the training data, may want to do multiple passes to count things.
     xTrain = []
     for x in xTrainRaw:
         features = []
 
-        # Have a feature for longer texts
-        if(len(x)>40):
-            features.append(1)
-        else:
-            features.append(0)
-
-        # Have a feature for texts with numbers in them
-        if(any(i.isdigit() for i in x)):
-            features.append(1)
-        else:
-            features.append(0)
-
-        # Have features for a few words
-        for word in words:
-            if word in x:
-                features.append(1)
-            else:
-                features.append(0)
+        for fsf in feature_selection_functions:
+            features.append(fsf(x))
 
         xTrain.append(features)
 
-    # now featurize test using any features discovered on the training set. Don't use the test set to influence which features to use.
-    xTest = []
-    for x in xTestRaw:
-        features = []
-        
-        # Have a feature for longer texts
-        if(len(x)>40):
-            features.append(1)
-        else:
-            features.append(0)
+    return xTrain
 
-        # Have a feature for texts with numbers in them
-        if(any(i.isdigit() for i in x)):
-            features.append(1)
-        else:
-            features.append(0)
-
-        # Have features for a few words
-        for word in words:
-            if word in x:
-                features.append(1)
-            else:
-                features.append(0)
-
-        xTest.append(features)
-
-    return (xTrain, xTest)
 
 def InspectFeatures(xRaw, x):
     for i in range(len(xRaw)):
         print(x[i], xRaw[i])
+
 
 def most_frequent_features(xTrain, N=1):
 
@@ -115,5 +83,35 @@ def most_frequent_features(xTrain, N=1):
         words = x.split(' ')
         for word in words:
             count[word] += 1
-    
+
     return count.most_common(N)
+
+
+def is_longger(msg, threshold=40):
+    if len(msg) > threshold:
+        return 1
+    return 0
+
+
+def has_number(msg):
+    if any(i.isdigit() for i in msg):
+        return 1
+    return 0
+
+
+def contain_word(msg, word):
+    if word in msg:
+        return 1
+    return 0
+
+
+def contain_call(msg):
+    return contain_word(msg, 'call')
+
+
+def contain_to(msg):
+    return contain_word(msg, 'to')
+
+
+def contain_your(msg):
+    return contain_word(msg, 'your')

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-import Assignment1Support
+import Assignment2Support as utils
 import EvaluationsStub
 
 # UPDATE this path for your environment
@@ -11,25 +11,41 @@ import os
 kDataPath = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Data/SMSSpamCollection")
 
-(xRaw, yRaw) = Assignment1Support.LoadRawData(kDataPath)
+(xRaw, yRaw) = utils.LoadRawData(kDataPath)
 
+# Train-Test split
+# TODO: splitting data into train, validation, test?
 (xTrainRaw, yTrainRaw, xTestRaw,
- yTestRaw) = Assignment1Support.TrainTestSplit(xRaw, yRaw)
+ yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
 
 print("Train is %f percent spam." % (sum(yTrainRaw)/len(yTrainRaw)))
 print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 
-(xTrain, xTest) = Assignment1Support.Featurize(xTrainRaw, xTestRaw)
+#(xTrain, xTest) = Assignment1Support.Featurize(xTrainRaw, xTestRaw)
 yTrain = yTrainRaw
 yTest = yTestRaw
 
-feature_selection_methods = []  # functions to filter features
-for f in feature_selection_methods:
-    pass
+
+# TODO:
+# functions to filter features
+feature_selection_methods_options = [utils.is_longger,
+                                     utils.has_number,
+                                     utils.contain_call,
+                                     utils.contain_to,
+                                     utils.contain_your]
+
+for i in range(len(feature_selection_methods_options)):
+    feature_selection_methods = list(feature_selection_methods_options)
+    function_out = feature_selection_methods.pop(i)
+    print("Exclude {}".format(function_out.__name__))
+    xTrain = utils.FeaturizeTraining(xTrainRaw, feature_selection_methods)
+
 
 ############################
 print("#############################")
 print("### Logistic regression model")
+
+
 def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
     t, s = zip(*tuples)
     fig, ax = plt.subplots()
@@ -38,6 +54,7 @@ def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
+
 
 def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
     fig, ax = plt.subplots()
@@ -49,6 +66,7 @@ def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
+
 
 report_path = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Report")
@@ -81,7 +99,8 @@ for i, iters in enumerate([iter_step] * 50):
     yTestPredicted = model.predict(xTest)
     test_loss = model.loss(xTest, yTest)
     test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
-    print("%d, %f, %f, %f" % (iter_cnt, model.weights[1], test_loss, test_accuracy))
+    print("%d, %f, %f, %f" %
+          (iter_cnt, model.weights[1], test_loss, test_accuracy))
     w1_vs_iters.append((iter_cnt, model.weights[1]))
     test_loss_vs_iters.append((iter_cnt, test_loss))
     test_accuracy_vs_iters.append((iter_cnt, test_accuracy))
@@ -90,19 +109,25 @@ for i, iters in enumerate([iter_step] * 50):
     iter_cnts.append(iter_cnt)
 
 weights_png = os.path.join(report_path, 'weights_{}.png'.format(max_iters))
-draw_weights(iter_cnts, weights, 'Iterations', 'Weights', 'Weights', weights_png)
+draw_weights(iter_cnts, weights, 'Iterations',
+             'Weights', 'Weights', weights_png)
 
 w1_png = os.path.join(report_path, 'w1_{}.png'.format(max_iters))
 draw_single_plot(w1_vs_iters, 'Iterations', 'Weight[1]', 'Weight[1]s', w1_png)
 
 test_loss_png = os.path.join(report_path, 'test_loss_{}.png'.format(max_iters))
-draw_single_plot(test_loss_vs_iters, 'Iterations', 'Test loss', 'Test Loss', test_loss_png)
+draw_single_plot(test_loss_vs_iters, 'Iterations',
+                 'Test loss', 'Test Loss', test_loss_png)
 
-test_accuracy_vs_iters_png = os.path.join(report_path, 'test_accuracy_vs_iters_{}.png'.format(max_iters))
-draw_single_plot(test_accuracy_vs_iters, 'Iterations', 'Test Accuracy', 'Test Accuracy', test_accuracy_vs_iters_png)
+test_accuracy_vs_iters_png = os.path.join(
+    report_path, 'test_accuracy_vs_iters_{}.png'.format(max_iters))
+draw_single_plot(test_accuracy_vs_iters, 'Iterations',
+                 'Test Accuracy', 'Test Accuracy', test_accuracy_vs_iters_png)
 
-training_set_loss_png = os.path.join(report_path, 'training_set_loss_{}.png'.format(max_iters))
-draw_single_plot(training_set_loss_vs_iters, 'Iterations', 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
+training_set_loss_png = os.path.join(
+    report_path, 'training_set_loss_{}.png'.format(max_iters))
+draw_single_plot(training_set_loss_vs_iters, 'Iterations',
+                 'Training Set Loss', 'Training Set Loss', training_set_loss_png)
 print("++++++++++++++++++++++++++++++++")
 
 statistic_md = os.path.join(report_path, 'statictics.md')

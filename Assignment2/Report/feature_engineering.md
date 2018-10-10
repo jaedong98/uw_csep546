@@ -26,7 +26,6 @@ A document that contains the following tables (clearly labeled!)
 
 0.5 point -- A list of the top 10 bag of word features selected by filtering by frequency.
 0.5 point -- A list of the top 10 bag of word features selected by filtering by mutual information.
- 
 
 2 points --
 
@@ -37,3 +36,26 @@ A document that contains the following tables (clearly labeled!)
 Hand in a clearly labeled table comparing the accuracies of these methods
 
 ***
+
+```python
+
+for f in featureSelectionMethodsToTry:
+    (trainX, trainY, fParameters) = FeaturizeTraining(rawTrainX, rawTrainY, f)
+    (validationX, validationY) = FeaturizeValidation(rawValidationX, rawValidationY, f, fParameters)
+
+for p in parametersToTry:
+    model.fit(trainX, trainY, p)
+    accuracies[p, f] = evaluate(validationY, model.predict(validationX))
+
+(bestPFound, bestFFound) = bestSettingFound(accuracies)
+
+(finalTrainX, finalTrainY, fParameters) =
+    FeaturizeTraining(rawTrainX + rawValidationX, rawTrainY + rawValidationY, bestFFound)
+
+(testX, testY) = FeaturizeValidation(rawTextX, rawTestY, bestFFound, fParameters)
+
+finalModel.fit(finalTrainX, finalTrainY, bestPFound)
+
+estimateOfGeneralizationPerformance = evaluate(testY, model.predict(testX))
+
+```
