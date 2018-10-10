@@ -1,4 +1,6 @@
 import collections
+import matplotlib
+import matplotlib.pyplot as plt
 
 
 def LoadRawData(path):
@@ -115,3 +117,51 @@ def contain_to(msg):
 
 def contain_your(msg):
     return contain_word(msg, 'your')
+
+
+def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
+    t, s = zip(*tuples)
+    fig, ax = plt.subplots()
+    ax.plot(t, s)
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    ax.grid()
+    fig.savefig(img_fname)
+    print("Saved/Updated image {}".format(img_fname))
+
+
+def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
+    """
+    iter_cnts: a list of iteration counts, [1000, 2000, ...]
+    weights: a list of weights per iteration, [(0, 0,...), (0.1, 0.2,...),...]
+    """
+    fig, ax = plt.subplots()
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    for ws in zip(*weights):
+        ax.plot(iter_cnts, ws)
+
+    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4', 'w5'))
+    ax.grid()
+    fig.savefig(img_fname)
+    print("Saved/Updated image {}".format(img_fname))
+
+
+def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
+    """
+    accuracies: a list of list of (iter_cnt, accurarcy)s
+    legends: a tuple/list of legends for each graphs
+    """
+    if not len(accuracies) == len(legends):
+        raise ValueError("Missing legends? {} vs {}".format(
+            len(accuracies), len(legends)))
+
+    fig, ax = plt.subplots()
+    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+
+    for accus in accuracies:
+        xs, ys = zip(*accus)
+        ax.plot(xs, ys)
+
+    ax.legend(legends)
+    ax.grid()
+    fig.savefig(img_fname)
+    print("Saved/Updated image {}".format(img_fname))
