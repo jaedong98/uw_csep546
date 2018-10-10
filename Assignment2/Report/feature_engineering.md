@@ -2,7 +2,7 @@
 
 ## Jae Dong Hwang
 
-Add bag of words features to your spam domain solution
+**Add bag of words features to your spam domain solution**
 
 Support frequency based feature selection, top N
 Support mutual information based features selection top N

@@ -23,26 +23,9 @@ print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 yTrain = yTrainRaw
 yTest = yTestRaw
 
-############################
-import MostCommonModel
-
-model = MostCommonModel.MostCommonModel()
-model.fit(xTrain, yTrain)
-yTestPredicted = model.predict(xTest)
-
-print("### 'Most Common' model")
-
-EvaluationsStub.ExecuteAll(yTest, yTestPredicted)
-
-############################
-import SpamHeuristicModel
-model = SpamHeuristicModel.SpamHeuristicModel()
-model.fit(xTrain, yTrain)
-yTestPredicted = model.predict(xTest)
-
-print("### Heuristic model")
-
-EvaluationsStub.ExecuteAll(yTest, yTestPredicted)
+feature_selection_methods = []  # functions to filter features
+for f in feature_selection_methods:
+    pass
 
 ############################
 print("#############################")

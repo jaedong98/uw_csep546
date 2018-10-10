@@ -108,3 +108,12 @@ def InspectFeatures(xRaw, x):
     for i in range(len(xRaw)):
         print(x[i], xRaw[i])
 
+def most_frequent_features(xTrain, N=1):
+
+    count = collections.Counter()
+    for x in xTrain:
+        words = x.split(' ')
+        for word in words:
+            count[word] += 1
+    
+    return count.most_common(N)
