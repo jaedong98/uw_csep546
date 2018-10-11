@@ -32,7 +32,7 @@ def extract_features_by_frequency(xTrainRaw, N):
 
 def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                          max_iters=50000, iter_step=1000, step=0.01,
-                         initial_w0=0.0):
+                         initial_w0=0.0, report_path=report_path):
     """
     Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
     """
@@ -50,11 +50,14 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     iter_cnts = [0]
     resolution = int(max_iters / iter_step)
     features = [x[0] for x in features]
+    img_fname = os.path.join(
+        report_path, 'iter_cnt_vs_accuracy_by_frequency_{}.png'.format(max_iters))
+    title = "Accuracy Over Iteration by Top {} Frequency Features.".format(N)
     return utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
                                                  yTrain, yTest,
                                                  features, iter_step,
                                                  resolution, initial_w0,
-                                                 step, max_iters, report_path)
+                                                 step, max_iters, img_fname, title)
 
 
 if __name__ == '__main__':

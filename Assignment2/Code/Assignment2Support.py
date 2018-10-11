@@ -254,7 +254,7 @@ def table_for_mi(n11, n10, n01, n00, feature, w=15):
     return table
 
 
-def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, report_path):
+def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, img_fname=None, title=""):
     """
     Args:
         features: a list of features(words)
@@ -284,10 +284,26 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
         iter_cnt_vs_accuracy.append((iter_cnt, test_accuracy))
         print("%d, %f, %f" % (iter_cnt, test_loss, test_accuracy))
 
-    iter_cnt_vs_loss_png = os.path.join(
-        report_path, 'iter_cnt_vs_accuracy_by_frequency_{}.png'.format(max_iters))
-    title = 'Loss with top 10 frequent words'.format(max_iters)
-    draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
-                    title, iter_cnt_vs_loss_png, [])
+    
+    if img_fname:
+        draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
+                        title, img_fname, [])
 
     return iter_cnt_vs_loss, iter_cnt_vs_accuracy
+
+
+def table_for_gradient_accuracy_comparision(accuracies, legends, w=30):
+    """
+    Args:
+        accuracies: a list of accuracy lists from different gradient decents.
+        legends: a list of strings to be named. ['Top 10 frequent words', ...]
+    """
+    table = '|{}|{}|'.format(
+        'Configurations'.center(w), 'Accuracy'.center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+    for legend, accu in zip(legends, accuracies):
+        table += '\n|{}|{}|'.format('{}'.format(legend).center(w),
+                                    '{}'.format(accu[-1][-1]).center(w))
+    return table
