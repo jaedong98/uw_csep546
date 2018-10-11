@@ -177,5 +177,3 @@ def accuracy_table(accuracies, features, w=20):
     for feature, accu in zip(features, accuracies):
         table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(accu[-1][-1]).center(w))
     return table
-
-print(accuracy_table([[(100, 0.9)],[(100, 0.91)]], ['apple', 'banana']))
