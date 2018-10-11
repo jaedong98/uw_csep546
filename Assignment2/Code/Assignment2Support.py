@@ -73,6 +73,27 @@ def FeaturizeTraining(xTrainRaw, feature_selection_functions):
     return xTrain
 
 
+def FeaturizeTrainingByWords(xTrainRaw, words):
+    """
+    xTrainRaw: a list of spam messages.
+    features: a list of features(words)
+    """
+    # featurize the training data, may want to do multiple passes to count things.
+    xTrain = []
+    for x in xTrainRaw:
+        features = []
+
+        for f in words:
+            if f in x:
+                features.append(1)
+            else:
+                features.append(0)
+
+        xTrain.append(features)
+
+    return xTrain
+
+
 def InspectFeatures(xRaw, x):
     for i in range(len(xRaw)):
         print(x[i], xRaw[i])
@@ -118,8 +139,10 @@ def contain_to(msg):
 def contain_your(msg):
     return contain_word(msg, 'your')
 
+
 def exclude(msg):
     return 1
+
 
 def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
     t, s = zip(*tuples)
@@ -168,15 +191,19 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
 
+
 def accuracy_table(accuracies, features, w=20):
 
-    table = '|{}|{}|'.format('Leave-out-Features'.center(w), 'Accuracy'.center(w))
+    table = '|{}|{}|'.format(
+        'Leave-out-Features'.center(w), 'Accuracy'.center(w))
     table += '\n|' + '-' * w
     table += '|' + '-' * w
     table += '|'
     for feature, accu in zip(features, accuracies):
-        table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(accu[-1][-1]).center(w))
+        table += '\n|{}|{}|'.format('{}'.format(feature).center(w),
+                                    '{}'.format(accu[-1][-1]).center(w))
     return table
+
 
 def selected_features_table(features, headers, w=20):
     """
@@ -188,11 +215,12 @@ def selected_features_table(features, headers, w=20):
     table += '|' + '-' * w
     table += '|'
     for feature, num in features:
-        table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(num).center(w))
+        table += '\n|{}|{}|'.format('{}'.format(feature).center(w),
+                                    '{}'.format(num).center(w))
     return table
 
 
-def table_for_mi(n11, n10, n01, n00, feature, w=15) :
+def table_for_mi(n11, n10, n01, n00, feature, w=15):
     """
     Creates a string of table.
     n11, n10, n01, n00: integer
@@ -205,15 +233,17 @@ def table_for_mi(n11, n10, n01, n00, feature, w=15) :
         | y(=1)  |    n11    |    n10    |
         | y(=0)  |    n01    |    n00    |
     """
-    
 
-    table = '|{}|{}|{}|'.format(''.center(w), feature.center(w), 'No "{}"'.format(feature).center(w))
+    table = '|{}|{}|{}|'.format(''.center(w), feature.center(
+        w), 'No "{}"'.format(feature).center(w))
     table += '\n|' + '-' * w
     table += '|' + '-' * w
     table += '|' + '-' * w
     table += '|'
-    
-    table += '\n|{}|{}|{}|'.format('y(=1)'.center(w), '{}'.format(n11).center(w), '{}'.format(n10).center(w))
-    table += '\n|{}|{}|{}|'.format('y(=0)'.center(w), '{}'.format(n01).center(w), '{}'.format(n00).center(w))
+
+    table += '\n|{}|{}|{}|'.format('y(=1)'.center(w),
+                                   '{}'.format(n11).center(w), '{}'.format(n10).center(w))
+    table += '\n|{}|{}|{}|'.format('y(=0)'.center(w),
+                                   '{}'.format(n01).center(w), '{}'.format(n00).center(w))
 
     return table
