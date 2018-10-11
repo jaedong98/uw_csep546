@@ -177,3 +177,16 @@ def accuracy_table(accuracies, features, w=20):
     for feature, accu in zip(features, accuracies):
         table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(accu[-1][-1]).center(w))
     return table
+
+def selected_features_table(features, headers, w=20):
+    """
+    features: a list of two element tuples, [('to', 1586), ('you', 1174),...]
+    headers: a list of two headers, ["Feature", "Frequency"]
+    """
+    table = '|{}|{}|'.format(headers[0].center(w), headers[1].center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+    for feature, num in features:
+        table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(num).center(w))
+    return table

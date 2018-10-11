@@ -23,9 +23,25 @@ HAND IN:
 ![iter_cnt_vs_accuracies](iter_cnt_vs_accuracies_50000.png)
 A document that contains the following tables (clearly labeled!)
 
-1 point -- Perform a leave-out-one wrapper search on each of the 5 features provided by the starting framework (50,000 iterations, there are 5 features, you can do this evaluation manually or programmatically). (> 40, contains #, contains ‘call’, contains ‘to’, contains ‘your’). Hand in a table showing the accuracy with each one left out, compared to a model built with all of them.
+* A table showing the accuracy with each one left out, compared to a model built with all of them.
 
-0.5 point -- A list of the top 10 bag of word features selected by filtering by frequency.
+** INSERT TABLE HERE **
+
+* A list of the top 10 bag of word features selected by filtering by frequency.
+  
+  |      Features      |     Frequency      |
+  |:------------------:|:------------------:|
+  |         to         |        1586        |
+  |        you         |        1174        |
+  |         I          |        1099        |
+  |         a          |        993         |
+  |        the         |        890         |
+  |        and         |        629         |
+  |         is         |        592         |
+  |         in         |        586         |
+  |         i          |        558         |
+  |         u          |        542         |
+
 0.5 point -- A list of the top 10 bag of word features selected by filtering by mutual information.
 
 2 points --
