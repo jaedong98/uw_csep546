@@ -24,31 +24,44 @@ A document that contains the following tables (clearly labeled!)
 
 * A table showing the accuracy with each one left out, compared to a model built with all of them.
 
-  | Leave-out-Features |      Accuracy      |
-  |--------------------|--------------------|
-  |   w/o IS_LONGGER   | 0.8974175035868006 |
-  |   w/o HAS_NUMBER   | 0.8651362984218077 |
-  |  w/o CONTAIN_CALL  | 0.9175035868005739 |
-  |   w/o CONTAIN_TO   | 0.8988522238163558 |
-  |  w/o CONTAIN_YOUR  | 0.9261119081779053 |
+  | Leave-out-Features | Accuracy           |
+  | ------------------ | ------------------ |
+  | w/o IS_LONGGER     | 0.8974175035868006 |
+  | w/o HAS_NUMBER     | 0.8651362984218077 |
+  | w/o CONTAIN_CALL   | 0.9175035868005739 |
+  | w/o CONTAIN_TO     | 0.8988522238163558 |
+  | w/o CONTAIN_YOUR   | 0.9261119081779053 |
   | w/ All of Features | 0.9261119081779053 |
 
 * A list of the top 10 bag of word features selected by filtering by frequency.
   
-  |      Features      |     Frequency      |
-  |:------------------:|:------------------:|
-  |         to         |        1586        |
-  |        you         |        1174        |
-  |         I          |        1099        |
-  |         a          |        993         |
-  |        the         |        890         |
-  |        and         |        629         |
-  |         is         |        592         |
-  |         in         |        586         |
-  |         i          |        558         |
-  |         u          |        542         |
+  | Features | Frequency |
+  | :------: | :-------: |
+  | to       | 1586      |
+  | you      | 1174      |
+  | I        | 1099      |
+  | a        | 993       |
+  | the      | 890       |
+  | and      | 629       |
+  | is       | 592       |
+  | in       | 586       |
+  | i        | 558       |
+  | u        | 542       |
 
-0.5 point -- A list of the top 10 bag of word features selected by filtering by mutual information.
+* A list of the top 10 bag of word features selected by filtering by mutual information.
+
+  | Features | Mutual Information     |
+  | -------- | ---------------------- |
+  | FREE     | 0.001127120817704475   |
+  | Call     | 0.0007793111368588145  |
+  | claim    | 0.0007697979751995503  |
+  | Txt      | 0.0007220353512232628  |
+  | To       | 0.0006523354438676451  |
+  | &        | 0.0005380149269707165  |
+  | Nokia    | 0.0005271425814939797  |
+  | mobile   | 0.0004549300650904067  |
+  | txt      | 0.00044463671754876215 |
+  | Text     | 0.0003684388365572178  |
 
 2 points --
 
