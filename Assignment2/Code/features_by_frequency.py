@@ -30,10 +30,12 @@ def get_most_frequent_features(xTrainRaw, N):
     return count.most_common(N)
 
 
-def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
+def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                          max_iters=50000, iter_step=1000, step=0.01,
                          initial_w0=0.0):
-
+    """
+    Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    """
     features = get_most_frequent_features(xTrainRaw, N)
 
     table = utils.selected_features_table(features, ["Features", "Frequency"])
@@ -45,43 +47,14 @@ def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
         f.write(table)
 
     # gradient decent
-    tic = time.time()
     iter_cnts = [0]
     resolution = int(max_iters / iter_step)
-
     features = [x[0] for x in features]
-    xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
-    xTest = utils.FeaturizeTrainingByWords(xTestRaw, features)
-
-    model = lgm.LogisticRegressionModel(initial_w0=initial_w0,
-                                        initial_weights=[0.0] * len(features))
-
-    # Extend xTrains and xTest with 1 at [0]
-    xTrain = [[1] + x for x in xTrain]
-    xTest = [[1] + x for x in xTest]
-
-    iter_cnt_vs_loss = []
-    iter_cnt_vs_accuracy = []
-    for i, iters in enumerate([iter_step] * resolution):
-        fit_tic = time.time()
-        model.fit(xTrain, yTrain, iterations=iters, step=step)
-        fit_toc = time.time() - fit_tic
-        iter_cnt = iter_step * (i + 1)
-        print("Took {} sec. Fitted data for {} iterations".format(fit_toc, iter_cnt))
-        yTestPredicted = model.predict(xTest)
-        test_loss = model.loss(xTest, yTest)
-        iter_cnt_vs_loss.append((iter_cnt, test_loss))
-        test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
-        iter_cnt_vs_accuracy.append((iter_cnt, test_accuracy))
-        print("%d, %f, %f" % (iter_cnt, test_loss, test_accuracy))
-
-    iter_cnt_vs_loss_png = os.path.join(
-        report_path, 'iter_cnt_vs_accuracy_by_frequency_{}.png'.format(max_iters))
-    title = 'Loss with top 10 frequent words'.format(max_iters)
-    utils.draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
-                          title, iter_cnt_vs_loss_png, ['Accuracy by Word Frequency'])
-
-    return iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    return utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
+                                                 yTrain, yTest,
+                                                 features, iter_step,
+                                                 resolution, initial_w0,
+                                                 step, max_iters, report_path)
 
 
 if __name__ == '__main__':
@@ -89,6 +62,6 @@ if __name__ == '__main__':
      yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
     yTrain = yTrainRaw
     yTest = yTestRaw
-    run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,  N=10,
+    run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                          max_iters=500, iter_step=100, step=0.01,
                          initial_w0=0.0)

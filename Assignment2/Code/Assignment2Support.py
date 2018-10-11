@@ -1,6 +1,10 @@
 import collections
 import matplotlib
 import matplotlib.pyplot as plt
+import os
+import time
+import LogisticRegressionModel as lgm
+import EvaluationsStub
 
 
 def LoadRawData(path):
@@ -175,9 +179,10 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
     accuracies: a list of list of (iter_cnt, accurarcy)s
     legends: a tuple/list of legends for each graphs
     """
-    if not len(accuracies) == len(legends):
-        raise ValueError("Missing legends? {} vs {}".format(
-            len(accuracies), len(legends)))
+    if legends:
+        if not len(accuracies) == len(legends):
+            raise ValueError("Missing legends? {} vs {}".format(
+                len(accuracies), len(legends)))
 
     fig, ax = plt.subplots()
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
@@ -247,3 +252,42 @@ def table_for_mi(n11, n10, n01, n00, feature, w=15):
                                    '{}'.format(n01).center(w), '{}'.format(n00).center(w))
 
     return table
+
+
+def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, report_path):
+    """
+    Args:
+        features: a list of features(words)
+    """
+    xTrain = FeaturizeTrainingByWords(xTrainRaw, features)
+    xTest = FeaturizeTrainingByWords(xTestRaw, features)
+
+    model = lgm.LogisticRegressionModel(initial_w0=initial_w0,
+                                    initial_weights=[0.0] * len(features))
+
+    # Extend xTrains and xTest with 1 at [0]
+    xTrain = [[1] + x for x in xTrain]
+    xTest = [[1] + x for x in xTest]
+
+    iter_cnt_vs_loss = []
+    iter_cnt_vs_accuracy = []
+    for i, iters in enumerate([iter_step] * resolution):
+        fit_tic = time.time()
+        model.fit(xTrain, yTrain, iterations=iters, step=step)
+        fit_toc = time.time() - fit_tic
+        iter_cnt = iter_step * (i + 1)
+        print("Took {} sec. Fitted data for {} iterations".format(fit_toc, iter_cnt))
+        yTestPredicted = model.predict(xTest)
+        test_loss = model.loss(xTest, yTest)
+        iter_cnt_vs_loss.append((iter_cnt, test_loss))
+        test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+        iter_cnt_vs_accuracy.append((iter_cnt, test_accuracy))
+        print("%d, %f, %f" % (iter_cnt, test_loss, test_accuracy))
+
+    iter_cnt_vs_loss_png = os.path.join(
+        report_path, 'iter_cnt_vs_accuracy_by_frequency_{}.png'.format(max_iters))
+    title = 'Loss with top 10 frequent words'.format(max_iters)
+    draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
+                    title, iter_cnt_vs_loss_png, [])
+
+    return iter_cnt_vs_loss, iter_cnt_vs_accuracy

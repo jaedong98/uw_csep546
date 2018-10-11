@@ -48,27 +48,31 @@ def calculate_mi2(y0_counter, y1_counter, top=10):
         n10 = y1_N - y1_counter[f]  # number of no 'Call' when y = 1
         n01 = y0_counter[f]         # number of 'Call' when y = 0
         n00 = y0_N - y0_counter[f]  # number of no 'Call' when y = 0
-        
+
         n = n00 + n01 + n10 + n11
         n1_ = n10 + n11
         n_1 = n01 + n11
         n0_ = n00 + n01
         n_0 = n00 + n10
-        
+
         mi[f] = (n11/n) * math.log2((n*n11 + 1) / (n1_ * n_1))\
                 + (n01/n) * math.log2((n*n01 + 1) / (n0_ * n_1))\
                 + (n10/n) * math.log2((n*n10 + 1) / (n1_ * n_0))\
                 + (n00/n) * math.log2((n*n00 + 1) / (n0_ * n_0))
         mi_tables[f] = utils.table_for_mi(n11, n10, n01, n00, f)
-    
+
     tops = mi.most_common(top)
     tables = [mi_tables[x[0]] for x in tops]
     return mi.most_common(top), tables
 
 
-def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
+
+def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                          max_iters=50000, iter_step=1000, step=0.01,
                          initial_w0=0.0):
+    """
+    Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    """
 
     # MI calculation
     y0_counter = collections.Counter()
@@ -85,7 +89,7 @@ def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
     if not len(y0_counter.keys()) == len(y1_counter.keys()):
         raise ValueError('Missing keys() {} vs {}'.format(
             len(y0_counter.keys()), len(y1_counter.keys())))
-            
+
     features, mi_tables = calculate_mi2(y0_counter, y1_counter, top=N)
 
     table = utils.selected_features_table(
@@ -104,43 +108,14 @@ def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
             f.write('\n')
 
     # gradient decent
-    tic = time.time()
     iter_cnts = [0]
     resolution = int(max_iters / iter_step)
-
     features = [x[0] for x in features]
-    xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
-    xTest = utils.FeaturizeTrainingByWords(xTestRaw, features)
-
-    model = lgm.LogisticRegressionModel(initial_w0=initial_w0,
-                                        initial_weights=[0.0] * len(features))
-
-    # Extend xTrains and xTest with 1 at [0]
-    xTrain = [[1] + x for x in xTrain]
-    xTest = [[1] + x for x in xTest]
-
-    iter_cnt_vs_loss = []
-    iter_cnt_vs_accuracy = []
-    for i, iters in enumerate([iter_step] * resolution):
-        fit_tic = time.time()
-        model.fit(xTrain, yTrain, iterations=iters, step=step)
-        fit_toc = time.time() - fit_tic
-        iter_cnt = iter_step * (i + 1)
-        print("Took {} sec. Fitted data for {} iterations".format(fit_toc, iter_cnt))
-        yTestPredicted = model.predict(xTest)
-        test_loss = model.loss(xTest, yTest)
-        iter_cnt_vs_loss.append((iter_cnt, test_loss))
-        test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
-        iter_cnt_vs_accuracy.append((iter_cnt, test_accuracy))
-        print("%d, %f, %f" % (iter_cnt, test_loss, test_accuracy))
-
-    iter_cnt_vs_loss_png = os.path.join(
-        report_path, 'iter_cnt_vs_accuracy_by_mi_{}.png'.format(max_iters))
-    title = 'Loss with top 10 frequent words'.format(max_iters)
-    utils.draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
-                          title, iter_cnt_vs_loss_png, ['Accuracy by MI'])
-
-    return iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    return utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
+                                                 yTrain, yTest,
+                                                 features, iter_step,
+                                                 resolution, initial_w0,
+                                                 step, max_iters, report_path)
 
 
 if __name__ == '__main__':
@@ -148,6 +123,6 @@ if __name__ == '__main__':
      yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
     yTrain = yTrainRaw
     yTest = yTestRaw
-    run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,  N=10,
+    run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                          max_iters=500, iter_step=100, step=0.01,
                          initial_w0=0.0)
