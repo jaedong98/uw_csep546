@@ -25,26 +25,43 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
     accuracies = []
     legends = []
     # Top N frequency
-    iter_cnt_vs_loss, iter_cnt_vs_accuracy = fbf.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
-                                                                      max_iters=max_iters, iter_step=iter_step, step=step,
-                                                                      initial_w0=initial_w0)
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_frequency = fbf.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
+                                                                                             max_iters=max_iters, iter_step=iter_step, step=step,
+                                                                                             initial_w0=initial_w0)
     losses.append(iter_cnt_vs_loss)
     accuracies.append(iter_cnt_vs_accuracy)
     legends.append('Top {} Frequency'.format(N))
 
     # Top N MI
-    iter_cnt_vs_loss, iter_cnt_vs_accuracy = fbm.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
-                                                                      max_iters=max_iters, iter_step=iter_step, step=step,
-                                                                      initial_w0=initial_w0)
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_mi = fbm.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
+                                                                                      max_iters=max_iters, iter_step=iter_step, step=step,
+                                                                                      initial_w0=initial_w0)
     losses.append(iter_cnt_vs_loss)
     accuracies.append(iter_cnt_vs_accuracy)
     legends.append('Top {} MI'.format(N))
+
+    # Merged Features:
+    merged_features = list(set(features_by_frequency + features_by_mi))
+    iter_cnts = [0]
+    resolution = int(max_iters / iter_step)
+    img_fname = os.path.join(
+        report_path, 'iter_cnt_vs_accuracy_by_merged_features_{}.png'.format(max_iters))
+    title = "Accuracy Over Iteration by Merged Features.".format(N)
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
+                                                                                   yTrain, yTest,
+                                                                                   merged_features, iter_step,
+                                                                                   resolution, initial_w0,
+                                                                                   step, max_iters, img_fname, title)
+    losses.append(iter_cnt_vs_loss)
+    accuracies.append(iter_cnt_vs_accuracy)
+    legends.append('Merged Features*'.format(N))
 
     # Custom features:
     if features:
         iter_cnts = [0]
         resolution = int(max_iters / iter_step)
-        img_fname = os.path.join(report_path, 'iter_cnt_vs_accuracy_by_custom_features_{}.png'.format(max_iters))
+        img_fname = os.path.join(
+            report_path, 'iter_cnt_vs_accuracy_by_custom_features_{}.png'.format(max_iters))
         title = "Accuracy Over Iteration by Custom Features.".format(N)
         iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
                                                                                        yTrain, yTest,
@@ -68,6 +85,10 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
     print(table)
     with open(table_md, 'w') as f:
         f.write(table)
+        f.write('\n')
+        f.write('\nMerged Features selected:')
+        f.write('\n{}'.format(merged_features))
+
         if features:
             f.write('\n')
             f.write('\nCustom Features selected:')
@@ -82,8 +103,8 @@ if __name__ == '__main__':
     yTest = yTestRaw
 
     # Configuration
-    max_iters = 5000
-    iter_step = 100
+    max_iters = 50000
+    iter_step = 1000
     step = 0.01
     initial_w0 = 0.0
 

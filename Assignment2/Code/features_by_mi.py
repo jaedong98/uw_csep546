@@ -56,9 +56,9 @@ def calculate_mi2(y0_counter, y1_counter, top=10):
         n_0 = n00 + n10
 
         mi[f] = (n11/n) * math.log2((n*n11 + 1) / (n1_ * n_1))\
-                + (n01/n) * math.log2((n*n01 + 1) / (n0_ * n_1))\
-                + (n10/n) * math.log2((n*n10 + 1) / (n1_ * n_0))\
-                + (n00/n) * math.log2((n*n00 + 1) / (n0_ * n_0))
+            + (n01/n) * math.log2((n*n01 + 1) / (n0_ * n_1))\
+            + (n10/n) * math.log2((n*n10 + 1) / (n1_ * n_0))\
+            + (n00/n) * math.log2((n*n00 + 1) / (n0_ * n_0))
         mi_tables[f] = utils.table_for_mi(n11, n10, n01, n00, f)
 
     tops = mi.most_common(top)
@@ -117,13 +117,16 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     iter_cnts = [0]
     resolution = int(max_iters / iter_step)
     features = [x[0] for x in features]
-    img_fname = os.path.join(report_path, 'iter_cnt_vs_accuracy_by_mi_{}.png'.format(max_iters))
+    img_fname = os.path.join(
+        report_path, 'iter_cnt_vs_accuracy_by_mi_{}.png'.format(max_iters))
     title = "Accuracy Over Iteration by Top {} MI.".format(N)
-    return utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
-                                                 yTrain, yTest,
-                                                 features, iter_step,
-                                                 resolution, initial_w0,
-                                                 step, max_iters, img_fname, title)
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
+                                                                                   yTrain, yTest,
+                                                                                   features, iter_step,
+                                                                                   resolution, initial_w0,
+                                                                                   step, max_iters, img_fname, title)
+
+    return iter_cnt_vs_loss, iter_cnt_vs_accuracy, features
 
 
 if __name__ == '__main__':
