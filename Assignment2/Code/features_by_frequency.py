@@ -39,7 +39,7 @@ def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
     table = utils.selected_features_table(features, ["Features", "Frequency"])
 
     table_md = os.path.join(
-        report_path, 'features_selected_table_{}.md'.format(N))
+        report_path, 'features_selected_by_top_{}_frequenct_words.md'.format(N))
 
     with open(table_md, 'w') as f:
         f.write(table)
@@ -85,8 +85,6 @@ def run_gradient_descent(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N=10,
 
 
 if __name__ == '__main__':
-    # Train-Test split
-    # TODO: splitting data into train, validation, test?
     (xTrainRaw, yTrainRaw, xTestRaw,
      yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
     yTrain = yTrainRaw
