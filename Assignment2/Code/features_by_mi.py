@@ -60,6 +60,8 @@ def calculate_mi(y0_counter, y1_counter, top=10):
     N = y0_N + y1_N
 
     mi = collections.Counter()
+
+
     for f in features:
 
         p_f_0 = (y0_counter[f] + 1) / (N + 2)
@@ -70,8 +72,10 @@ def calculate_mi(y0_counter, y1_counter, top=10):
 
         p_f_1 = (y1_counter[f] + 1) / (N + 2)
         p_1 = (y1_counter[f] + 1) / (y1_N + 2)
-        p_f = (y1_counter[f] + 1) / (total_cnt + 2)
+        total_cnt = y0_counter[f] + y1_counter[f]
+        p_f = (y0_counter[f] + 1) / (total_cnt + 2)
         mi_1 = p_f_1 * math.log2(p_f_1 / (p_f * p_1))
+
 
         mi[f] = mi_0 + mi_1
 
