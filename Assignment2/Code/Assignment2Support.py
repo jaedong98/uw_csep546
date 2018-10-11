@@ -190,3 +190,30 @@ def selected_features_table(features, headers, w=20):
     for feature, num in features:
         table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(num).center(w))
     return table
+
+
+def table_for_mi(n11, n10, n01, n00, feature, w=15) :
+    """
+    Creates a string of table.
+    n11, n10, n01, n00: integer
+    feature: a string
+
+    Returns:
+        a string of following table.
+        |        |   'call'  | no 'Call' |
+        |--------|-----------|-----------|
+        | y(=1)  |    n11    |    n10    |
+        | y(=0)  |    n01    |    n00    |
+    """
+    
+
+    table = '|{}|{}|{}|'.format(''.center(w), feature.center(w), 'No "{}"'.format(feature).center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+    
+    table += '\n|{}|{}|{}|'.format('y(=1)'.center(w), '{}'.format(n11).center(w), '{}'.format(n10).center(w))
+    table += '\n|{}|{}|{}|'.format('y(=0)'.center(w), '{}'.format(n01).center(w), '{}'.format(n00).center(w))
+
+    return table

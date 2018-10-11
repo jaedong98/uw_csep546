@@ -83,7 +83,7 @@ def calculate_mi2(y0_counter, y1_counter, top=10):
     y1_N = sum(y1_counter.values())
     N = y0_N + y1_N
     mi = collections.Counter()
-
+    mi_tables = dict()
     for f in features:
         if not f:
             continue
@@ -108,10 +108,14 @@ def calculate_mi2(y0_counter, y1_counter, top=10):
                 + (n01/n) * math.log2((n*n01 + 1) / (n0_ * n_1))\
                 + (n10/n) * math.log2((n*n10 + 1) / (n1_ * n_0))\
                 + (n00/n) * math.log2((n*n00 + 1) / (n0_ * n_0))
+        mi_tables[f] = utils.table_for_mi(n11, n10, n01, n00, f)
+    
+    tops = mi.most_common(top)
+    tables = [mi_tables[x[0]] for x in tops]
+    return mi.most_common(top), tables
 
-    return mi.most_common(top)
-
-features = calculate_mi2(y0_counter, y1_counter, top=10)
+#features = calculate_mi(y0_counter, y1_counter, top=10)
+features, mi_tables = calculate_mi2(y0_counter, y1_counter, top=10)
 # print_lookup_table(y0_counter, y1_counter)
 
 # Create a lookup table
@@ -126,20 +130,6 @@ features = calculate_mi2(y0_counter, y1_counter, top=10)
 # p(call) would be 5/8
 # but then smooth them by adding 1 to the numerator and 2 to the denominator
 
-# then
-# p(call, 1) would be 3 / 11 (= 3 / N)
-# p(1) would be 3/4
-# p(call) would be 3/8
-
-#          |   'call'  |   'OK'   | ...
-# |--------|-----------|----------|...
-# | y(=0)  |     5     |    0     |...
-# | y(=1)  |     0     |    5     |...
-# p(call, 0) would be 5 / 10 (= 5 / N)
-# p(0) would be 5/5
-# p(call) would be 5/5
-
-
 
 table = utils.selected_features_table(
     features, ["Features", "Mutual Information"], w=25)
@@ -148,3 +138,11 @@ table_md = os.path.join(report_path, 'features_selected_by_mi.md')
 
 with open(table_md, 'w') as f:
     f.write(table)
+    f.write('\n')
+    f.write('\nMutual Information Tables for Top {} features'.format(N))
+    f.write('\n')
+    for mi_table in mi_tables:
+        f.write('\n')
+        f.write(mi_table)
+        f.write('\n')
+
