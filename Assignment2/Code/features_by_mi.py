@@ -66,14 +66,10 @@ def calculate_mi2(y0_counter, y1_counter, top=10):
     return mi.most_common(top), tables
 
 
-
-def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
-                         max_iters=50000, iter_step=1000, step=0.01,
-                         initial_w0=0.0):
+def extract_features_by_mi(xTrainRaw, yTrainRaw, N):
     """
-    Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    Returns: features, mi_tables
     """
-
     # MI calculation
     y0_counter = collections.Counter()
     y1_counter = collections.Counter()
@@ -90,7 +86,17 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
         raise ValueError('Missing keys() {} vs {}'.format(
             len(y0_counter.keys()), len(y1_counter.keys())))
 
-    features, mi_tables = calculate_mi2(y0_counter, y1_counter, top=N)
+    return calculate_mi2(y0_counter, y1_counter, top=N)
+
+
+def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
+                         max_iters=50000, iter_step=1000, step=0.01,
+                         initial_w0=0.0):
+    """
+    Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    """
+
+    features, mi_tables = extract_features_by_mi(xTrainRaw, yTrainRaw, N)
 
     table = utils.selected_features_table(
         features, ["Features", "Mutual Information"], w=25)
