@@ -97,4 +97,4 @@ if __name__ == '__main__':
     # Top 100
     # N = 100
     # run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                    N, max_iters, iter_step, step, initial_w0)
+    #                N, max_iters, iter_step, step, initial_w0)

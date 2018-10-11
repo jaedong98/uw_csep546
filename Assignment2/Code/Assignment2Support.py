@@ -168,7 +168,7 @@ def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
     for ws in zip(*weights):
         ax.plot(iter_cnts, ws)
 
-    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4', 'w5'))
+    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4', 'w5'), loc='best')
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
@@ -191,7 +191,8 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
         xs, ys = zip(*accus)
         ax.plot(xs, ys)
 
-    ax.legend(legends)
+    if legends:
+        ax.legend(legends, loc='best')
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
