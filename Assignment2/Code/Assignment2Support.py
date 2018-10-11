@@ -118,6 +118,8 @@ def contain_to(msg):
 def contain_your(msg):
     return contain_word(msg, 'your')
 
+def exclude(msg):
+    return 1
 
 def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
     t, s = zip(*tuples)
@@ -165,3 +167,15 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
+
+def accuracy_table(accuracies, features, w=20):
+
+    table = '|{}|{}|'.format('Leave-out-Features'.center(w), 'Accuracy'.center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+    for feature, accu in zip(features, accuracies):
+        table += '\n|{}|{}|'.format('{}'.format(feature).center(w), '{}'.format(accu[-1][-1]).center(w))
+    return table
+
+print(accuracy_table([[(100, 0.9)],[(100, 0.91)]], ['apple', 'banana']))

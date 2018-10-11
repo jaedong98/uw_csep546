@@ -40,24 +40,12 @@ feature_selection_methods_options = [utils.is_longger,
                                      utils.contain_to,
                                      utils.contain_your]
 
-tic = time.time()
-max_iters = 50000
-iter_cnts = [0]
-iter_step = 1000
-resolution = int(max_iters / iter_step)
-
-iter_cnt_vs_accuracies = []
-legends = []
-for i in range(len(feature_selection_methods_options)):
-    feature_selection_methods = list(feature_selection_methods_options)
-    function_out = feature_selection_methods.pop(i)
-    legends.append("w/o {}".format(function_out.__name__.upper()))
-    print("Exclude {}".format(function_out.__name__))
+def calculate_accuracy(xTrainRaw, xTestRaw, feature_selection_methods, iter_step, resolution):
     xTrain = utils.FeaturizeTraining(xTrainRaw, feature_selection_methods)
     xTest = utils.FeaturizeTraining(xTestRaw, feature_selection_methods)
     model = lgm.LogisticRegressionModel(initial_w0=0.0,
                                         initial_weights=[0.0] * len(feature_selection_methods))
-    weights = [list(model.weights)]
+
     # Extend xTrains and xTest with 1 at [0]
     xTrain = [[1] + x for x in xTrain]
     xTest = [[1] + x for x in xTest]
@@ -73,13 +61,47 @@ for i in range(len(feature_selection_methods_options)):
         test_loss = model.loss(xTest, yTest)
         test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
         print("%d, %f, %f, %f" %
-              (iter_cnt, model.weights[1], test_loss, test_accuracy))
+            (iter_cnt, model.weights[1], test_loss, test_accuracy))
         iter_cnt_vs_accu.append((iter_cnt, test_accuracy))
+    return iter_cnt_vs_accu
+
+tic = time.time()
+max_iters = 50000
+iter_cnts = [0]
+iter_step = 1000
+resolution = int(max_iters / iter_step)
+
+iter_cnt_vs_accuracies = []
+legends = []
+for i in range(len(feature_selection_methods_options)):
+    feature_selection_methods = list(feature_selection_methods_options)
+    function_out = feature_selection_methods.pop(i)
+    legends.append("w/o {}".format(function_out.__name__.upper()))
+    print("Exclude {}".format(function_out.__name__))
+    
+    iter_cnt_vs_accu = calculate_accuracy(xTrainRaw, 
+                                          xTestRaw,
+                                          feature_selection_methods,
+                                          iter_step, resolution)
 
     iter_cnt_vs_accuracies.append(iter_cnt_vs_accu)
+
+legends.append("w/ All of Features")
+iter_cnt_vs_accu = calculate_accuracy(xTrainRaw, xTestRaw, feature_selection_methods_options, iter_step, resolution)
+iter_cnt_vs_accuracies.append(iter_cnt_vs_accu)
 
 iter_cnt_vs_accuracies_png = os.path.join(
     report_path, 'iter_cnt_vs_accuracies_{}.png'.format(max_iters))
 title = 'Accuracy with Leave-Out-One w/ {} Iterations'.format(max_iters)
 utils.draw_accuracies(iter_cnt_vs_accuracies, 'Iterations', 'Accuracy',
                       title, iter_cnt_vs_accuracies_png, legends)
+
+
+table = utils.accuracy_table(iter_cnt_vs_accuracies, legends)
+table_md = os.path.join(report_path, 'accuracy_table_{}.md'.format(max_iters))
+
+with open(table_md, 'w') as f:
+    f.write(table)
+    f.writelines("\n")
+    f.writelines("\n{} iterations".format(max_iters))
+    f.writelines("\nTook: {} sec.".format(time.time() - tic))
