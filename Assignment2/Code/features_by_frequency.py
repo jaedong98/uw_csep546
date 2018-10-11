@@ -20,7 +20,7 @@ report_path = os.path.join(os.path.dirname(
 (xRaw, yRaw) = utils.LoadRawData(kDataPath)
 
 
-def get_most_frequent_features(xTrainRaw, N):
+def extract_features_by_frequency(xTrainRaw, N):
 
     count = collections.Counter()
     for x in xTrainRaw:
@@ -36,7 +36,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     """
     Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
     """
-    features = get_most_frequent_features(xTrainRaw, N)
+    features = extract_features_by_frequency(xTrainRaw, N)
 
     table = utils.selected_features_table(features, ["Features", "Frequency"])
 
