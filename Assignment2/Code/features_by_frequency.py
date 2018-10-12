@@ -47,7 +47,6 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
         f.write(table)
 
     # gradient decent
-    iter_cnts = [0]
     resolution = int(max_iters / iter_step)
     features = [x[0] for x in features]
     img_fname = os.path.join(
