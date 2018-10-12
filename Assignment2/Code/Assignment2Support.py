@@ -1,6 +1,7 @@
 import collections
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 import time
 import LogisticRegressionModel as lgm
@@ -58,6 +59,12 @@ def TrainTestSplit(x, y, percentTest=.25):
 
     return (xTrain, yTrain, xTest, yTest)
 
+
+def GetAllDataExceptFold(xRaw, yRaw, i):
+    pass
+
+def GetDataInFold(xRaw, yRaw, i):
+    pass
 
 def FeaturizeTraining(xTrainRaw, feature_selection_functions):
     """
@@ -308,3 +315,33 @@ def table_for_gradient_accuracy_comparision(accuracies, legends, w=30):
         table += '\n|{}|{}|'.format('{}'.format(legend).center(w),
                                     '{}'.format(accu[-1][-1]).center(w))
     return table
+
+def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
+    """
+    Args:
+        accuracies: a list of accuracy lists from different gradient decents.
+        legends: a list of strings to be named. ['Top 10 frequent words', ...]
+    """
+    table = '|{}|{}|{}|{}|'.format('Feature Selections'.center(w),
+                                   'Accuracy'.center(w),
+                                   'Upper'.center(w),
+                                   'Lower'.center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+
+    for legend, accu in zip(legends, accuracies):
+        accuracy = accu[-1][-1]
+        upper = accuracy + zn * np.sqrt((accuracy * (1 - accuracy) / N))
+        lower = accuracy - zn * np.sqrt((accuracy * (1 - accuracy) / N))
+        table += '\n|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
+                                          '{}'.format(accuracy).center(w),
+                                          '{}'.format(upper).center(w),
+                                          '{}'.format(lower).center(w))
+    return table
+
+#legends = ['apple', 'banana']
+#accuracies = [[(0,0.9), (100, 0.8)],[(10, 0.7), (100, 0.91)]]
+#print(table_for_gradient_accuracy_estimate(accuracies, legends, N=10))
