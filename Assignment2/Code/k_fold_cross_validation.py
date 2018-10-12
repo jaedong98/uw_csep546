@@ -124,15 +124,15 @@ def run_gradient_descent(xTrain, xTest, yTrain, yTest, features, N=10,
     return accuracy
 
 
-def compare_models(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                   N=10,
-                   max_iters=50000,
-                   iter_step=1000,
-                   step=0.01,
-                   initial_w0=0.0,
-                   k=5,
-                   zn=1.96,
-                   report_path=report_path):
+def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+                                       N=10,
+                                       max_iters=50000,
+                                       iter_step=1000,
+                                       step=0.01,
+                                       initial_w0=0.0,
+                                       k=5,
+                                       zn=1.96,
+                                       report_path=report_path):
 
     yTrain = yTrainRaw
     yTest = yTestRaw
@@ -168,7 +168,8 @@ def compare_models(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     legends = ["Top 10 Frequency", "Top 10 MI "]
     table = utils.table_for_cross_validation_accuracy_estimate(accuracies,
                                                                legends,
-                                                               len(xTrain), zn)
+                                                               len(xTrain),
+                                                               N, zn)
     print(table)
     cm_md = os.path.join(report_path,
                          '{}_N{}_k{}.md'.format(inspect.stack()[0][3], N, k))
@@ -187,17 +188,17 @@ if __name__ == '__main__':
                                                                       yRaw)
 
     N = 10
-    max_iters = 50
-    iter_step = 25
+    max_iters = 5000
+    iter_step = 100
     step = 0.01
     initial_w0 = 0.0
     k = 5
     zn = 1.96
-    compare_models(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                   N=N,
-                   max_iters=max_iters,
-                   iter_step=iter_step,
-                   step=step,
-                   initial_w0=initial_w0,
-                   k=k,
-                   zn=zn)
+    compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+                                       N=N,
+                                       max_iters=max_iters,
+                                       iter_step=iter_step,
+                                       step=step,
+                                       initial_w0=initial_w0,
+                                       k=k,
+                                       zn=zn)

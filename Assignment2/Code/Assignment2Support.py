@@ -368,22 +368,25 @@ def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
     return table
 
 
-def table_for_cross_validation_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
+def table_for_cross_validation_accuracy_estimate(accuracies, legends, len_xTrain, N, zn=1.96, w=30):
     """
     Args:
         accuracies: a list of accuracy lists from different gradient decents.
         legends: a list of strings to be named. ['Top 10 frequent words', ...]
         N: len(xTrains)
     """
-    table = '|{}|{}|{}|{}|{}|{}|'.format('Feature Selections'.center(w),
-                                         'TotalCorrect'.center(w),
-                                         'N'.center(w),
-                                         'Accuracy'.center(w),
-                                         'Upper'.center(w),
-                                         'Lower'.center(w))
-    table += '\n|' + '-' * w
-    table += '|' + '-' * w
-    table += '|' + '-' * w
+    short_w = int(w / 2)
+    table = '* Accuracy Estimate from Cross Validation'
+    table += '\n'
+    table += '\n  |{}|{}|{}|{}|{}|{}|'.format('Feature Selections'.center(w),
+                                            'TotalCorrect'.center(short_w),
+                                            'N'.center(short_w),
+                                            'Accuracy'.center(w),
+                                            'Upper'.center(w),
+                                            'Lower'.center(w))
+    table += '\n  |' + '-' * w
+    table += '|' + '-' * short_w
+    table += '|' + '-' * short_w
     table += '|' + '-' * w
     table += '|' + '-' * w
     table += '|' + '-' * w
@@ -391,10 +394,11 @@ def table_for_cross_validation_accuracy_estimate(accuracies, legends, N, zn=1.96
 
     for legend, accuracy in zip(legends, accuracies):
         
-        upper, lower = calculate_bounds(accuracy, zn, N)
-        table += '\n|{}|{}|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
-                                          '{}'.format(accuracy * N).center(w),
-                                          '{}'.format(N).center(w),  
+        upper, lower = calculate_bounds(accuracy, zn, len_xTrain)
+        correct = int(accuracy * len_xTrain)
+        table += '\n  |{}|{}|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
+                                          '{}'.format(correct).center(short_w),
+                                          '{}'.format(N).center(short_w),  
                                           '{}'.format(accuracy).center(w),
                                           '{}'.format(upper).center(w),
                                           '{}'.format(lower).center(w))
