@@ -63,8 +63,10 @@ def TrainTestSplit(x, y, percentTest=.25):
 def GetAllDataExceptFold(xRaw, yRaw, i):
     pass
 
+
 def GetDataInFold(xRaw, yRaw, i):
     pass
+
 
 def FeaturizeTraining(xTrainRaw, feature_selection_functions):
     """
@@ -271,7 +273,7 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
     xTest = FeaturizeTrainingByWords(xTestRaw, features)
 
     model = lgm.LogisticRegressionModel(initial_w0=initial_w0,
-                                    initial_weights=[0.0] * len(features))
+                                        initial_weights=[0.0] * len(features))
 
     # Extend xTrains and xTest with 1 at [0]
     xTrain = [[1] + x for x in xTrain]
@@ -292,12 +294,35 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
         iter_cnt_vs_accuracy.append((iter_cnt, test_accuracy))
         print("%d, %f, %f" % (iter_cnt, test_loss, test_accuracy))
 
-    
     if img_fname:
         draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
                         title, img_fname, [])
 
     return iter_cnt_vs_loss, iter_cnt_vs_accuracy
+
+
+def logistic_regression_model_by_features(xTrainRaw, yTrain, features, iter_step, resolution, initial_w0, step, max_iters):
+    """
+    Featuring xTrainRaw data and run gradient descents.
+    Returns:
+        an instance of Logistic Regression model
+    """
+    xTrain = FeaturizeTrainingByWords(xTrainRaw, features)
+
+    model = lgm.LogisticRegressionModel(initial_w0=initial_w0,
+                                        initial_weights=[0.0] * len(features))
+
+    # Extend xTrains and xTest with 1 at [0]
+    xTrain = [[1] + x for x in xTrain]
+
+    for i, iters in enumerate([iter_step] * resolution):
+        fit_tic = time.time()
+        model.fit(xTrain, yTrain, iterations=iters, step=step)
+        fit_toc = time.time() - fit_tic
+        iter_cnt = iter_step * (i + 1)
+        print("Took {} sec. Fitted data for {} iterations".format(fit_toc, iter_cnt))
+
+    return model
 
 
 def table_for_gradient_accuracy_comparision(accuracies, legends, w=30):
@@ -316,11 +341,13 @@ def table_for_gradient_accuracy_comparision(accuracies, legends, w=30):
                                     '{}'.format(accu[-1][-1]).center(w))
     return table
 
+
 def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
     """
     Args:
         accuracies: a list of accuracy lists from different gradient decents.
         legends: a list of strings to be named. ['Top 10 frequent words', ...]
+        N: len(xTrains)
     """
     table = '|{}|{}|{}|{}|'.format('Feature Selections'.center(w),
                                    'Accuracy'.center(w),
