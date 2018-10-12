@@ -1,4 +1,5 @@
 import collections
+import inspect
 import itertools
 import matplotlib.pyplot as plt
 import numpy as np
@@ -68,17 +69,27 @@ def divide_into_group(xTrainRaw, k):
     return groups
 
 
-def get_features_by_frequency(xTrainRaw, xTestRaw N):
+def get_features_by_frequency(xTrainRaw, xTestRaw, N):
 
-    features = extract_features_by_frequency(xTrainRaw, N)
+    features = fbf.extract_features_by_frequency(xTrainRaw, N)
     features = [x[0] for x in features]
-    xTrain = FeaturizeTrainingByWords(xTrainRaw, features)
-    xTest = FeaturizeTrainingByWords(xTestRaw, features)
+    xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
+    xTest = utils.FeaturizeTrainingByWords(xTestRaw, features)
 
-    return xTrain, xTest
+    return xTrain, xTest, features
 
 
-def run_gradient_descent(xTrain, xTest, yTrain, yTest, N=10,
+def get_features_mi(xTrainRaw, yTrainRaw, xTestRaw, N):
+
+    features, _ = fbm.extract_features_by_mi(xTrainRaw, yTrainRaw, N)
+    features = [x[0] for x in features]
+    xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
+    xTest = utils.FeaturizeTrainingByWords(xTestRaw, features)
+
+    return xTrain, xTest, features
+
+
+def run_gradient_descent(xTrain, xTest, yTrain, yTest, features, N=10,
                          max_iters=50000, iter_step=1000, step=0.01,
                          initial_w0=0.0, report_path=report_path, fname='', k=5):
     """
@@ -88,15 +99,13 @@ def run_gradient_descent(xTrain, xTest, yTrain, yTest, N=10,
     fold_xTrains, fold_xVals = fold_data(xTrain, k)
     fold_yTrains, fold_yVals = fold_data(yTrain, k)
 
+    resolution = int(max_iters / iter_step)
     i = 0
     total_correct = 0
     for f_xTrain, f_xVal, f_yTrain, f_yVal in zip(fold_xTrains, fold_xVals,
                                                   fold_yTrains, fold_yVals):
 
         print("Gradient descent for {}th folding".format(i))
-        resolution = int(max_iters / iter_step)
-        features = [x[0] for x in features]
-
         model = utils.logistic_regression_model_by_features(
             f_xTrain, f_yTrain, features, iter_step, resolution, initial_w0, step, max_iters)
         f_yVal_predict = model.predict(f_xVal)
@@ -129,8 +138,10 @@ def compare_models(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     yTest = yTestRaw
 
     # Top N frequency
-    xTrain, xTest = get_features_by_frequency(xTrainRaw, xTestRaw, N)
+    xTrain, xTest, f_features = get_features_by_frequency(
+        xTrainRaw, xTestRaw, N)
     accuracy_by_frequency = run_gradient_descent(xTrain, xTest, yTrain, yTest,
+                                                 f_features,
                                                  N=N,
                                                  max_iters=max_iters,
                                                  iter_step=iter_step,
@@ -140,7 +151,10 @@ def compare_models(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     #ub_f, lb_f = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # Top N Mutual Information
+    xTrain, xTest, m_features = get_features_mi(
+        xTrainRaw, yTrainRaw, xTestRaw, N)
     accuracy_by_mi = run_gradient_descent(xTrain, xTest, yTrain, yTest,
+                                          m_features,
                                           N=N,
                                           max_iters=max_iters,
                                           iter_step=iter_step,
@@ -150,13 +164,20 @@ def compare_models(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     #ub_m, lb_m = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # report table (including upper and lower bounds)
-    table = utils.table_for_gradient_accuracy_estimate(accuracies, legends,
-                                                       len(xTrain), zn)
+    accuracies = [accuracy_by_frequency, accuracy_by_mi]
+    legends = ["Top 10 Frequency", "Top 10 MI "]
+    table = utils.table_for_cross_validation_accuracy_estimate(accuracies,
+                                                               legends,
+                                                               len(xTrain), zn)
     print(table)
     cm_md = os.path.join(report_path,
                          '{}_N{}_k{}.md'.format(inspect.stack()[0][3], N, k))
     with open(cm_md, 'w') as f:
         f.write(table)
+        f.write("\n")
+        f.write("\n Features by Frequency: {}".format(f_features))
+        f.write("\n")
+        f.write("\n Features by Mutual Information: {}".format(m_features))
 
 
 if __name__ == '__main__':
@@ -166,8 +187,8 @@ if __name__ == '__main__':
                                                                       yRaw)
 
     N = 10
-    max_iters = 50000
-    iter_step = 1000
+    max_iters = 50
+    iter_step = 25
     step = 0.01
     initial_w0 = 0.0
     k = 5

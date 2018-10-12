@@ -301,13 +301,12 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
     return iter_cnt_vs_loss, iter_cnt_vs_accuracy
 
 
-def logistic_regression_model_by_features(xTrainRaw, yTrain, features, iter_step, resolution, initial_w0, step, max_iters):
+def logistic_regression_model_by_features(xTrain, yTrain, features, iter_step, resolution, initial_w0, step, max_iters):
     """
-    Featuring xTrainRaw data and run gradient descents.
+    Featuring xTrain data and run gradient descents.
     Returns:
         an instance of Logistic Regression model
     """
-    xTrain = FeaturizeTrainingByWords(xTrainRaw, features)
 
     model = lgm.LogisticRegressionModel(initial_w0=initial_w0,
                                         initial_weights=[0.0] * len(features))
@@ -363,6 +362,39 @@ def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
         accuracy = accu[-1][-1]
         upper, lower = calculate_bounds(accuracy, zn, N)
         table += '\n|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
+                                          '{}'.format(accuracy).center(w),
+                                          '{}'.format(upper).center(w),
+                                          '{}'.format(lower).center(w))
+    return table
+
+
+def table_for_cross_validation_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
+    """
+    Args:
+        accuracies: a list of accuracy lists from different gradient decents.
+        legends: a list of strings to be named. ['Top 10 frequent words', ...]
+        N: len(xTrains)
+    """
+    table = '|{}|{}|{}|{}|{}|{}|'.format('Feature Selections'.center(w),
+                                         'TotalCorrect'.center(w),
+                                         'N'.center(w),
+                                         'Accuracy'.center(w),
+                                         'Upper'.center(w),
+                                         'Lower'.center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+
+    for legend, accuracy in zip(legends, accuracies):
+        
+        upper, lower = calculate_bounds(accuracy, zn, N)
+        table += '\n|{}|{}|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
+                                          '{}'.format(accuracy * N).center(w),
+                                          '{}'.format(N).center(w),  
                                           '{}'.format(accuracy).center(w),
                                           '{}'.format(upper).center(w),
                                           '{}'.format(lower).center(w))
