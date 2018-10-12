@@ -24,8 +24,6 @@ class LogisticRegressionModel(object):
                              "include x0 = 1. {} vs {}".format(
                                  len(self.weights), len(xTrain[0])))
 
-        self.w1_vs_iterations = []
-        self.training_set_loss_vs_iterations = []
         print("Fitting training dataset with {} iteration".format(iterations))
         print("Initial: {}".format(self.weights))
         cnt = 0
@@ -40,15 +38,10 @@ class LogisticRegressionModel(object):
 
             training_loss = self.loss_calculator(yTrainPredicted, yTrain)
 
-            if cnt % 10000:
-                self.w1_vs_iterations.append((cnt, self.weights[1]))
-
-            if cnt % 1000:
-                self.training_set_loss_vs_iterations.append(
-                    (cnt, training_loss))
-
             cnt += 1
         self.training_loss = training_loss
+
+        return
 
     def loss_calculator(self, yPredicted, ys):
         loss = 0
@@ -86,3 +79,7 @@ class LogisticRegressionModel(object):
                 predictions.append(0)
 
         return predictions
+
+    def predict_probabilities(self, x):
+        return self.calculate_yhats(x)
+
