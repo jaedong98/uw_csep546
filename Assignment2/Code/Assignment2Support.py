@@ -334,7 +334,7 @@ def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
 
     for legend, accu in zip(legends, accuracies):
         accuracy = accu[-1][-1]
-        upper, lower = alculate_bounds(accuracy, zn, N)
+        upper, lower = calculate_bounds(accuracy, zn, N)
         table += '\n|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
                                           '{}'.format(accuracy).center(w),
                                           '{}'.format(upper).center(w),
