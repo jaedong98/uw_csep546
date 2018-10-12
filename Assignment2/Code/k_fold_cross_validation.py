@@ -70,7 +70,9 @@ def divide_into_group(xTrainRaw, k):
 
 
 def get_features_by_frequency(xTrainRaw, xTestRaw, N):
-
+    """
+    Returns: a tuple of (xTrain, xTest, a list of words(features))
+    """
     features = fbf.extract_features_by_frequency(xTrainRaw, N)
     features = [x[0] for x in features]
     xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
@@ -80,7 +82,9 @@ def get_features_by_frequency(xTrainRaw, xTestRaw, N):
 
 
 def get_features_mi(xTrainRaw, yTrainRaw, xTestRaw, N):
-
+    """
+    Returns: a tuple of (xTrain, xTest, a list of words(features))
+    """
     features, _ = fbm.extract_features_by_mi(xTrainRaw, yTrainRaw, N)
     features = [x[0] for x in features]
     xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
@@ -89,13 +93,16 @@ def get_features_mi(xTrainRaw, yTrainRaw, xTestRaw, N):
     return xTrain, xTest, features
 
 
-def run_gradient_descent(xTrain, xTest, yTrain, yTest, features, N=10,
-                         max_iters=50000, iter_step=1000, step=0.01,
-                         initial_w0=0.0, report_path=report_path, fname='', k=5):
+def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
+                             max_iters=50000, iter_step=1000, step=0.01,
+                             initial_w0=0.0, report_path=report_path, fname='',
+                             k=5):
     """
-    Returns: iter_cnt_vs_loss, iter_cnt_vs_accuracy
+    Calculatge the accracy of cross validation using gradient descent.
+    Returns: accuracy from cross validation.
     """
 
+    # folding data into Train vs Validation
     fold_xTrains, fold_xVals = fold_data(xTrain, k)
     fold_yTrains, fold_yVals = fold_data(yTrain, k)
 
@@ -108,8 +115,11 @@ def run_gradient_descent(xTrain, xTest, yTrain, yTest, features, N=10,
         print("Gradient descent for {}th folding".format(i))
         model = utils.logistic_regression_model_by_features(
             f_xTrain, f_yTrain, features, iter_step, resolution, initial_w0, step, max_iters)
+
+        # predict using validation dataset
         f_yVal_predict = model.predict(f_xVal)
 
+        # compare and count corrections
         for p, v in zip(f_yVal_predict, f_yVal):
             if p == v:
                 total_correct += 1
@@ -140,27 +150,27 @@ def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     # Top N frequency
     xTrain, xTest, f_features = get_features_by_frequency(
         xTrainRaw, xTestRaw, N)
-    accuracy_by_frequency = run_gradient_descent(xTrain, xTest, yTrain, yTest,
-                                                 f_features,
-                                                 N=N,
-                                                 max_iters=max_iters,
-                                                 iter_step=iter_step,
-                                                 step=step,
-                                                 initial_w0=initial_w0,
-                                                 k=k)
+    accuracy_by_frequency = calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest,
+                                                     f_features,
+                                                     N=N,
+                                                     max_iters=max_iters,
+                                                     iter_step=iter_step,
+                                                     step=step,
+                                                     initial_w0=initial_w0,
+                                                     k=k)
     #ub_f, lb_f = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # Top N Mutual Information
     xTrain, xTest, m_features = get_features_mi(
         xTrainRaw, yTrainRaw, xTestRaw, N)
-    accuracy_by_mi = run_gradient_descent(xTrain, xTest, yTrain, yTest,
-                                          m_features,
-                                          N=N,
-                                          max_iters=max_iters,
-                                          iter_step=iter_step,
-                                          step=step,
-                                          initial_w0=initial_w0,
-                                          k=k)
+    accuracy_by_mi = calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest,
+                                              m_features,
+                                              N=N,
+                                              max_iters=max_iters,
+                                              iter_step=iter_step,
+                                              step=step,
+                                              initial_w0=initial_w0,
+                                              k=k)
     #ub_m, lb_m = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # report table (including upper and lower bounds)
