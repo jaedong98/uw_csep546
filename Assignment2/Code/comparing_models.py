@@ -1,4 +1,5 @@
 import collections
+import inspect
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -23,17 +24,20 @@ def accuracy_estimate_bounds(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_it
     accuracies = []
     legends = []
     # Top N frequency
+    fname = '{}_by_frequency_{}.png'.format(inspect.stack()[0][3], max_iters)
     iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_frequency = fbf.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                                                                                              max_iters=max_iters, iter_step=iter_step, step=step,
-                                                                                             initial_w0=initial_w0)
+                                                                                             initial_w0=initial_w0, fname=fname)
     losses.append(iter_cnt_vs_loss)
     accuracies.append(iter_cnt_vs_accuracy)
     legends.append('Top {} Frequency'.format(N))
 
     # Top N MI
+    fname = '{}_by_mi_{}.png'.format(inspect.stack()[0][3], max_iters)
+    title = "Accuracy Over Iteration by Top {} Frequency Features.".format(N)
     iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_mi = fbm.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                                                                                       max_iters=max_iters, iter_step=iter_step, step=step,
-                                                                                      initial_w0=initial_w0)
+                                                                                      initial_w0=initial_w0, fname=fname)
     losses.append(iter_cnt_vs_loss)
     accuracies.append(iter_cnt_vs_accuracy)
     legends.append('Top {} MI'.format(N))
