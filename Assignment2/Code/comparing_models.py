@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # Configuration
     max_iters = 50000
     iter_step = 1000
-    step = 0.01
+    step = 10
     initial_w0 = 0.0
 
     # Top 10

@@ -20,15 +20,17 @@ Hand in a clearly labeled table with:
 
 ## The accuracy estimates from the train/test split run with error bounds
 
-### Table TO BE UPDATED
+### TODO: Table TO BE UPDATED (with comparing_models.py)
 
-|      Feature Selections      |           Accuracy           |            Upper             |            Lower             |
-|------------------------------|------------------------------|------------------------------|------------------------------|
-|       Top 10 Frequency       |      0.5401721664275466      |      0.5552810251250209      |      0.5250633077300724      |
-|          Top 10 MI           |      0.9239598278335724      |      0.9319953854766465      |      0.9159242701904984      |
+| Feature Selections | Accuracy           | Upper              | Lower              |
+| ------------------ | ------------------ | ------------------ | ------------------ |
+| Top 10 Frequency   | 0.5401721664275466 | 0.5552810251250209 | 0.5250633077300724 |
+| Top 10 MI          | 0.9239598278335724 | 0.9319953854766465 | 0.9159242701904984 |
 
 ## The accuracy estimates from the cross validations runs for the two model variants with error bound
 
+### TODO: * run k_fold_cross_validation.py with proper configuration.*
+  
 NOTE: if your gradient descent is slow (like mine is) these runs are going to start to take a long time. One possibility is to just-not-care — let it run over night or whatever. Another easy approach is to do several runs in parallel. You can do this manually or programmatically.
 
 You could also choose to optimize your code, but don’t go overboard. That’s not the point of this assignment. In practice you should use an existing, highly-optimized implementation.
