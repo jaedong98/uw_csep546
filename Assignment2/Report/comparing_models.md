@@ -18,9 +18,16 @@ Run this ONLY on the previous training data (hold out the previous test data).
 
 Hand in a clearly labeled table with:
 
-* 1 point -- the accuracy estimates from the train/test split run with error bounds
+## The accuracy estimates from the train/test split run with error bounds
 
-* 1 point --  the accuracy estimates from the cross validations runs for the two model variants with error bound
+### Table TO BE UPDATED
+
+|      Feature Selections      |           Accuracy           |            Upper             |            Lower             |
+|------------------------------|------------------------------|------------------------------|------------------------------|
+|       Top 10 Frequency       |      0.5401721664275466      |      0.5552810251250209      |      0.5250633077300724      |
+|          Top 10 MI           |      0.9239598278335724      |      0.9319953854766465      |      0.9159242701904984      |
+
+## The accuracy estimates from the cross validations runs for the two model variants with error bound
 
 NOTE: if your gradient descent is slow (like mine is) these runs are going to start to take a long time. One possibility is to just-not-care — let it run over night or whatever. Another easy approach is to do several runs in parallel. You can do this manually or programmatically.
 
