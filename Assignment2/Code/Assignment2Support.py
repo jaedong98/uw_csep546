@@ -334,13 +334,18 @@ def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
 
     for legend, accu in zip(legends, accuracies):
         accuracy = accu[-1][-1]
-        upper = accuracy + zn * np.sqrt((accuracy * (1 - accuracy) / N))
-        lower = accuracy - zn * np.sqrt((accuracy * (1 - accuracy) / N))
+        upper, lower = alculate_bounds(accuracy, zn, N)
         table += '\n|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
                                           '{}'.format(accuracy).center(w),
                                           '{}'.format(upper).center(w),
                                           '{}'.format(lower).center(w))
     return table
+
+
+def calculate_bounds(accuracy, zn, N):
+    upper = accuracy + zn * np.sqrt((accuracy * (1 - accuracy) / N))
+    lower = accuracy - zn * np.sqrt((accuracy * (1 - accuracy) / N))
+    return upper, lower
 
 #legends = ['apple', 'banana']
 #accuracies = [[(0,0.9), (100, 0.8)],[(10, 0.7), (100, 0.91)]]
