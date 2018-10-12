@@ -5,7 +5,7 @@ class SpamHeuristicModel(object):
         pass
 
     def fit(self, x, y):
-        self.weights = [.75, .75, .75, .25, .25]
+        self.weights = [0.75] * len(x[0])
         pass
 
     def predict(self, x):

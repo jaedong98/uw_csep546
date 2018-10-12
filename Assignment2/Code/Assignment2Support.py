@@ -207,7 +207,7 @@ def accuracy_table(accuracies, features, w=20):
     table += '|'
     for feature, accu in zip(features, accuracies):
         table += '\n|{}|{}|'.format('{}'.format(feature).center(w),
-                                    '{}'.format(accu[-1][-1]).center(w))
+                                    '{}'.format(accu).center(w))
     return table
 
 

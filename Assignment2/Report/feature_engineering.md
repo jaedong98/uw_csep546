@@ -19,19 +19,19 @@ And use smoothing when calculating the probabilities:
 P(*) = (# observed + 1) / (total samples + 2)
 
 HAND IN:
-![iter_cnt_vs_accuracies](iter_cnt_vs_accuracies_50000.png)
+
 A document that contains the following tables (clearly labeled!)
 
 * A table showing the accuracy with each one left out, compared to a model built with all of them.
 
-  | Leave-out-Features | Accuracy           |
-  | ------------------ | ------------------ |
-  | w/o IS_LONGGER     | 0.8974175035868006 |
-  | w/o HAS_NUMBER     | 0.8651362984218077 |
-  | w/o CONTAIN_CALL   | 0.9175035868005739 |
-  | w/o CONTAIN_TO     | 0.8988522238163558 |
-  | w/o CONTAIN_YOUR   | 0.9261119081779053 |
-  | w/ All of Features | 0.9261119081779053 |
+  | Leave-out-Features |      Accuracy      |
+  |--------------------|--------------------|
+  |   w/o IS_LONGGER   | 0.8895265423242468 |
+  |   w/o HAS_NUMBER   | 0.857245337159254  |
+  |  w/o CONTAIN_CALL  | 0.8938307030129125 |
+  |   w/o CONTAIN_TO   | 0.8974175035868006 |
+  |  w/o CONTAIN_YOUR  | 0.9167862266857962 |
+  | w/ All of Features | 0.8931133428981348 |
 
 * A list of the top 10 bag of word features selected by filtering by frequency.
   
