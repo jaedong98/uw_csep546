@@ -198,8 +198,8 @@ if __name__ == '__main__':
                                                                       yRaw)
 
     N = 10
-    max_iters = 5000
-    iter_step = 100
+    max_iters = 50000
+    iter_step = 1000
     step = 0.01
     initial_w0 = 0.0
     k = 5
