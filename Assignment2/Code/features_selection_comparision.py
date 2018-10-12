@@ -46,7 +46,7 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
     resolution = int(max_iters / iter_step)
     img_fname = os.path.join(
         report_path, 'iter_cnt_vs_accuracy_by_merged_features_{}.png'.format(max_iters))
-    title = "Accuracy Over Iteration by Merged Features.".format(N)
+    title = "Accuracy Over Iteration by Merged Features."
     iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
                                                                                    yTrain, yTest,
                                                                                    merged_features, iter_step,
@@ -54,7 +54,7 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
                                                                                    step, max_iters, img_fname, title)
     losses.append(iter_cnt_vs_loss)
     accuracies.append(iter_cnt_vs_accuracy)
-    legends.append('Merged Features*'.format(N))
+    legends.append('Merged Features*')
 
     # Custom features:
     if features:
@@ -62,7 +62,7 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
         resolution = int(max_iters / iter_step)
         img_fname = os.path.join(
             report_path, 'iter_cnt_vs_accuracy_by_custom_features_{}.png'.format(max_iters))
-        title = "Accuracy Over Iteration by Custom Features.".format(N)
+        title = "Accuracy Over Iteration by Custom Features."
         iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
                                                                                        yTrain, yTest,
                                                                                        features, iter_step,
@@ -70,7 +70,7 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
                                                                                        step, max_iters, img_fname, title)
         losses.append(iter_cnt_vs_loss)
         accuracies.append(iter_cnt_vs_accuracy)
-        legends.append('Custom Features*'.format(N))
+        legends.append('Custom Features*')
 
     # Outputs
     img_fname = os.path.join(
@@ -117,6 +117,6 @@ if __name__ == '__main__':
                     N, max_iters, iter_step, step, initial_w0, features)
 
     # Top 100
-    # N = 100
-    #run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-    #                N, max_iters, iter_step, step, initial_w0, features)
+    N = 100
+    run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+                    N, max_iters, iter_step, step, initial_w0, features)
