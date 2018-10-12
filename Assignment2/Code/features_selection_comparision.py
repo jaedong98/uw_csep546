@@ -25,7 +25,7 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
     accuracies = []
     legends = []
     # Top N frequency
-    iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_frequency = fbf.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_frequency = fbf.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=N,
                                                                                              max_iters=max_iters, iter_step=iter_step, step=step,
                                                                                              initial_w0=initial_w0)
     losses.append(iter_cnt_vs_loss)
@@ -33,7 +33,7 @@ def run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, N, max_iters, iter
     legends.append('Top {} Frequency'.format(N))
 
     # Top N MI
-    iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_mi = fbm.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy, features_by_mi = fbm.run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=N,
                                                                                       max_iters=max_iters, iter_step=iter_step, step=step,
                                                                                       initial_w0=initial_w0)
     losses.append(iter_cnt_vs_loss)

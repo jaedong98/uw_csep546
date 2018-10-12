@@ -2,35 +2,17 @@
 
 ## Jae Dong Hwang
 
-**Add bag of words features to your spam domain solution**
-
-Support frequency based feature selection, top N
-Support mutual information based features selection top N
-Tokenize in the simplest way possible (by splitting on whitespace)
-
-Recall:
-
-MutiualInformation(X,Y) = Sum over every value X has and Y has:
-
-            P(has X, has Y) * log_2 P(has X, has Y) / (P(has X) * P(has Y))
-
-And use smoothing when calculating the probabilities:
-
-P(*) = (# observed + 1) / (total samples + 2)
-
-HAND IN:
-
-A document that contains the following tables (clearly labeled!)
+### SpamHeuristicModel with bag of word modification
 
 * A table showing the accuracy with each one left out, compared to a model built with all of them.
 
-  | Leave-out-Features |      Accuracy      |
-  |--------------------|--------------------|
-  |   w/o IS_LONGGER   | 0.8895265423242468 |
-  |   w/o HAS_NUMBER   | 0.857245337159254  |
-  |  w/o CONTAIN_CALL  | 0.8938307030129125 |
-  |   w/o CONTAIN_TO   | 0.8974175035868006 |
-  |  w/o CONTAIN_YOUR  | 0.9167862266857962 |
+  | Leave-out-Features | Accuracy           |
+  | ------------------ | ------------------ |
+  | w/o IS_LONGGER     | 0.8895265423242468 |
+  | w/o HAS_NUMBER     | 0.857245337159254  |
+  | w/o CONTAIN_CALL   | 0.8938307030129125 |
+  | w/o CONTAIN_TO     | 0.8974175035868006 |
+  | w/o CONTAIN_YOUR   | 0.9167862266857962 |
   | w/ All of Features | 0.8931133428981348 |
 
 * A list of the top 10 bag of word features selected by filtering by frequency.
@@ -63,35 +45,24 @@ A document that contains the following tables (clearly labeled!)
   | To       | 0.0016346171629362423 |
   | Txt      | 0.0015661937627271662 |
 
-2 points --
+### Gradient descent to 50,000 iterations
 
-0.5 point -- Run gradient descent to 50,000 iterations with the top 10 words by frequency.
-0.5 point -- Run gradient descent to 50,000 iterations with the top 10 words by mutual information.
-0.5 point -- Run gradient descent to 50,000 iterations with the better of these PLUS the hand crafted features from the framework.
-0.5 point -- Run gradient descent to 50,000 iterations of the previous setting with 100 words plus hand-crafted instead of 10.
-Hand in a clearly labeled table comparing the accuracies of these methods
+* Run gradient descent to 50,000 iterations with the top 10 words by frequency.
+* Run gradient descent to 50,000 iterations with the top 10 words by mutual information.
+* Run gradient descent to 50,000 iterations with the better of these PLUS the hand crafted features from the framework.
+* Run gradient descent to 50,000 iterations of the previous setting with 100 words plus hand-crafted instead of 10.
 
-***
+#### N = 10
 
-```python
+  | Configurations   | Accuracy           |
+  | ---------------- | ------------------ |
+  | Top 10 Frequency | 0.8550932568149211 |
+  | Top 10 MI        | 0.9239598278335724 |
+  | Merged Features* | 0.9246771879483501 |
+  | Custom Features* | 0.9153515064562411 |
 
-for f in featureSelectionMethodsToTry:
-    (trainX, trainY, fParameters) = FeaturizeTraining(rawTrainX, rawTrainY, f)
-    (validationX, validationY) = FeaturizeValidation(rawValidationX, rawValidationY, f, fParameters)
+* Merged Features selected:
+  ['I', 'in', 'u', 'Call', 'To', 'the', 'my', 'Txt', 'to', 'is', 'you', 'FREE', 'a', 'claim', 'mobile', 'i', 'and', '&']
 
-for p in parametersToTry:
-    model.fit(trainX, trainY, p)
-    accuracies[p, f] = evaluate(validationY, model.predict(validationX))
-
-(bestPFound, bestFFound) = bestSettingFound(accuracies)
-
-(finalTrainX, finalTrainY, fParameters) =
-    FeaturizeTraining(rawTrainX + rawValidationX, rawTrainY + rawValidationY, bestFFound)
-
-(testX, testY) = FeaturizeValidation(rawTextX, rawTestY, bestFFound, fParameters)
-
-finalModel.fit(finalTrainX, finalTrainY, bestPFound)
-
-estimateOfGeneralizationPerformance = evaluate(testY, model.predict(testX))
-
-```
+* Custom Features selected:
+  ['I', 'Call', 'i', 'Free', 'claim', 'to', 'you', 'a', 'the', 'and', 'prize', 'www.', 'customer']
