@@ -50,7 +50,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     resolution = int(max_iters / iter_step)
     features = [x[0] for x in features]
     if not fname:
-        fname = 'iter_cnt_vs_accuracy_by_frequency_{}.png'.format(max_iters)
+        fname = 'iter_cnt_vs_accuracy_by_frequency_{}_N{}.png'.format(max_iters, N)
     img_fname = os.path.join(report_path, fname)
     title = "Accuracy Over Iteration by Top {} Frequency Features.".format(N)
     iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
