@@ -117,6 +117,7 @@ def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
             f_xTrain, f_yTrain, features, iter_step, resolution, initial_w0, step, max_iters)
 
         # predict using validation dataset
+        f_xVal = [[1] + x for x in f_xVal]
         f_yVal_predict = model.predict(f_xVal)
 
         # compare and count corrections
@@ -198,8 +199,8 @@ if __name__ == '__main__':
                                                                       yRaw)
 
     N = 10
-    max_iters = 50000
-    iter_step = 1000
+    max_iters = 5000
+    iter_step = 100
     step = 0.01
     initial_w0 = 0.0
     k = 5

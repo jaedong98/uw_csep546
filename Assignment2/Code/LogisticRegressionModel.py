@@ -36,7 +36,7 @@ class LogisticRegressionModel(object):
             ys_delta = array(yTrainPredicted) - array(yTrain)
             weights_descents.append([step * dot(ys_delta, xs) / n for xs in zip(*xTrain)])
             cnt += 1
-            
+
         n_weights = []
         for w, w_des in zip(self.weights, zip(*weights_descents)):
             n_weights.append(w - sum(w_des))
@@ -62,7 +62,7 @@ class LogisticRegressionModel(object):
     def predict(self, x):
 
         yhats = self.calculate_yhats(x)
-        return [1 if p > self.threshold else 0 for s in yhats]
+        return [1 if s > self.threshold else 0 for s in yhats]
 
     def predict_probabilities(self, x):
         return self.calculate_yhats(x)
