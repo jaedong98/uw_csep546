@@ -113,8 +113,8 @@ if __name__ == '__main__':
     features = ['I', 'Call', 'i', 'Free',
                 'claim', 'to', 'you', 'a', 'the', 'and',
                 'prize', 'www.', 'customer']
-    run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                    N, max_iters, iter_step, step, initial_w0, features)
+    #run_comparision(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+    #                N, max_iters, iter_step, step, initial_w0, features)
 
     # Top 100
     N = 100
