@@ -28,10 +28,11 @@ Hand in a clearly labeled table with:
 
 ## The accuracy estimates from the cross validations runs for the two model variants with error bound
 
-### TODO: * run k_fold_cross_validation.py with proper configuration.*
-  
-NOTE: if your gradient descent is slow (like mine is) these runs are going to start to take a long time. One possibility is to just-not-care — let it run over night or whatever. Another easy approach is to do several runs in parallel. You can do this manually or programmatically.
+* Accuracy Estimate from Cross Validation
 
-You could also choose to optimize your code, but don’t go overboard. That’s not the point of this assignment. In practice you should use an existing, highly-optimized implementation.
+  |      Feature Selections      |  TotalCorrect |       N       |           Accuracy           |            Upper             |            Lower             |
+  |------------------------------|---------------|---------------|------------------------------|------------------------------|------------------------------|
+  |       Top 10 Frequency       |      3294     |       10      |      0.7880382775119618      |      0.8004282490023151      |      0.7756483060216084      |
+  |          Top 10 MI           |      3891     |       10      |      0.9308612440191387      |      0.9385520381370541      |      0.9231704499012233      |
 
 ***
