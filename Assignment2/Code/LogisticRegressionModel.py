@@ -28,26 +28,25 @@ class LogisticRegressionModel(object):
         print("Initial: {}".format(self.weights))
         cnt = 0
         n = len(xTrain)
+        dot = np.dot
+        array = np.array
+        weights_descents = []
         while cnt < iterations:
             yTrainPredicted = self.calculate_yhats(xTrain)
-            for i, xs in enumerate(zip(*xTrain)):
-                ys_delta = np.array(yTrainPredicted) - np.array(yTrain)
-                partial_loss = np.dot(ys_delta, xs)
-                partial_derv_loss = partial_loss / n
-                self.weights[i] = self.weights[i] - step * partial_derv_loss
-
-            training_loss = self.loss_calculator(yTrainPredicted, yTrain)
-
+            ys_delta = array(yTrainPredicted) - array(yTrain)
+            weights_descents.append([step * dot(ys_delta, xs) / n for xs in zip(*xTrain)])
             cnt += 1
-        self.training_loss = training_loss
+            
+        n_weights = []
+        for w, w_des in zip(self.weights, zip(*weights_descents)):
+            n_weights.append(w - sum(w_des))
+        self.weights = n_weights
+        self.training_loss = self.loss_calculator(yTrainPredicted, yTrain)
 
-        return
 
     def loss_calculator(self, yPredicted, ys):
-        loss = 0
-        for y_hat, y in zip(yPredicted, ys):
-            loss += (-y * math.log(y_hat)) - ((1 - y) * (math.log(1.0-y_hat)))
-        return loss
+        log = math.log
+        return sum([log(1.0 - y_hat) if y == 0 else -y * log(y_hat) for y_hat, y in zip(yPredicted, ys)])
 
     def loss(self, xTest, yTest):
 
@@ -56,29 +55,14 @@ class LogisticRegressionModel(object):
 
     def calculate_yhats(self, x):
 
-        sigmoids = []
-
-        for example in x:
-            scores = [example[i] * self.weights[i]
-                      for i in range(len(example))]
-            # w0 is already in example, self.weights[0] + sum(scores)
-            z = sum(scores)
-            sigmoid = 1.0 / (1.0 + math.exp(-z))
-            sigmoids.append(sigmoid)
-
-        return sigmoids
+        exp = math.exp
+        dot = np.dot
+        return [1.0 / (1.0 + exp(-dot(d , self.weights))) for d in x]
 
     def predict(self, x):
 
         yhats = self.calculate_yhats(x)
-        predictions = []
-        for s in yhats:
-            if s > self.threshold:
-                predictions.append(1)
-            else:
-                predictions.append(0)
-
-        return predictions
+        return [1 if p > self.threshold else 0 for s in yhats]
 
     def predict_probabilities(self, x):
         return self.calculate_yhats(x)
