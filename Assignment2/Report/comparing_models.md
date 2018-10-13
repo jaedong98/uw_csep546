@@ -20,12 +20,11 @@ Hand in a clearly labeled table with:
 
 ## The accuracy estimates from the train/test split run with error bounds
 
-### TODO: Table TO BE UPDATED (with comparing_models.py)
-
-| Feature Selections | Accuracy           | Upper              | Lower              |
-| ------------------ | ------------------ | ------------------ | ------------------ |
-| Top 10 Frequency   | 0.5401721664275466 | 0.5552810251250209 | 0.5250633077300724 |
-| Top 10 MI          | 0.9239598278335724 | 0.9319953854766465 | 0.9159242701904984 |
+* Accuracy Estimates w/ Zn=1.96
+  |      Feature Selections      |           Accuracy           |            Upper             |            Lower             |
+  |------------------------------|------------------------------|------------------------------|------------------------------|
+  |       Top 10 Frequency       |      0.8550932568149211      |      0.8657645971081168      |      0.8444219165217254      |
+  |          Top 10 MI           |      0.9239598278335724      |      0.9319953854766465      |      0.9159242701904984      |
 
 ## The accuracy estimates from the cross validations runs for the two model variants with error bound
 
