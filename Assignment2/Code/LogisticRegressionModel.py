@@ -48,6 +48,7 @@ class LogisticRegressionModel(object):
         log = math.log
         return sum([log(1.0 - y_hat) if y == 0 else -y * log(y_hat) for y_hat, y in zip(yPredicted, ys)])
 
+
     def loss(self, xTest, yTest):
 
         yTestPredicted = self.calculate_yhats(xTest)
@@ -66,4 +67,3 @@ class LogisticRegressionModel(object):
 
     def predict_probabilities(self, x):
         return self.calculate_yhats(x)
-
