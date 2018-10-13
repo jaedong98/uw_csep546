@@ -119,7 +119,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     features = [x[0] for x in features]
 
     if not fname:
-        fname = 'iter_cnt_vs_accuracy_by_mi_{}.png'.format(max_iters)
+        fname = 'iter_cnt_vs_accuracy_by_mi_{}_N{}.png'.format(max_iters, N)
     img_fname = os.path.join(report_path, fname)
     
     title = "Accuracy Over Iteration by Top {} MI.".format(N)
