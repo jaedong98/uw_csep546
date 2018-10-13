@@ -7,7 +7,7 @@ import os
 import time
 
 import Assignment2Support as utils
-import EvaluationsStub
+import EvaluationsStub as es
 import LogisticRegressionModel as lgm
 import features_by_frequency as fbf
 import features_by_mi as fbm
@@ -50,12 +50,14 @@ def find_categrize_mistakes(xTrain, xTest, yTrain, yTest, features, iter_step, r
     model = utils.logistic_regression_model_by_features(
         xTrain, yTrain, features, iter_step, resolution, initial_w0, step, max_iters)
 
+    xTest = [[1] + x for x in xTest]
     # predict using validation dataset
     yTestPredicted_prob = model.predict_probabilities(xTest)
     yTestPredicted = model.predict(xTest)
 
     fn = []
     fp = []
+
     for i, (t, p) in enumerate(zip(yTest, yTestPredicted)):
         prob = yTestPredicted_prob[i]
         if (t, p) == (1, 0):  # false negative
@@ -67,7 +69,13 @@ def find_categrize_mistakes(xTrain, xTest, yTrain, yTest, features, iter_step, r
     sorted_fn = sorted(fn)
     # the true answer was 0, but gives very high probabilities.
     sorted_fp = sorted(fp, reverse=True)
-
+    print('*' * 80)
+    print('Total {} false netagives.'.format(len(sorted_fn)))
+    print('Total {} false positives.'.format(len(sorted_fp)))
+    print('False Netagives: {}'.format(sorted_fn))
+    print('False Positives: {}'.format(sorted_fp))
+    print(es.ConfusionMatrix(yTest, yTestPredicted))
+    print('*' * 80)
     return sorted_fn[:top], sorted_fp[:top]
 
 
@@ -93,11 +101,11 @@ if __name__ == '__main__':
                                                                       yRaw)
 
     N = 10
-    max_iters = 50
-    iter_step = 10
+    max_iters = 50000
+    iter_step = 1000
     resolution = int(max_iters / iter_step)
     initial_w0 = 0.0
-    step = 10
+    step = 0.01
     top = 20
 
     ############################################################################
