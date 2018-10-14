@@ -112,9 +112,11 @@
 
   I categorized the messages above based on the observation, which actually was based on N tokens. I think it helps model to understand the context of sms messages, which make model hard to make mistakes.
 
-  In the first problem, feature selection, the number of features selected would increase accuracy of prediction. Assuming we can utilized the performance optimized library and access to higher volumn of training data, we should be able to increase the accuracy than what currently we are getting in this homework.
+  In the first problem, feature selection, I learned that the number of features selected would increase accuracy of prediction. Assuming we can utilized the performance optimized library and access to higher volumn of training data, we should be able to increase the accuracy than what currently we are getting in this homework.
   
-  To categorize the messages, I used heuristic features listed above in table. But here are self-descriptive functions that i used. 
+  And also, if we generate modeling with randomly sorted data and more independent events, I think the performance of model would increase to handle test data incoming.
+
+  To categorize the messages, I used heuristic features listed above in table. An here are self-descriptive functions that i used. 
 
   ```python
 def many_uppers(line, U=3):

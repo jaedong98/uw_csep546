@@ -18,7 +18,7 @@ Run this ONLY on the previous training data (hold out the previous test data).
 
 Hand in a clearly labeled table with:
 
-## Verify that it is selecting the correct data into each fold.
+### Verify that it is selecting the correct data into each fold.
 
 I implemented below function and verified a list of objects can be folded by index.
 
@@ -79,14 +79,15 @@ trainings, validations = fold_data(xTrainRaw, 3)
 for t, v in zip(trainings, validations):
     print("Training: {} Validation: {}".format(t, v))
 
-# Outputs:
+# Code above produced output below:
+
 # Groupped xTrainRaw into 3 groups.
 # Training: ['b', 'c'] Validation: ['a']
 # Training: ['a', 'c'] Validation: ['b']
 # Training: ['a', 'b'] Validation: ['c']
 ```
 
-## The accuracy estimates from the train/test split run with error bounds
+### The accuracy estimates from the train/test split run with error bounds
 
 * Accuracy Estimates w/ Zn=1.96
   |      Feature Selections      |           Accuracy           |            Upper             |            Lower             |
@@ -94,9 +95,9 @@ for t, v in zip(trainings, validations):
   |       Top 10 Frequency       |      0.8550932568149211      |      0.8657645971081168      |      0.8444219165217254      |
   |          Top 10 MI           |      0.9239598278335724      |      0.9319953854766465      |      0.9159242701904984      |
 
-## The accuracy estimates from the cross validations runs for the two model variants with error bound
+### The accuracy estimates from the cross validations runs for the two model variants with error bound
 
-* Accuracy Estimate from Cross Validation
+* Accuracy Estimate from Cross Validation w/ Zn=1.96
 
   |      Feature Selections      |  TotalCorrect |       N       |           Accuracy           |            Upper             |            Lower             |
   |------------------------------|---------------|---------------|------------------------------|------------------------------|------------------------------|
