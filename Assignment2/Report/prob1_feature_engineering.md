@@ -54,6 +54,8 @@
 
 #### N = 10
 
+  Below is the results from 50,000 iteration with different configurations. Merged features is the one that combined top 10 frequency into top 10 mutual information. I also chose three additional words(features) and ran model with top 10 features. The accuracies over iteration was plotted below.
+
   | Configurations   | Accuracy           |
   | ---------------- | ------------------ |
   | Top 10 Frequency | 0.8550932568149211 |
@@ -70,6 +72,8 @@
 ![accuracy_comparison_top_10](accuracy_comparison_top_10.png)
 
 #### N = 100
+
+With N=100, I got much better accuracy as expected. The custom features below is the results from the custom case with N=10 and plotted to make the comparision easier between N=100 and N=10 (see plot below).
 
 |        Configurations        |           Accuracy           |
 |------------------------------|------------------------------|
