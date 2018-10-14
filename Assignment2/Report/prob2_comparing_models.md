@@ -18,6 +18,60 @@ Run this ONLY on the previous training data (hold out the previous test data).
 
 Hand in a clearly labeled table with:
 
+## Verify that it is selecting the correct data into each fold.
+
+I implemented below function and verified a list of objects can be folded by index.
+
+```python
+def fold_data(xTrainRaw, k):
+    """
+    Args:
+        xTrainRaw: a list of xTrainRaw data
+        k: number of folding
+    Returns:
+        (a list of training sets, a list of validation sets)
+    """
+    if not k > 1:
+        raise ValueError("Expected {} > 1".format(k))
+
+    # divid xTrainRaw data into k group
+    grouped_xTrainRaw = divide_into_group(xTrainRaw, k)
+    print("Groupped xTrainRaw into {} groups.".format(k))
+
+    trains = []
+    validations = []
+    for i in range(k):
+        group = list(grouped_xTrainRaw)
+        validation = group.pop(i)
+        train = list(itertools.chain.from_iterable(group))
+        trains.append(train)
+        validations.append(validation)
+
+    return trains, validations
+
+
+def divide_into_group(xTrainRaw, k):
+
+    cnt = len(xTrainRaw) / k
+    groups = []
+    last = 0.0
+
+    while last < len(xTrainRaw):
+        groups.append(xTrainRaw[int(last):int(last + cnt)])
+        last += cnt
+
+    if not len(xTrainRaw) == sum([len(g) for g in groups]):
+        raise AssertionError("Missing/Duplicated element {} vs {}"
+                             .format(len(xTrainRaw),
+                                     sum([len(g) for g in groups])))
+
+    if not len(groups) == k:
+        raise AssertionError("More or less groups found {} vs (expected){}"
+                             .format(len(groups), k))
+    return groups
+
+```
+
 ## The accuracy estimates from the train/test split run with error bounds
 
 * Accuracy Estimates w/ Zn=1.96

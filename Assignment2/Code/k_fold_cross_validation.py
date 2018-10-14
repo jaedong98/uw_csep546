@@ -7,7 +7,7 @@ import os
 import time
 
 import Assignment2Support as utils
-import EvaluationsStub
+import EvaluationsStub as ev
 import LogisticRegressionModel as lgm
 import features_by_frequency as fbf
 import features_by_mi as fbm
@@ -109,6 +109,7 @@ def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
     resolution = int(max_iters / iter_step)
     i = 0
     total_correct = 0
+    status = ''
     for f_xTrain, f_xVal, f_yTrain, f_yVal in zip(fold_xTrains, fold_xVals,
                                                   fold_yTrains, fold_yVals):
 
@@ -125,13 +126,22 @@ def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
             if p == v:
                 total_correct += 1
 
+        status += "Gradient descent for {}th folding".format(i)
+        status += '\n'
+        status += ev.EvaluateAll(f_yVal, f_yVal_predict)
+        status += '\n'
         print("Total correction: {}".format(total_correct))
 
         i += 1
 
     accuracy = total_correct / len(xTrain)
     print("Accuracy: {}".format(accuracy))
+    print("Summary:")
+    print(status)
 
+    if fname:
+        with open(fname, 'w') as f:
+            f.write(status)
     return accuracy
 
 
@@ -151,6 +161,7 @@ def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     # Top N frequency
     xTrain, xTest, f_features = get_features_by_frequency(
         xTrainRaw, xTestRaw, N)
+    fname = os.path.join(report_path, 'cross_validation_by_frequency_folding_evals_{}.md'.format(N))
     accuracy_by_frequency = calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest,
                                                      f_features,
                                                      N=N,
@@ -158,12 +169,14 @@ def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                                      iter_step=iter_step,
                                                      step=step,
                                                      initial_w0=initial_w0,
-                                                     k=k)
+                                                     k=k,
+                                                     fname=fname)
     #ub_f, lb_f = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # Top N Mutual Information
     xTrain, xTest, m_features = get_features_mi(
         xTrainRaw, yTrainRaw, xTestRaw, N)
+    fname = os.path.join(report_path, 'cross_validation_by_mi_folding_evals_{}.md'.format(N))
     accuracy_by_mi = calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest,
                                               m_features,
                                               N=N,
@@ -171,7 +184,8 @@ def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                               iter_step=iter_step,
                                               step=step,
                                               initial_w0=initial_w0,
-                                              k=k)
+                                              k=k,
+                                              fname=fname)
     #ub_m, lb_m = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # report table (including upper and lower bounds)

@@ -71,9 +71,11 @@
 
 #### N = 100
 
-### TODO: *Contents should be copied from:*
-
-*(feature_section_comparision.py)*
-*accuracy_comparision_by_feature_selections_100.md*
+|        Configurations        |           Accuracy           |
+|------------------------------|------------------------------|
+|      Top 100 Frequency       |      0.9591104734576757      |
+|          Top 100 MI          |      0.9655667144906743      |
+|       Merged Features*       |      0.9705882352941176      |
+|       Custom Features*       |      0.9153515064562411      |
 
 ![accuracy_comparison_top_100](accuracy_comparison_top_100.png)
