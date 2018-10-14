@@ -71,6 +71,20 @@ def divide_into_group(xTrainRaw, k):
     return groups
 
 ```
+And I tested with below code and verified the outputs:
+
+```python
+xTrainRaw = ['a', 'b', 'c']
+trainings, validations = fold_data(xTrainRaw, 3)
+for t, v in zip(trainings, validations):
+    print("Training: {} Validation: {}".format(t, v))
+
+# Outputs:
+# Groupped xTrainRaw into 3 groups.
+# Training: ['b', 'c'] Validation: ['a']
+# Training: ['a', 'c'] Validation: ['b']
+# Training: ['a', 'b'] Validation: ['c']
+```
 
 ## The accuracy estimates from the train/test split run with error bounds
 
