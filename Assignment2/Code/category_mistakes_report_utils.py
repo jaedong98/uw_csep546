@@ -95,6 +95,18 @@ def has_reply(line):
 def has_call_nums(line):
     return contains(line, r'(call \d+|text \d+)|reply')
 
+def has_dots(line):
+    return contains(line, r'\.\.')
+
+def has_lower_i(line):
+    return contains(line, ' i ')
+
+def very_long(line):
+    return lengthy_line(line, 120)
+
+def has_exlamations(line):
+    return contains(line, '.*!.*!')
+
 category_funcs = [has_call_nums, many_uppers, has_url, lengthy_line]
 
 def categorize(fname, category_funcs=category_funcs, w=20):
@@ -103,6 +115,7 @@ def categorize(fname, category_funcs=category_funcs, w=20):
     categories = [c.__name__ for c in category_funcs]
     table = '* Categorized Message'
     table += '\n  |{}|{}|{}|'.format('Message Index'.center(w), 'Type'.center(w), 'Category'.center(w))
+    table += '\n  |{}|{}|{}|'.format('-'*w,'-'*w,'-'*w)
     with open(fname, 'r') as f:
         l_cnt = 0
         cnt = 0
@@ -148,12 +161,15 @@ if __name__ == "__main__":
     print(categorize(fn_file))
     
     print('+' * 80)
+    L = 2000
+    
     fp_mcw = get_most_common_words(fp_file, N)
     print(fp_mcw)
     fp_lengthy = lengthy(fp_file, L)
     print(fp_lengthy)
     fp_uppers = has_uppers(fp_file, U)
     print(fp_uppers)
-    print(categorize(fp_file))
+    category_funcs = [has_exlamations, has_lower_i, has_dots, very_long]
+    print(categorize(fp_file, category_funcs))
     
     # https://medium.com/greyatom/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
