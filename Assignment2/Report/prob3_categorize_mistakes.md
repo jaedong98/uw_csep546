@@ -2,10 +2,11 @@
 
 ## Jae Dong Hwang
 
-**Implement a way to get the raw context for the samples where your model is most-wrong. Recall this includes examples where the true answer was 1, but the model gives very low probabilities, and examples where the true answer was 0, but gives very high probabilities.**
+### Implement a way to get the raw context for the samples where your model is most-wrong. Recall this includes examples where the true answer was 1, but the model gives very low probabilities, and examples where the true answer was 0, but gives very high probabilities.
 
 ### Produce a list of the 20 worst false positives made by running logistic regression on the initial train/test split with 10 mutual information features
-  * False Positive - the true answer was 0, but gives very high probabilities
+
+* False Positive - the true answer was 0, but gives very high probabilities
 
   | Probabilities | Test Raw |
   |-|-|
@@ -31,7 +32,7 @@
   |      0.9698845717052931      | That's ok. I popped in to ask bout something and she said you'd been in. Are you around tonght wen this girl comes?|
 
 ### Produce a list of the 20 worst false negatives made by running logistic regression on the initial train/test split with 10 mutual information features
-  * False Negatives - the true answer was 1, but the model gives very low probabilities
+* False Negatives - the true answer was 1, but the model gives very low probabilities
 
   | Probabilities | Test Raw |
   |-|-|
@@ -56,7 +57,7 @@
   |     0.06716028386908282      | Do you want 750 anytime any network mins 150 text and a NEW VIDEO phone for only five pounds per week call 08002888812 or reply for delivery tomorrow|
   |     0.06716028386908282      | We tried to contact you re our offer of New Video Phone 750 anytime any network mins HALF PRICE Rental camcorder call 08000930705 or reply for delivery Wed|
 
-* **Categorize the false positives into at least 4 categories.**
+### Categorize the false positives into at least 4 categories.
 
   |   Message Index    |        Type        |      Category      |
   |--------------------|--------------------|--------------------|
@@ -81,7 +82,7 @@
   |         18         |         3          |     very_long      |
   |         19         |         3          |     very_long      |
 
-* **Categorize the false negatives into at least 4 categories.**
+### Categorize the false negatives into at least 4 categories.
   
   |   Message Index    |        Type        |      Category      |
   |--------------------|--------------------|--------------------|

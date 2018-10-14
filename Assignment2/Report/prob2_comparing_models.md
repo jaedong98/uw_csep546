@@ -2,23 +2,7 @@
 
 ## Jae Dong Hwang
 
-Implement code to estimate the 95% range for your accuracy estimates. In the future always include 95% confidence ranges whenever you turn in accuracy estimates.
-
-Recall:
-Upper = Accuracy + 1.96 * sqrt((Accuracy * (1 - Accuracy) / n))
-Lower = Accuracy - 1.96 * sqrt((Accuracy * (1 - Accuracy) / n))
-
-Evaluate two settings from your feature selection assignment: 10 words selected by mutual information and 10 words selected by frequency).
-
-Implement cross validation that supports any number of folds from 2 to n. Verify that it is selecting the correct data into each fold. Be prepared to run all current evaluations on the result (precision, recall, false positive rate, false negative rate).
-
-Run a 5 fold crossvalidation evaluation of tw models from the previous assignment (10 words selected with mutual info, 10 words selected with frequency).
-
-Run this ONLY on the previous training data (hold out the previous test data).
-
-Hand in a clearly labeled table with:
-
-### Verify that it is selecting the correct data into each fold.
+### Verify that cross validations is selecting the correct data into each fold.
 
 I implemented below function and verified a list of objects can be folded by index.
 
