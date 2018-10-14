@@ -93,18 +93,20 @@ def get_features_mi(xTrainRaw, yTrainRaw, xTestRaw, N):
     return xTrain, xTest, features
 
 
-def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
+def calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
+                             N=10,
                              max_iters=50000, iter_step=1000, step=0.01,
                              initial_w0=0.0, report_path=report_path, fname='',
-                             k=5):
+                             k=5,
+                             selection_by='frequency'):
     """
     Calculatge the accracy of cross validation using gradient descent.
     Returns: accuracy from cross validation.
     """
 
     # folding data into Train vs Validation
-    fold_xTrains, fold_xVals = fold_data(xTrain, k)
-    fold_yTrains, fold_yVals = fold_data(yTrain, k)
+    fold_xTrains, fold_xVals = fold_data(xTrainRaw, k)
+    fold_yTrains, fold_yVals = fold_data(yTrainRaw, k)
 
     resolution = int(max_iters / iter_step)
     i = 0
@@ -112,6 +114,17 @@ def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
     status = ''
     for f_xTrain, f_xVal, f_yTrain, f_yVal in zip(fold_xTrains, fold_xVals,
                                                   fold_yTrains, fold_yVals):
+
+        # extrace features from folded xTrain
+        if selection_by == 'frequency':
+            features = fbf.extract_features_by_frequency(f_xTrain, N)
+        else:
+            features, _ = fbm.extract_features_by_mi(f_xTrain, f_yTrain, N)
+        features = [x[0] for x in features]
+
+        # feature engineering on folded xTrain
+        f_xTrain = utils.FeaturizeTrainingByWords(f_xTrain, features)
+        f_xVal = utils.FeaturizeTrainingByWords(f_xVal, features)
 
         print("Gradient descent for {}th folding".format(i))
         model = utils.logistic_regression_model_by_features(
@@ -125,16 +138,17 @@ def calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest, features, N=10,
         for p, v in zip(f_yVal_predict, f_yVal):
             if p == v:
                 total_correct += 1
-
-        status += "Gradient descent for {}th folding".format(i)
+        status += '\n'
+        status += "\nGradient descent for {}th folding".format(i)
         status += '\n'
         status += ev.EvaluateAll(f_yVal, f_yVal_predict)
         status += '\n'
+        status += 'Features selected: {}'.format(features)
         print("Total correction: {}".format(total_correct))
 
         i += 1
 
-    accuracy = total_correct / len(xTrain)
+    accuracy = total_correct / len(xTrainRaw)
     print("Accuracy: {}".format(accuracy))
     print("Summary:")
     print(status)
@@ -157,53 +171,46 @@ def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
     yTrain = yTrainRaw
     yTest = yTestRaw
-
     # Top N frequency
-    xTrain, xTest, f_features = get_features_by_frequency(
-        xTrainRaw, xTestRaw, N)
-    fname = os.path.join(report_path, 'cross_validation_by_frequency_folding_evals_{}.md'.format(N))
-    accuracy_by_frequency = calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest,
-                                                     f_features,
+    fname = os.path.join(
+        report_path, 'cross_validation_by_frequency_folding_evals_{}.md'.format(N))
+    accuracy_by_frequency = calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
                                                      N=N,
                                                      max_iters=max_iters,
                                                      iter_step=iter_step,
                                                      step=step,
                                                      initial_w0=initial_w0,
                                                      k=k,
-                                                     fname=fname)
-    #ub_f, lb_f = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
+                                                     fname=fname,
+                                                     selection_by='frequency')
+    # ub_f, lb_f = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # Top N Mutual Information
-    xTrain, xTest, m_features = get_features_mi(
-        xTrainRaw, yTrainRaw, xTestRaw, N)
-    fname = os.path.join(report_path, 'cross_validation_by_mi_folding_evals_{}.md'.format(N))
-    accuracy_by_mi = calculate_accuracy_by_cv(xTrain, xTest, yTrain, yTest,
-                                              m_features,
+    fname = os.path.join(
+        report_path, 'cross_validation_by_mi_folding_evals_{}.md'.format(N))
+    accuracy_by_mi = calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
                                               N=N,
                                               max_iters=max_iters,
                                               iter_step=iter_step,
                                               step=step,
                                               initial_w0=initial_w0,
                                               k=k,
-                                              fname=fname)
-    #ub_m, lb_m = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
+                                              fname=fname,
+                                              selection_by='mi')
+    # ub_m, lb_m = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
 
     # report table (including upper and lower bounds)
     accuracies = [accuracy_by_frequency, accuracy_by_mi]
     legends = ["Top 10 Frequency", "Top 10 MI "]
     table = utils.table_for_cross_validation_accuracy_estimate(accuracies,
                                                                legends,
-                                                               len(xTrain),
+                                                               len(xTrainRaw),
                                                                N, zn)
     print(table)
     cm_md = os.path.join(report_path,
                          '{}_N{}_k{}.md'.format(inspect.stack()[0][3], N, k))
     with open(cm_md, 'w') as f:
         f.write(table)
-        f.write("\n")
-        f.write("\n Features by Frequency: {}".format(f_features))
-        f.write("\n")
-        f.write("\n Features by Mutual Information: {}".format(m_features))
 
 
 if __name__ == '__main__':

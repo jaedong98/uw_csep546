@@ -1,3 +1,5 @@
+
+
 Gradient descent for 0th folding
 * Statistics: 
 
@@ -10,6 +12,8 @@ Precision: 0.0
 Recall: 0.0
 FPR: 0.0
 FNR: 1.0
+Features selected: ['to', 'you', 'I', 'a', 'the', 'and', 'is', 'in', 'i', 'u']
+
 Gradient descent for 1th folding
 * Statistics: 
 
@@ -22,6 +26,8 @@ Precision: 0.0
 Recall: 0.0
 FPR: 0.0
 FNR: 1.0
+Features selected: ['to', 'you', 'I', 'a', 'the', 'and', 'in', 'is', 'i', 'u']
+
 Gradient descent for 2th folding
 * Statistics: 
 
@@ -34,6 +40,8 @@ Precision: 0.24213836477987422
 Recall: 0.7549019607843137
 FPR: 0.32833787465940056
 FNR: 0.24509803921568626
+Features selected: ['to', 'you', 'I', 'a', 'the', 'and', 'is', 'in', 'i', 'u']
+
 Gradient descent for 3th folding
 * Statistics: 
 
@@ -46,6 +54,8 @@ Precision: 0.23423423423423423
 Recall: 0.6610169491525424
 FPR: 0.3551532033426184
 FNR: 0.3389830508474576
+Features selected: ['to', 'you', 'I', 'a', 'the', 'and', 'is', 'in', 'i', 'u']
+
 Gradient descent for 4th folding
 * Statistics: 
 
@@ -58,3 +68,4 @@ Precision: 0.0
 Recall: 0.0
 FPR: 0.0
 FNR: 1.0
+Features selected: ['to', 'you', 'I', 'a', 'the', 'and', 'is', 'in', 'i', 'u']
