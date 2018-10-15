@@ -60,10 +60,11 @@ class LogisticRegressionModel(object):
         dot = np.dot
         return [1.0 / (1.0 + exp(-dot(d , self.weights))) for d in x]
 
-    def predict(self, x):
-
+    def predict(self, x, threshold=None):
+        if not threshold:
+            threshold = self.threshold
         yhats = self.calculate_yhats(x)
-        return [1 if s > self.threshold else 0 for s in yhats]
+        return [1 if s > threshold else 0 for s in yhats]
 
     def predict_probabilities(self, x):
         return self.calculate_yhats(x)
