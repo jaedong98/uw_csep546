@@ -209,11 +209,19 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
     print("Saved/Updated image {}".format(img_fname))
 
 
-def draw_comparison(data, xlabel, ylabel, title, img_fname, lengends):
+def draw_comparison(data, xlabel, ylabel, title, img_fname, legends):
     """
     data: a list of [[(x1, y1), (x2, y2), ...], [(t1, s1), (t2, s2), ...], ...]
     """
     draw_accuracies(data, xlabel, ylabel, title, img_fname, legends)
+
+def write_csv(data, csv_fname, headers=[]):
+
+    with open(csv_fname, 'w') as f:
+        if headers:
+            f.write(','.join(headers))
+        for r in data:
+            f.write('\n{}'.format(','.join([str(x) for x in r])))
 
 def accuracy_table(accuracies, features, w=20):
 
@@ -272,7 +280,7 @@ def table_for_mi(n11, n10, n01, n00, feature, w=15):
     return table
 
 
-def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, img_fname=None, title="", predict_threshold=0.5, return_last_evals=False):
+def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, img_fname=None, title="", predict_threshold=0.5, return_model=False):
     """
     Args:
         features: a list of features(words)
@@ -307,8 +315,8 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
         draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
                         title, img_fname, [])
 
-    if return_last_evals:
-        return EvaluationsStub.Evaluation(yTest, yTestPredicted)
+    if return_model:
+        return model
 
     return iter_cnt_vs_loss, iter_cnt_vs_accuracy
 
