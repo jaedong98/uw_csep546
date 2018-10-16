@@ -157,11 +157,13 @@ def exclude(msg):
     return 1
 
 
-def draw_single_plot(tuples, xlabel, ylabel, title, img_fname):
+def draw_single_plot(tuples, xlabel, ylabel, title, img_fname, legends=None):
     t, s = zip(*tuples)
     fig, ax = plt.subplots()
     ax.plot(t, s)
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    if legends:
+        ax.legend(legends)
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
@@ -206,6 +208,12 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
 
+
+def draw_comparison(data, xlabel, ylabel, title, img_fname, lengends):
+    """
+    data: a list of [[(x1, y1), (x2, y2), ...], [(t1, s1), (t2, s2), ...], ...]
+    """
+    draw_accuracies(data, xlabel, ylabel, title, img_fname, legends)
 
 def accuracy_table(accuracies, features, w=20):
 
@@ -264,7 +272,7 @@ def table_for_mi(n11, n10, n01, n00, feature, w=15):
     return table
 
 
-def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, img_fname=None, title=""):
+def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features, iter_step, resolution, initial_w0, step, max_iters, img_fname=None, title="", predict_threshold=0.5, return_last_evals=False):
     """
     Args:
         features: a list of features(words)
@@ -281,13 +289,14 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
 
     iter_cnt_vs_loss = []
     iter_cnt_vs_accuracy = []
+
     for i, iters in enumerate([iter_step] * resolution):
         fit_tic = time.time()
         model.fit(xTrain, yTrain, iterations=iters, step=step)
         fit_toc = time.time() - fit_tic
         iter_cnt = iter_step * (i + 1)
         print("Took {} sec. Fitted data for {} iterations".format(fit_toc, iter_cnt))
-        yTestPredicted = model.predict(xTest)
+        yTestPredicted = model.predict(xTest, threshold=predict_threshold)
         test_loss = model.loss(xTest, yTest)
         iter_cnt_vs_loss.append((iter_cnt, test_loss))
         test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
@@ -297,6 +306,9 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
     if img_fname:
         draw_accuracies([iter_cnt_vs_accuracy], 'Iterations', 'Accuracy',
                         title, img_fname, [])
+
+    if return_last_evals:
+        return EvaluationsStub.Evaluation(yTest, yTestPredicted)
 
     return iter_cnt_vs_loss, iter_cnt_vs_accuracy
 

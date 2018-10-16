@@ -116,3 +116,12 @@ def EvaluateAll(y, yPredicted):
     results += "\nFNR: {}".format(FalseNegativeRate(y, yPredicted))
 
     return results
+
+class Evaluation():
+
+    def __init__(self, y, yPredicted):
+        self.accuracy = Accuracy(y, yPredicted)
+        self.precision = Precision(y, yPredicted)
+        self.recall = Recall(y, yPredicted)
+        self.fpr = FalsePositiveRate(y, yPredicted)
+        self.fnr = FalseNegativeRate(y, yPredicted)
