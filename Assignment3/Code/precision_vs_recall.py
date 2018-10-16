@@ -23,7 +23,7 @@ report_path = os.path.join(os.path.dirname(
 
 def run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
                                      max_iters=50000, iter_step=1000, step=0.01,
-                                     initial_w0=0.0, report_path=report_path, fname='',
+                                     initial_w0=0.0, report_path=report_path,
                                      predict_thresholds=[0.5],
                                      additional_features=[]):
     
@@ -47,13 +47,14 @@ def run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=10
                                                       step, max_iters,
                                                       return_model=True)
     precisions_vs_recalls = []
+    thresholds_fp_fn = []
     for predict_threshold in predict_thresholds:
         
         yTestPredicted = model.predict(xTest, predict_threshold)
         evaluation = EvaluationsStub.Evaluation(yTest, yTestPredicted)
         precisions_vs_recalls.append((evaluation.recall, evaluation.precision))
-
-    return precisions_vs_recalls
+        thresholds_fp_fn.append((predict_threshold, evaluation.fpr, evaluation.fnr))
+    return precisions_vs_recalls, thresholds_fp_fn
 
 
 
@@ -67,27 +68,32 @@ if __name__ == '__main__':
     yTrain = yTrainRaw
     yTest = yTestRaw
     predict_thresholds = list(np.linspace(0.01, 0.99, 101))
-    max_iters = 500
-    iter_step = 100
+    max_iters = 50000
+    iter_step = 1000
     step = 0.01
     initial_w0 = 0.0
     N = 10
-    fname = 'precision_vs_recall_{}_thresholds.png'.format(len(predict_thresholds))
-    prs1 = run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=N,
-                                        max_iters=max_iters, iter_step=iter_step, step=step,
-                                        initial_w0=initial_w0, fname=fname,
-                                        predict_thresholds=predict_thresholds)
-    csv_fname = os.path.join(report_path, fname.replace('.png', '.csv'))
-    utils.write_csv(prs1, csv_fname, headers=["Recall", "Precision"])
 
-    fname = 'precision_vs_recall_{}_thresholds_w_additional.png'.format(len(predict_thresholds))
-    prs2 = run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=N,
+    ##
+    prs1, fp_fn1 = run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=N,
                                         max_iters=max_iters, iter_step=iter_step, step=step,
-                                        initial_w0=initial_w0, fname=fname,
+                                        initial_w0=initial_w0,
+                                        predict_thresholds=predict_thresholds)
+    csv_fname = os.path.join(report_path, 'precision_vs_recall_{}_thresholds.csv'.format(max_iters))
+    utils.write_csv(prs1, csv_fname, headers=["Recall", "Precision"])
+    csv_fname = os.path.join(report_path, 'thresholds_fpr_fnr_{}_thresholds.csv'.format(max_iters))
+    utils.write_csv(fp_fn1, csv_fname, headers=["Thresholds", "False Positive Rate", "False Negative Rate"])
+
+    ##
+    prs2, fp_fn2 = run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=N,
+                                        max_iters=max_iters, iter_step=iter_step, step=step,
+                                        initial_w0=initial_w0,
                                         predict_thresholds=predict_thresholds,
                                         additional_features=['call', 'to', 'your'])
-    csv_fname = os.path.join(report_path, fname.replace('.png', '.csv'))
+    csv_fname = os.path.join(report_path, 'precision_vs_recall_{}_thresholds_w_additional.csv'.format(len(predict_thresholds)))
     utils.write_csv(prs2, csv_fname, headers=["Recall", "Precision"])
+    csv_fname = os.path.join(report_path, 'thresholds_fpr_fnr_{}_thresholds_w_additional.csv'.format(max_iters))
+    utils.write_csv(fp_fn1, csv_fname, headers=["Thresholds", "False Positive Rate", "False Negative Rate"])
 
     title = "Precision vs. Recalls"
     legends = ['Top 10 MI', 'Top 10 MI with +3']
