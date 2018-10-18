@@ -94,7 +94,7 @@ def split(feature_index, xTrains, yTrains):
     # gather all values of feature xTrain[i]
     values_by_features = [x for x in zip(*xTrains)]
     unique_values = list(set(values_by_features[feature_index]))
-    threshold = sum(unique_values) / len(unique_values)
+    threshold = (max(unique_values) - min(unique_values)) / 2
 
     l_xTrains, l_yTrains = [], []
     r_xTrains, r_yTrains = [], []
