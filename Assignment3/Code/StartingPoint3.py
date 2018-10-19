@@ -31,6 +31,11 @@ print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 yTrain = yTrainRaw
 yTest = yTestRaw
 
-
-tree = dtm.build_tree(xTrain, yTrain, 100)
+min_to_stop = 100
+accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
+tree = dtm.build_tree(xTrain, yTrain, min_to_stop)
 dtm.print_tree(tree)
+with open(accuracy_md, 'w') as file_obj:
+    file_obj.write('Decision Tree with minToStop={}'.format(min_to_stop))
+    dtm.write_tree(tree, file_obj)
+
