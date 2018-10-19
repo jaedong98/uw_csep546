@@ -136,7 +136,7 @@ def get_entropy_S(yTrains):
 
 def get_information_gains(xTrains, yTrains):
     """
-
+    Calculates information gains for all features.
     :param xTrains: examples from training data,
                     [[outlook_0, temperature_0, humidity_0, wind_0],[],...]
     :param yTrains: a list of target attribute, [0, 1, 0, 0,...]
@@ -149,47 +149,18 @@ def get_information_gains(xTrains, yTrains):
     return gains
 
 
-def split(node, min_to_stop=100):
-
-    ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains)) = node['groups']
-    del(node['groups'])
-    
-    if not l_xTrains and r_xTrains:
-        node['left'] = None
-        node['right'] = get_split(r_xTrains, r_yTrains)
-        return
-
-    if l_xTrains and not r_xTrains:
-        node['left'] = get_split(l_xTrains, l_yTrains)
-        node['right'] = None
-        return
-
-    if sum(l_yTrains) == 0 and sum(r_yTrains) == 0:  # all 0
-        node['left'] = node['right'] = 0
-        return
-    
-    if all(l_yTrains) and all(r_yTrains):  # all 1
-        node['left'] = node['right'] = 1
-        return
-    
-    if len(l_yTrains) < min_to_stop:
-        node['left'] = Counter(l_yTrains).most_common(1)[0][0]
-    else:
-        node['left'] = get_split(l_xTrains, l_yTrains)
-        split(node['left'], min_to_stop)
-
-    if len(r_yTrains) < min_to_stop:
-        node['right'] = Counter(r_yTrains).most_common(1)[0][0]
-    else:
-        node['right'] = get_split(r_xTrains, r_yTrains)
-        split(node['right'], min_to_stop)
-
-
 def get_split(xTrains, yTrains):
     """
     Split dataset and create a node based on the feature [i] who has highest information gain.
-    Returns:
-        an instance of Node
+
+    :param xTrains: examples from training data,
+                    [[outlook_0, temperature_0, humidity_0, wind_0],[],...]
+    :param yTrains: a list of target attribute, [0, 1, 0, 0,...]
+
+    :returns
+        an instance of Node dict {'index': the index of feature selected,
+                                  'gain': info. gain,
+                                  'groups': [((examples), (ys)), ((examples), (ys))]}
     """
     i_gails = get_information_gains(xTrains, yTrains)
     feature_index = i_gails.index(max(i_gails))
@@ -199,8 +170,13 @@ def get_split(xTrains, yTrains):
 
 def split_by_feature(feature_index, xTrains, yTrains):
     """
-        Calculates the threshold based on the feature values at i and split data 
-        into two groups.
+    Calculates the threshold based on the feature values at i and split data
+    into two groups.
+    :param xTrains: examples from training data,
+                    [[outlook_0, temperature_0, humidity_0, wind_0],[],...]
+    :param yTrains: a list of target attribute, [0, 1, 0, 0,...]
+    :returns:
+        ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains))
     """
     if not len(xTrains) == len(yTrains):
         raise ValueError("Unmatched xTrains({}) and yTrains({})".format(
@@ -218,7 +194,7 @@ def split_by_feature(feature_index, xTrains, yTrains):
     l_xTrains, l_yTrains = [], []
     r_xTrains, r_yTrains = [], []
     for xTrain, yTrain in zip(xTrains, yTrains):
-        if xTrain[feature_index] < threshold:
+        if xTrain[feature_index] > threshold:
             l_xTrains.append(xTrain)
             l_yTrains.append(yTrain)
         else:
@@ -230,7 +206,36 @@ def split_by_feature(feature_index, xTrains, yTrains):
     return ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains))
 
 
-# Build a decision tree
+def split(node, min_to_stop=100):
+    ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains)) = node['groups']
+    del (node['groups'])
+
+    if not l_xTrains or not r_xTrains:
+        ys = l_yTrains + r_yTrains
+        node['left'] = node['right'] = Counter(ys).most_common(1)[0][0]
+        return
+
+    if sum(l_yTrains) == 0 and sum(r_yTrains) == 0:  # all 0
+        node['left'] = node['right'] = 0
+        return
+
+    if all(l_yTrains) and all(r_yTrains):  # all 1
+        node['left'] = node['right'] = 1
+        return
+
+    if len(l_yTrains) < min_to_stop:
+        node['left'] = Counter(l_yTrains).most_common(1)[0][0]
+    else:
+        node['left'] = get_split(l_xTrains, l_yTrains)
+        split(node['left'], min_to_stop)
+
+    if len(r_yTrains) < min_to_stop:
+        node['right'] = Counter(r_yTrains).most_common(1)[0][0]
+    else:
+        node['right'] = get_split(r_xTrains, r_yTrains)
+        split(node['right'], min_to_stop)
+
+
 def build_tree(xTrains, yTrains, min_to_stop=100):
     root = get_split(xTrains, yTrains)
     split(root, min_to_stop)

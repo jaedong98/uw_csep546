@@ -77,7 +77,10 @@ class TestDecisionTreeModel(unittest.TestCase):
         self.assertAlmostEqual(gain, 0.048, 3)
 
     def test_get_information_gains(self):
-        """Construct xTrains data to have same data structure from original framework."""
+        """
+        Construct xTrains data to have same data structure
+        from original framework.
+        """
         # Mitchell, page 59 and 60
         humidity = [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]  # high = 0
         wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
@@ -92,16 +95,28 @@ class TestDecisionTreeModel(unittest.TestCase):
         humidity = [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]  # high = 0
         wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
         play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
-        xTrains = [[h, w] for h, w in zip(humidity, wind)]
-        node = dtm.get_split(xTrains, play_tennis)
 
         # pick humidity as a feature to split
+        xTrains = [[h, w] for h, w in zip(humidity, wind)]
+        node = dtm.get_split(xTrains, play_tennis)
         self.assertTrue(node['index'] == 0)
 
         # swap the orders in feature.
         xTrains = [[w, h] for w, h in zip(wind, humidity)]
         node = dtm.get_split(xTrains, play_tennis)
         self.assertTrue(node['index'] == 1)
+
+
+    def test_split(self):
+
+        # Given a node and grow tree recursively until it meets the stop requirements.
+        humidity =    [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]  # high = 0
+        wind =        [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
+        play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+        xTrains = [[h, w] for h, w in zip(humidity, wind)]
+        node = dtm.get_split(xTrains, play_tennis)
+        dtm.split(node, min_to_stop=2)
+        dtm.print_tree(node)
 
 if __name__ == '__main__':
     unittest.main()
