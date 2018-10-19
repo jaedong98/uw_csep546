@@ -47,9 +47,12 @@ accuracies = []
 start = 100
 end = 1010
 step = 10
+best_accuracy = 0
+min_to_stop_at_best_accuracy = 0
+
+model = dtm.DecisionTreeModel()
 for min_to_stop in [x for x in range(start, end, step)]:
     accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
-    model = dtm.DecisionTreeModel()
     model.fit(xTrain, yTrain, min_to_stop)
     model.visualize()
 
@@ -63,6 +66,10 @@ for min_to_stop in [x for x in range(start, end, step)]:
     min_to_stops.append(min_to_stop)
     accuracies.append((lower, accuracy, upper))
 
+    if accuracy > best_accuracy:
+        best_accuracy = accuracy
+        min_to_stop_at_best_accuracy = min_to_stop
+
 
 img_fname = os.path.join(report_path,
                          'prob2_part2_accuracy_{}_{}_{}.png'
@@ -75,3 +82,18 @@ utils.draw_accuracies_vs_min_to_stps(min_to_stops,
                                      'Accuracies vs. MinToStops',
                                      img_fname,
                                      ['Lower Bound', 'Accuracy Estimates', 'Upper Bound'])
+
+tunning_result = "* Best accuracy {} with MinToStop {}"\
+    .format(best_accuracy, min_to_stop_at_best_accuracy)
+print(tunning_result)
+
+tuning_md = os.path.join(report_path, 'prob2_part2_tuning_min_to_stop.md')
+with open(tuning_md, 'w') as f:
+    f.write(tunning_result)
+    f.write("\n* Model visualization with min to stop {}"
+            .format(min_to_stop_at_best_accuracy))
+    model.fit(xTrain, yTrain, min_to_stop_at_best_accuracy)
+    model.visualize(f)
+
+# ROC curve comparision
+
