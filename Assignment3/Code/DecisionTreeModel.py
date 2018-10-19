@@ -165,7 +165,10 @@ def get_split(xTrains, yTrains):
     i_gails = get_information_gains(xTrains, yTrains)
     feature_index = i_gails.index(max(i_gails))
     groups = split_by_feature(feature_index, xTrains, yTrains)
-    return {'index': feature_index, 'gain': max(i_gails), 'groups': groups}
+
+    return {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
+            'num_label_1': groups[0][1].count(1),
+            'num_label_0': groups[0][1].count(0)}
 
 
 def split_by_feature(feature_index, xTrains, yTrains):
@@ -194,7 +197,7 @@ def split_by_feature(feature_index, xTrains, yTrains):
     l_xTrains, l_yTrains = [], []
     r_xTrains, r_yTrains = [], []
     for xTrain, yTrain in zip(xTrains, yTrains):
-        if xTrain[feature_index] > threshold:
+        if xTrain[feature_index] >= threshold:
             l_xTrains.append(xTrain)
             l_yTrains.append(yTrain)
         else:
@@ -247,16 +250,10 @@ def print_tree(node, depth=0, indent='    '):
 
     if isinstance(node, dict):
         print('{}Feature {}: '.format(str(depth * indent), node['index']))
-        try:
-            left = node['left']
-            right = node['right']
-            if isinstance(node['left'], dict):
-                left = len(node['left'])
-            if isinstance(node['right'], dict):
-                right = len(node['right'])
-        except KeyError as ke:
-            raise ke
-        print('{}    >= 0.5: TODO!!!! <num with label 1> <num with label 0>Leaf: {} vs {}'.format(str(depth * indent), left, right))
+        num_label_1 = node['num_label_1']
+        num_label_0 = node['num_label_0']
+        print('{}    >= 0.5:'.format(str(depth * indent)))
+        print('{}    Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
         print('{}    < 0.5:'.format(str(depth * indent)))
         if 'left' in node:
             print_tree(node['left'], depth+1)

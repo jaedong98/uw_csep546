@@ -115,7 +115,7 @@ class TestDecisionTreeModel(unittest.TestCase):
         play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
         xTrains = [[h, w] for h, w in zip(humidity, wind)]
         node = dtm.get_split(xTrains, play_tennis)
-        dtm.split(node, min_to_stop=2)
+        dtm.split(node, min_to_stop=1)
         dtm.print_tree(node)
 
 if __name__ == '__main__':
