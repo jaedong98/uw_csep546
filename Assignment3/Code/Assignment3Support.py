@@ -116,7 +116,66 @@ def Featurize(xTrainRaw, xTestRaw):
         xTest.append(features)
 
     return (xTrain, xTest)
-    
+
+
+def FeaturizeWNumericFeature(xTrainRaw, xTestRaw):
+    """
+    https://canvas.uw.edu/courses/1233238/assignments/4455449
+    :param xTrainRaw: a list of training string data
+    :param xTestRaw: a list of test string data
+    :return:
+    """
+
+    words = ['call', 'to', 'your']
+
+    # featurize the training data, may want to do multiple passes to count things.
+    xTrain = []
+    for x in xTrainRaw:
+        features = []
+
+        # Have a feature for the length
+        features.append(len(x))
+
+        # Have a feature for texts with numbers in them
+        if (any(i.isdigit() for i in x)):
+            features.append(1)
+        else:
+            features.append(0)
+
+        # Have features for a few words
+        for word in words:
+            if word in x:
+                features.append(1)
+            else:
+                features.append(0)
+
+        xTrain.append(features)
+
+    # now featurize test using any features discovered on the training set. Don't use the test set to influence which features to use.
+    xTest = []
+    for x in xTestRaw:
+        features = []
+
+        # Have a feature for the length
+        features.append(len(x))
+
+        # Have a feature for texts with numbers in them
+        if (any(i.isdigit() for i in x)):
+            features.append(1)
+        else:
+            features.append(0)
+
+        # Have features for a few words
+        for word in words:
+            if word in x:
+                features.append(1)
+            else:
+                features.append(0)
+
+        xTest.append(features)
+
+    return (xTrain, xTest)
+
 
 def GetAllDataExceptFold(xRaw, yRaw, i):
     pass

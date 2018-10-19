@@ -81,8 +81,15 @@ def get_feature_dict(xTrains, yTrains):
     if yTrains.count(1) == yTrains.count(0):  # same counts for target attributes
         return feature_dict
 
+    feature_threshold = None
+    if not set(xTrains) == set([0, 1]):
+        feature_threshold = (max(xTrains) - min(xTrains)) / 2
+
     for x, y in zip(xTrains, yTrains):
-        feature_dict[x][y] += 1
+        if feature_threshold:
+            feature_dict[int(feature_threshold <= x)][y] += 1
+        else:
+            feature_dict[x][y] += 1
 
     return feature_dict
 

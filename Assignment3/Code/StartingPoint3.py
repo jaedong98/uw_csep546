@@ -1,12 +1,7 @@
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
 import os
-import time
 
 import Assignment3Support as utils
 import EvaluationsStub
-import LogisticRegressionModel as lgm
 import DecisionTreeModel as dtm
 # File/Folder path
 kDataPath = os.path.join(os.path.dirname(
@@ -20,7 +15,6 @@ report_path = os.path.join(os.path.dirname(
 (xRaw, yRaw) = utils.LoadRawData(kDataPath)
 
 # Train-Test split
-# TODO: splitting data into train, validation, test?
 (xTrainRaw, yTrainRaw, xTestRaw,
  yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
 
@@ -31,6 +25,7 @@ print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 yTrain = yTrainRaw
 yTest = yTestRaw
 
+# part 1
 min_to_stop = 100
 accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
 model = dtm.DecisionTreeModel()
