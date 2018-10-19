@@ -83,7 +83,18 @@ def get_information_gains(xTrains, yTrains):
 def split(node, min_to_stop=100):
 
     ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains)) = node['groups']
+    del(node['groups'])
     
+    if not l_xTrains and r_xTrains:
+        node['left'] = None
+        node['right'] = get_split(r_xTrains, r_yTrains)
+        return
+
+    if l_xTrains and not r_xTrains:
+        node['left'] = get_split(l_xTrains, l_yTrains)
+        node['right'] = None
+        return
+
     if sum(l_yTrains) == 0 and sum(r_yTrains) == 0:  # all 0
         node['left'] = node['right'] = 0
         return
@@ -115,6 +126,7 @@ def get_split(xTrains, yTrains):
     feature_index = i_gails.index(max(i_gails))
     groups = split_by_feature(feature_index, xTrains, yTrains)
     return {'index': feature_index, 'gain': max(i_gails), 'groups': groups}
+
 
 def split_by_feature(feature_index, xTrains, yTrains):
     """
@@ -148,21 +160,24 @@ def split_by_feature(feature_index, xTrains, yTrains):
         len(xTrains), len(l_xTrains), len(r_xTrains)))
     return ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains))
 
-    # Build a decision tree
+
+# Build a decision tree
 def build_tree(xTrains, yTrains, min_to_stop=100):
-	root = get_split(xTrains, yTrains)
-	split(root, min_to_stop)
-	return root
+    root = get_split(xTrains, yTrains)
+    split(root, min_to_stop)
+    return root
 
 
 # Print a decision tree
 def print_tree(node, depth=0):
-	if isinstance(node, dict):
-		print('%s[X%d < %.3f]' % ((depth*' ', (node['index']+1), node['gain'])))
-		print_tree(node['left'], depth+1)
-		print_tree(node['right'], depth+1)
-	else:
-		print('%s[%s]' % ((depth*' ', node)))
+    if isinstance(node, dict):
+        print('{} Feature {}: \n'.format(str(depth * ' '), node['index']))
+        if 'left' in node:
+            print_tree(node['left'], depth+1)
+        if 'right' in node:
+            print_tree(node['right'], depth+1)
+    else:
+        print('%s[%s]' % (depth * ' ', node))
 
 
 if __name__ == '__main__':
