@@ -118,5 +118,20 @@ class TestDecisionTreeModel(unittest.TestCase):
         dtm.split(node, min_to_stop=1)
         dtm.print_tree(node)
 
+    def test_predict(self):
+
+        # Given a node and grow tree recursively until it meets the stop requirements.
+        humidity = [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]  # high = 0
+        wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
+        play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+        xTrains = [[h, w] for h, w in zip(humidity, wind)]
+        model = dtm.DecisionTreeModel()
+        model.fit(xTrains, play_tennis, min_to_stop=1)
+        expected_predictions = [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]
+        # give me perfect prediction
+        predictions = model.predict(xTrains)
+        self.assertTrue(predictions == expected_predictions)
+
+
 if __name__ == '__main__':
     unittest.main()

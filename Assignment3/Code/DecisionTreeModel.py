@@ -11,7 +11,12 @@ class DecisionTreeModel(object):
         self.tree = build_tree(x, y, min_to_stop)
 
     def predict(self, xTest):
-        pass
+
+        predictions = []
+        for example in xTest:
+            predictions.append(predict(self.tree, example))
+
+        return predictions
 
     def visualize(self, file_obj=None):
         print_tree(self.tree)
@@ -279,3 +284,25 @@ def write_tree(node, file_obj, depth=0, indent='    '):
             write_tree(node['right'],  file_obj, depth + 1)
     else:
         file_obj.write('\n%s[%s]' % (depth * indent, node))
+
+
+def predict(node, example):
+    """
+    Predict the value for an example given a tree(/node):
+         {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
+                'num_label_1': groups[0][1].count(1),
+                'num_label_0': groups[0][1].count(0)}
+    :param node:
+    :param row:
+    :return:
+    """
+    if example[node['index']] >= 0.5:
+        if isinstance(node['left'], dict):
+            return predict(node['left'], example)
+        else:
+            return node['left']
+    else:
+        if isinstance(node['right'], dict):
+            return predict(node['right'], example)
+        else:
+            return node['right']
