@@ -286,7 +286,21 @@ def draw_single_plot(tuples, xlabel, ylabel, title, img_fname, legends=None):
     print("Saved/Updated image {}".format(img_fname))
 
 
-def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
+def draw_accuracies_vs_min_to_stps(min_to_stops, accuracies,
+                                   xlabel, ylabel,
+                                   title, img_fname,
+                                   legends=None):
+
+    draw_weights(min_to_stops, accuracies,
+                 xlabel, ylabel,
+                 title, img_fname,
+                 legends)
+
+
+def draw_weights(iter_cnts, weights,
+                 xlabel, ylabel,
+                 title, img_fname,
+                 legends=None):
     """
     iter_cnts: a list of iteration counts, [1000, 2000, ...]
     weights: a list of weights per iteration, [(0, 0,...), (0.1, 0.2,...),...]
@@ -294,9 +308,15 @@ def draw_weights(iter_cnts, weights, xlabel, ylabel, title, img_fname):
     fig, ax = plt.subplots()
     ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
     for ws in zip(*weights):
-        ax.plot(iter_cnts, ws)
+        try:
+            ax.plot(iter_cnts, ws)
+        except:
+            print("HERE")
 
-    ax.legend(('w0', 'w1', 'w2', 'w3', 'w4', 'w5'), loc='best')
+    if legends:
+        ax.legend(legends, loc='best')
+    else:
+        ax.legend(('w0', 'w1', 'w2', 'w3', 'w4', 'w5'), loc='best')
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))
