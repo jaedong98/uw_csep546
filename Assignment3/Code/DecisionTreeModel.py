@@ -19,36 +19,6 @@ class DecisionTree():
         pass
 
 
-def get_entropy(xTrains, yTrains):
-    """Calculates entropies for all features in S(xTrains)"""
-    if all(yTrains):  # all ys are 1
-        return [0] * len(xTrains[0])
-
-    if not any(yTrains):  # all ys are 0
-        return [0] * len(xTrains[0])
-
-    entropies = list()
-    for i in range(len(xTrains[0])):
-        ys_0 = 0
-        ys_1 = 0
-        for xTrain, yTrain in zip(xTrains, yTrains):
-            if xTrain[i] == 1:
-                if yTrain == 1:
-                    ys_1 += 1
-                else:
-                    ys_0 += 1
-        if ys_0 == ys_1:
-            # entropy is 1 when the collection contains an equal number of positive and negative examples.
-            entropies.append(1)
-            continue
-        y_total = ys_0 + ys_1
-        p0 = float(ys_0 + 1 / y_total + 2)
-        p1 = float(ys_1 + 1/ y_total + 2)
-        entropies.append(-p0 * math.log2(p0) - p1 * math.log2(p1))
-
-    return entropies
-
-
 def get_entropy_for_feature(feature_dict):
     """
     Args:
@@ -263,40 +233,3 @@ def print_tree(node, depth=0):
             print_tree(node['right'], depth+1)
     else:
         print('%s[%s]' % (depth * ' ', node))
-
-
-if __name__ == '__main__':
-    xTrains = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1],
-               [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
-    yTrains = [1, 0, 1, 1, 0, 1, 0, 1]
-    # [1, -0.8112781244591328, -0.8112781244591328]
-    print(get_entropy(xTrains, yTrains))
-    print(get_entropy_S(yTrains))
-    print("Information Gains: {}".format(
-        get_information_gains(xTrains, yTrains)))
-
-    yTrains = [0, 0, 0, 0, 1, 1, 1, 1]
-    print(get_entropy_S(yTrains))
-
-    yTrains = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    print(get_entropy_S(yTrains))
-
-    yTrains = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    print(get_entropy(xTrains, yTrains))  # [0, 0, 0]
-    print(get_entropy_S(yTrains))
-
-    yTrains = [1, 1, 1, 1, 1, 1, 1, 1]
-    print(get_entropy(xTrains, yTrains))  # [0, 0, 0]
-    print(get_entropy_S(yTrains))
-
-    yTrains = [0, 1, 0, 1, 0, 1, 0, 1]
-    print(split_by_feature(0, xTrains, yTrains))
-    print(split_by_feature(1, xTrains, yTrains))
-    print(split_by_feature(2, xTrains, yTrains))
-
-    root = get_split(xTrains, yTrains)
-    print(root)
-
-    tree = build_tree(xTrains, yTrains, 2)
-    print(tree)
-    print_tree(tree)

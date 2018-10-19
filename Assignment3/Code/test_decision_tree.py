@@ -32,34 +32,19 @@ class TestDecisionTreeModel(unittest.TestCase):
     def test_get_split(self):
         pass
 
-    def test_get_entropy(self):
-
-        # all ys are 0s
-        xTrains = [[1, 1]] * 10  # two features, ten samples
-        yTrains = [0] * 10
-        entropy = dtm.get_entropy(xTrains, yTrains)
-        self.assertTrue(entropy == [0, 0], entropy)
-
-        # all ys are 1s
-        yTrains = [1, 1] * 10
-        entropy = dtm.get_entropy(xTrains, yTrains)
-        self.assertTrue(entropy == [0, 0], entropy)
-
-        # 5:5
-        yTrains = [1] * 5 + [0] * 5
-        entropy = dtm.get_entropy(xTrains, yTrains)
-        self.assertTrue(entropy == [1, 1], entropy)
-
     def test_entropy_S(self):
 
+        # Mitchell, page 56, when all values are 0
         yTrains = [0] * 10
         s = dtm.get_entropy_S(yTrains)
         self.assertTrue(s == 0)
 
-        yTrains = [0] * 10
+        # Mitchell, page 56, when all values are 1
+        yTrains = [1] * 10
         s = dtm.get_entropy_S(yTrains)
         self.assertTrue(s == 0)
 
+        # Mitchell, page 56, when num(0s) == num(1s)
         yTrains = [1] * 5 + [0] * 5
         s = dtm.get_entropy_S(yTrains)
         self.assertTrue(s == 1)
@@ -71,6 +56,7 @@ class TestDecisionTreeModel(unittest.TestCase):
 
     def test_get_entropy_for_feature(self):
 
+        # Mitchell, page 58
         wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
         play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
         feature_dict = dtm.get_feature_dict(wind, play_tennis)
