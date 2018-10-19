@@ -64,6 +64,12 @@ class TestDecisionTreeModel(unittest.TestCase):
         for entropy, expected in zip(es, [0.811, 1.0]):
             self.assertAlmostEqual(entropy, expected, 3)
 
+        # Mitchell, page 57 (one of p is 1.0, entropy should be 0)
+        feature_dict = {0: {0: 10, 1: 0}, 1: {0: 0, 1: 10}}
+        es = dtm.get_entropy_for_feature(feature_dict)
+        for entropy, expected in zip(es, [0.0, 0.0]):
+            self.assertAlmostEqual(entropy, expected, 3)
+
     def test_get_information_gain(self):
 
         # Mitchell, page 58

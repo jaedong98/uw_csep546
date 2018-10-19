@@ -32,9 +32,20 @@ def get_entropy_for_feature(feature_dict):
         ys = feature_dict[feature]
         y0s, y1s = ys[0], ys[1]
         y_total = y0s + y1s
-        p0 = float(y0s / y_total)
-        p1 = float(y1s / y_total)
-        entropies.append(-p0 * math.log2(p0) - p1 * math.log2(p1))
+        if y_total == 0:
+            p0 = float((y0s + 1) / (y_total + 2))
+            p1 = float((y1s + 1) / (y_total + 2))
+        else:
+            p0 = float(y0s / y_total)
+            p1 = float(y1s / y_total)
+
+        if p0 == 1.0 or p1 == 1.0:
+            entropies.append(0.0)
+            continue
+        try:
+            entropies.append(-p0 * math.log2(p0) - p1 * math.log2(p1))
+        except ValueError as ve:
+            raise ve
 
     return entropies
 
