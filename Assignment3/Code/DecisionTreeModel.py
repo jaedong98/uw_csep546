@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import Counter, namedtuple
 import math
 import numpy as np
 
@@ -68,8 +68,8 @@ def get_entropy_S(yTrains):
         return 1
 
     y_total = ys_0 + ys_1
-    p0 = float(ys_0 / y_total)
-    p1 = float(ys_1 / y_total)
+    p0 = float(ys_0/ y_total)
+    p1 = float(ys_1/ y_total)
     return -p0 * math.log2(p0) - p1 * math.log2(p1)
 
 
@@ -104,13 +104,13 @@ def split(node, min_to_stop=100):
         return
     
     if len(l_yTrains) < min_to_stop:
-        node['left'] = max(set(l_yTrains), key=l_yTrains.count)
+        node['left'] = Counter(l_yTrains).most_common(1)[0][0]
     else:
         node['left'] = get_split(l_xTrains, l_yTrains)
         split(node['left'], min_to_stop)
 
     if len(r_yTrains) < min_to_stop:
-        node['right'] = max(set(r_yTrains), key=r_yTrains.count)
+        node['right'] = Counter(r_yTrains).most_common(1)[0][0]
     else:
         node['right'] = get_split(r_xTrains, r_yTrains)
         split(node['right'], min_to_stop)

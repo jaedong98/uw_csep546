@@ -50,7 +50,28 @@ class TestDecisionTreeModel(unittest.TestCase):
         entropy = dtm.get_entropy(xTrains, yTrains)
         self.assertTrue(entropy == [1, 1], entropy)
 
+    def test_entropy_S(self):
 
+        yTrains = [0] * 10
+        s = dtm.get_entropy_S(yTrains)
+        self.assertTrue(s == 0)
+
+        yTrains = [0] * 10
+        s = dtm.get_entropy_S(yTrains)
+        self.assertTrue(s == 0)
+
+        yTrains = [1] * 5 + [0] * 5
+        s = dtm.get_entropy_S(yTrains)
+        self.assertTrue(s == 1)
+
+        # case - Mitchell, Chapter 3, page 56
+        yTrains = [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
+        s = dtm.get_entropy_S(yTrains)
+        self.assertAlmostEqual(s, 0.940, 3)
+
+    def test_information_gain(self):
+
+        xTrains = [[1], [], [], [], [], []]
 
 if __name__ == '__main__':
     unittest.main()
