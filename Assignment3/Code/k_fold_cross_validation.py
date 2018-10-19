@@ -6,11 +6,9 @@ import numpy as np
 import os
 import time
 
-import Assignment2Support as utils
+import Assignment3Support as utils
 import EvaluationsStub as ev
-import LogisticRegressionModel as lgm
-import features_by_frequency as fbf
-import features_by_mi as fbm
+import DecisionTreeModel as dtm
 
 
 # File/Folder path
@@ -69,37 +67,15 @@ def divide_into_group(xTrainRaw, k):
     return groups
 
 
-def get_features_by_frequency(xTrainRaw, xTestRaw, N):
-    """
-    Returns: a tuple of (xTrain, xTest, a list of words(features))
-    """
-    features = fbf.extract_features_by_frequency(xTrainRaw, N)
-    features = [x[0] for x in features]
-    xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
-    xTest = utils.FeaturizeTrainingByWords(xTestRaw, features)
-
-    return xTrain, xTest, features
-
-
-def get_features_mi(xTrainRaw, yTrainRaw, xTestRaw, N):
-    """
-    Returns: a tuple of (xTrain, xTest, a list of words(features))
-    """
-    features, _ = fbm.extract_features_by_mi(xTrainRaw, yTrainRaw, N)
-    features = [x[0] for x in features]
-    xTrain = utils.FeaturizeTrainingByWords(xTrainRaw, features)
-    xTest = utils.FeaturizeTrainingByWords(xTestRaw, features)
-
-    return xTrain, xTest, features
-
-
-def calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
-                             N=10,
-                             max_iters=50000, iter_step=1000, step=0.01,
-                             initial_w0=0.0, report_path=report_path, fname='',
+def calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
+                             fname='',
                              k=5,
-                             selection_by='frequency'):
+                             min_to_stop=100,
+                             featurize=utils.FeaturizeWNumericFeature):
     """
+    COPIED from homework2 but
+    MODIFIED for homework3 as feature selection isn't necessary.
+
     Calculatge the accracy of cross validation using gradient descent.
     Returns: accuracy from cross validation.
     """
@@ -108,30 +84,19 @@ def calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
     fold_xTrains, fold_xVals = fold_data(xTrainRaw, k)
     fold_yTrains, fold_yVals = fold_data(yTrainRaw, k)
 
-    resolution = int(max_iters / iter_step)
     i = 0
     total_correct = 0
     status = ''
     for f_xTrain, f_xVal, f_yTrain, f_yVal in zip(fold_xTrains, fold_xVals,
                                                   fold_yTrains, fold_yVals):
 
-        # extrace features from folded xTrain
-        if selection_by == 'frequency':
-            features = fbf.extract_features_by_frequency(f_xTrain, N)
-        else:
-            features, _ = fbm.extract_features_by_mi(f_xTrain, f_yTrain, N)
-        features = [x[0] for x in features]
-
         # feature engineering on folded xTrain
-        f_xTrain = utils.FeaturizeTrainingByWords(f_xTrain, features)
-        f_xVal = utils.FeaturizeTrainingByWords(f_xVal, features)
+        f_xTrain, _ = featurize(f_xTrain, [])
+        f_xVal, _ = featurize(f_xVal, [])
 
-        print("Gradient descent for {}th folding".format(i))
-        model = utils.logistic_regression_model_by_features(
-            f_xTrain, f_yTrain, features, iter_step, resolution, initial_w0, step, max_iters)
-
-        # predict using validation dataset
-        f_xVal = [[1] + x for x in f_xVal]
+        print("Cross validation for {}th folding".format(i))
+        model = dtm.DecisionTreeModel()
+        model.fit(f_xTrain, f_yTrain, min_to_stop)
         f_yVal_predict = model.predict(f_xVal)
 
         # compare and count corrections
@@ -139,12 +104,11 @@ def calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
             if p == v:
                 total_correct += 1
         status += '\n'
-        status += "\nGradient descent for {}th folding".format(i)
+        status += "\nDecisionTreeModel for {}th folding".format(i)
         status += '\n'
         status += ev.EvaluateAll(f_yVal, f_yVal_predict)
         status += '\n'
-        status += 'Features selected: {}'.format(features)
-        print("Total correction: {}".format(total_correct))
+        print("Total correction so far: {}".format(total_correct))
 
         i += 1
 
@@ -219,18 +183,11 @@ if __name__ == '__main__':
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = utils.TrainTestSplit(xRaw,
                                                                       yRaw)
 
-    N = 10
-    max_iters = 50000
-    iter_step = 1000
-    step = 0.01
-    initial_w0 = 0.0
+
     k = 5
-    zn = 1.96
-    compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                                       N=N,
-                                       max_iters=max_iters,
-                                       iter_step=iter_step,
-                                       step=step,
-                                       initial_w0=initial_w0,
-                                       k=k,
-                                       zn=zn)
+    for
+    calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
+                             fname='',
+                             k=5,
+                             min_to_stop=100,
+                             featurize=utils.FeaturizeWNumericFeature)

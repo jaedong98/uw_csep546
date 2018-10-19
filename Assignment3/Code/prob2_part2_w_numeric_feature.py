@@ -25,25 +25,9 @@ print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 yTrain = yTrainRaw
 yTest = yTestRaw
 
-min_to_stop = 300
-accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
-model = dtm.DecisionTreeModel()
-model.fit(xTrain, yTrain, min_to_stop)
-model.visualize()
-
-yTestPredicted = model.predict(xTest)
-accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
-zn = 1.96
-N = len(yTrain)
-
-upper, lower = utils.calculate_bounds(accuracy, zn, N)
-results = "* Before changing feature selections"
-results += "\n  * Accuracy: {}, Lower: {}, Upper: {}".format(accuracy, lower, upper)
-print(results)
-
+# create a picture accuracy vs min_to_stops
 min_to_stops = []
 accuracies = []
-
 start = 100
 end = 1010
 step = 10
@@ -52,7 +36,7 @@ min_to_stop_at_best_accuracy = 0
 
 model = dtm.DecisionTreeModel()
 for min_to_stop in [x for x in range(start, end, step)]:
-    accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
+
     model.fit(xTrain, yTrain, min_to_stop)
     model.visualize()
 
@@ -95,5 +79,5 @@ with open(tuning_md, 'w') as f:
     model.fit(xTrain, yTrain, min_to_stop_at_best_accuracy)
     model.visualize(f)
 
-# ROC curve comparision
+# ROC curve comparision (False Positive Rate vs False Negative Rate)
 

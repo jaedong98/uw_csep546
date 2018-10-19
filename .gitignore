@@ -4,3 +4,4 @@
 .idea/
 .env
 .pytest_cache/
+.cache/

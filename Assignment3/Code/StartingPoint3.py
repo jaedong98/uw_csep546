@@ -27,7 +27,8 @@ yTest = yTestRaw
 
 # part 1
 min_to_stop = 100
-accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
+accuracy_md = os.path.join(report_path,
+                           'prob2_part1_accuracy_m2s{}.md'.format(min_to_stop))
 model = dtm.DecisionTreeModel()
 model.fit(xTrain, yTrain, min_to_stop)
 model.visualize()
