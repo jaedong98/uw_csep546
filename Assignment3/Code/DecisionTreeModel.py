@@ -1,6 +1,8 @@
+from collections import namedtuple
 import math
 import numpy as np
 
+Leaf = namedtuple('Leaf', ['prediction'])
 
 class DecisionTree():
 
@@ -40,8 +42,8 @@ def get_entropy(xTrains, yTrains):
             entropies.append(1)
             continue
         y_total = ys_0 + ys_1
-        p0 = float(ys_0 / y_total)
-        p1 = float(ys_1 / y_total)
+        p0 = float(ys_0 + 1 / y_total + 2)
+        p1 = float(ys_1 + 1/ y_total + 2)
         entropies.append(-p0 * math.log2(p0) - p1 * math.log2(p1))
 
     return entropies
@@ -78,7 +80,43 @@ def get_information_gains(xTrains, yTrains):
     return list(np.array(H * len(xTrains[0])) - np.array(entropies))
 
 
-def split(feature_index, xTrains, yTrains):
+def split(node, min_to_stop=100):
+
+    ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains)) = node['groups']
+    
+    if sum(l_yTrains) == 0 and sum(r_yTrains) == 0:  # all 0
+        node['left'] = node['right'] = 0
+        return
+    
+    if all(l_yTrains) and all(r_yTrains):  # all 1
+        node['left'] = node['right'] = 1
+        return
+    
+    if len(l_yTrains) < min_to_stop:
+        node['left'] = max(set(l_yTrains), key=l_yTrains.count)
+    else:
+        node['left'] = get_split(l_xTrains, l_yTrains)
+        split(node['left'], min_to_stop)
+
+    if len(r_yTrains) < min_to_stop:
+        node['right'] = max(set(r_yTrains), key=r_yTrains.count)
+    else:
+        node['right'] = get_split(r_xTrains, r_yTrains)
+        split(node['right'], min_to_stop)
+
+
+def get_split(xTrains, yTrains):
+    """
+    Split dataset and create a node based on the feature [i] who has highest information gain.
+    Returns:
+        an instance of Node
+    """
+    i_gails = get_information_gains(xTrains, yTrains)
+    feature_index = i_gails.index(max(i_gails))
+    groups = split_by_feature(feature_index, xTrains, yTrains)
+    return {'index': feature_index, 'gain': max(i_gails), 'groups': groups}
+
+def split_by_feature(feature_index, xTrains, yTrains):
     """
         Calculates the threshold based on the feature values at i and split data 
         into two groups.
@@ -108,7 +146,23 @@ def split(feature_index, xTrains, yTrains):
 
     print("{} samples are splitted into L({}), R({})".format(
         len(xTrains), len(l_xTrains), len(r_xTrains)))
-    return l_xTrains, l_yTrains, r_xTrains, r_yTrains
+    return ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains))
+
+    # Build a decision tree
+def build_tree(xTrains, yTrains, min_to_stop=100):
+	root = get_split(xTrains, yTrains)
+	split(root, min_to_stop)
+	return root
+
+
+# Print a decision tree
+def print_tree(node, depth=0):
+	if isinstance(node, dict):
+		print('%s[X%d < %.3f]' % ((depth*' ', (node['index']+1), node['gain'])))
+		print_tree(node['left'], depth+1)
+		print_tree(node['right'], depth+1)
+	else:
+		print('%s[%s]' % ((depth*' ', node)))
 
 
 if __name__ == '__main__':
@@ -136,6 +190,13 @@ if __name__ == '__main__':
     print(get_entropy_S(yTrains))
 
     yTrains = [0, 1, 0, 1, 0, 1, 0, 1]
-    print(split(0, xTrains, yTrains))
-    print(split(1, xTrains, yTrains))
-    print(split(2, xTrains, yTrains))
+    print(split_by_feature(0, xTrains, yTrains))
+    print(split_by_feature(1, xTrains, yTrains))
+    print(split_by_feature(2, xTrains, yTrains))
+
+    root = get_split(xTrains, yTrains)
+    print(root)
+
+    tree = build_tree(xTrains, yTrains, 2)
+    print(tree)
+    print_tree(tree)
