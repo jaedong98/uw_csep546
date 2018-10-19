@@ -238,12 +238,24 @@ def build_tree(xTrains, yTrains, min_to_stop=100):
 
 
 # Print a decision tree
-def print_tree(node, depth=0):
+def print_tree(node, depth=0, indent='    '):
+
     if isinstance(node, dict):
-        print('{} Feature {}: \n'.format(str(depth * ' '), node['index']))
+        print('{}Feature {}: '.format(str(depth * indent), node['index']))
+        try:
+            left = node['left']
+            right = node['right']
+            if isinstance(node['left'], dict):
+                left = len(node['left'])
+            if isinstance(node['right'], dict):
+                right = len(node['right'])
+        except KeyError as ke:
+            raise ke
+        print('{}    >= 0.5: TODO!!!! <num with label 1> <num with label 0>Leaf: {} vs {}'.format(str(depth * indent), left, right))
+        print('{}    < 0.5:'.format(str(depth * indent)))
         if 'left' in node:
             print_tree(node['left'], depth+1)
         if 'right' in node:
             print_tree(node['right'], depth+1)
     else:
-        print('%s[%s]' % (depth * ' ', node))
+        print('%s[%s]' % (depth * indent, node))
