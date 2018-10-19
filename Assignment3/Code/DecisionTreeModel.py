@@ -49,8 +49,85 @@ def get_entropy(xTrains, yTrains):
     return entropies
 
 
+def get_entropy_for_feature(feature_dict):
+    """
+    Args:
+        feature_dict: {0: {0: 0, 1: 0},  # {x = 0: dict(y), ..}
+                       1: {0: 0, 1: 0}}
+    Returns:
+        a list of entropy values, (+, -) for the feature, xTrains.
+    """
+    entropies = []
+    for feature in [0, 1]:
+        ys = feature_dict[feature]
+        y0s, y1s = ys[0], ys[1]
+        y_total = y0s + y1s
+        p0 = float(y0s / y_total)
+        p1 = float(y1s / y_total)
+        entropies.append(-p0 * math.log2(p0) - p1 * math.log2(p1))
+
+    return entropies
+
+
+def get_feature_dict(xTrains, yTrains):
+    """
+    :param xTrains: a list of feature i values, [x for x in zip(*xTrains)][i]
+    :param yTrains: a list of target attributes
+    :return
+        a list of entropy values, (+, -) for the feature, xTrains.
+    """
+    if not len(xTrains) == len(yTrains):
+        raise ValueError("Unmatched list lengths {} vs {}".format(len(xTrains), len(yTrains)))
+
+    if all(yTrains):  # all ys are 1
+        return 0
+
+    if not any(yTrains):  # all ys are 0
+        return 0
+
+    if yTrains.count(1) == yTrains.count(0):  # same counts for target attributes
+        return 0
+
+    feature_dict = {0: {0: 0, 1: 0},  # {x = 0: dict(y), ..}
+                    1: {0: 0, 1: 0}}
+
+    for x, y in zip(xTrains, yTrains):
+        feature_dict[x][y] += 1
+
+    return feature_dict
+
+
+def get_information_gain(xTrains, yTrains):
+    """
+    Loss(S, 𝑥_𝑖)
+     lossSum = 0
+     for 𝑆_𝑣𝑎𝑙 in SplitByFeatureValues(S, 𝑥_𝑖)
+          lossSum += Entropy(𝑆_𝑣𝑎𝑙 ) * len(𝑆_𝑣𝑎𝑙)
+     return lossSum / len(S)
+
+    InformationGain(S, 𝑥_𝑖)
+     return Entropy(S) – Loss(S, 𝑥_𝑖)
+
+
+    :param xTrains: a list of feature i values, [x for x in zip(*xTrains)][i]
+    :param yTrains: a list of target attributes
+    :return: information gain for the feature
+    """
+    feature_dict = get_feature_dict(xTrains, yTrains)
+    entropies = get_entropy_for_feature(feature_dict)
+    entropy_S = get_entropy_S(yTrains)
+    loss_sum = 0
+    for k, ys in feature_dict.items():
+        loss_sum += entropies[k] * sum(ys.values())
+    loss = loss_sum / len(yTrains)
+    return entropy_S - loss
+
+
 def get_entropy_S(yTrains):
-    """Calculate entropy of yTrains. In tree, yTrains will be the splitted yTrains."""
+    """
+    Calculate entropy of S, yTrains. Mitchell page 57, eq(3.3)
+
+    In tree, yTrains will be the splitted yTrains."""
     if all(yTrains):  # all ys are 1
         return 0
 
@@ -74,10 +151,18 @@ def get_entropy_S(yTrains):
 
 
 def get_information_gains(xTrains, yTrains):
+    """
 
-    H = get_entropy_S(yTrains)
-    entropies = get_entropy(xTrains, yTrains)
-    return list(np.array(H * len(xTrains[0])) - np.array(entropies))
+    :param xTrains: examples from training data,
+                    [[outlook_0, temperature_0, humidity_0, wind_0],[],...]
+    :param yTrains: a list of target attribute, [0, 1, 0, 0,...]
+    :return: a list of information gains for features,
+            i.e., outlook, temperature, humidity, wind.
+    """
+    gains = []
+    for xTrain in zip(*xTrains):
+        gains.append(get_information_gain(xTrain, yTrains))
+    return gains
 
 
 def split(node, min_to_stop=100):

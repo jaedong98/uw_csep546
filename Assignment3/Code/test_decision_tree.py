@@ -69,9 +69,34 @@ class TestDecisionTreeModel(unittest.TestCase):
         s = dtm.get_entropy_S(yTrains)
         self.assertAlmostEqual(s, 0.940, 3)
 
-    def test_information_gain(self):
+    def test_get_entropy_for_feature(self):
 
-        xTrains = [[1], [], [], [], [], []]
+        wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
+        play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+        feature_dict = dtm.get_feature_dict(wind, play_tennis)
+        es = dtm.get_entropy_for_feature(feature_dict)
+        for entropy, expected in zip(es, [0.811, 1.0]):
+            self.assertAlmostEqual(entropy, expected, 3)
+
+    def test_get_information_gain(self):
+
+        # Mitchell, page 58
+        wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
+        play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+        gain = dtm.get_information_gain(wind, play_tennis)
+        self.assertAlmostEqual(gain, 0.048, 3)
+
+    def test_get_information_gains(self):
+        """Construct xTrains data to have same data structure from original framework."""
+        # Mitchell, page 59 and 60
+        humidity = [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]  # high = 0
+        wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
+        play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+        xTrains = [[h, w] for h, w in zip(humidity, wind)]
+        gains = dtm.get_information_gains(xTrains, play_tennis)
+        for gain, expected in zip(gains, [0.151, 0.048]):
+            self.assertAlmostEqual(gain, expected, 2)
+
 
 if __name__ == '__main__':
     unittest.main()
