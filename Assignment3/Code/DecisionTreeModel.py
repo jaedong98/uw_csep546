@@ -29,7 +29,10 @@ def get_entropy_for_feature(feature_dict):
     """
     entropies = []
     for feature in [0, 1]:
-        ys = feature_dict[feature]
+        try:
+            ys = feature_dict[feature]
+        except TypeError as te:
+            raise te
         y0s, y1s = ys[0], ys[1]
         y_total = y0s + y1s
         if y_total == 0:
@@ -60,17 +63,17 @@ def get_feature_dict(xTrains, yTrains):
     if not len(xTrains) == len(yTrains):
         raise ValueError("Unmatched list lengths {} vs {}".format(len(xTrains), len(yTrains)))
 
-    if all(yTrains):  # all ys are 1
-        return 0
-
-    if not any(yTrains):  # all ys are 0
-        return 0
-
-    if yTrains.count(1) == yTrains.count(0):  # same counts for target attributes
-        return 0
-
     feature_dict = {0: {0: 0, 1: 0},  # {x = 0: dict(y), ..}
                     1: {0: 0, 1: 0}}
+
+    if all(yTrains):  # all ys are 1
+        return feature_dict
+
+    if not any(yTrains):  # all ys are 0
+        return feature_dict
+
+    if yTrains.count(1) == yTrains.count(0):  # same counts for target attributes
+        return feature_dict
 
     for x, y in zip(xTrains, yTrains):
         feature_dict[x][y] += 1

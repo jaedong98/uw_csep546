@@ -89,6 +89,11 @@ class TestDecisionTreeModel(unittest.TestCase):
         for gain, expected in zip(gains, [0.151, 0.048]):
             self.assertAlmostEqual(gain, expected, 2)
 
+    def test_get_split(self):
+
+        root = dtm.get_split(xTrains, yTrains)
+        print(root)
+
 
 if __name__ == '__main__':
     unittest.main()
