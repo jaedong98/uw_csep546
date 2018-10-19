@@ -71,7 +71,8 @@ def calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
                              fname='',
                              k=5,
                              min_to_stop=100,
-                             featurize=utils.FeaturizeWNumericFeature):
+                             featurize=utils.FeaturizeWNumericFeature,
+                             file_obj=None):
     """
     COPIED from homework2 but
     MODIFIED for homework3 as feature selection isn't necessary.
@@ -120,6 +121,10 @@ def calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
     if fname:
         with open(fname, 'w') as f:
             f.write(status)
+
+    if file_obj:
+        file_obj.write(status)
+
     return accuracy
 
 
@@ -183,11 +188,48 @@ if __name__ == '__main__':
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = utils.TrainTestSplit(xRaw,
                                                                       yRaw)
 
-
+    start = 100
+    end = 1010
+    step = 10
     k = 5
-    for
-    calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
-                             fname='',
-                             k=5,
-                             min_to_stop=100,
-                             featurize=utils.FeaturizeWNumericFeature)
+    zn = 1.96
+    N = len(xTrainRaw)
+    accuracies = []
+    cross_val_md = os.path.join(report_path,
+                                'cross_val_{}_{}_{}_numeric_feature.md'.format(start, end, step))
+    with open(cross_val_md, 'w') as file_obj:
+        min_to_stops = []
+        accuracies = []
+        best_accuracy = 0
+        min_to_stop_at_best_accuracy = 0
+        for min_to_stop in [x for x in range(start, end, step)]:
+            accu = calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
+                                            fname='',
+                                            k=5,
+                                            min_to_stop=min_to_stop,
+                                            featurize=utils.FeaturizeWNumericFeature,
+                                            file_obj=file_obj)
+            upper, lower = utils.calculate_bounds(accu, zn, N)
+            min_to_stops.append(min_to_stop)
+            accuracies.append((lower, accu, upper))
+
+            if accu > best_accuracy:
+                best_accuracy = accu
+                min_to_stop_at_best_accuracy = min_to_stop
+
+        tunning_result = "* Best accuracy {} with MinToStop {}" \
+            .format(best_accuracy, min_to_stop_at_best_accuracy)
+        file_obj.write('\n')
+        file_obj.write(tunning_result)
+
+        img_fname = os.path.join(report_path,
+                                 'prob2_part2_cross_val_accuracy_{}_{}_{}_numeric_feature.png'
+                                 .format(start, end, step))
+
+        utils.draw_accuracies_vs_min_to_stps(min_to_stops,
+                                             accuracies,
+                                             'MinToStops',
+                                             'Accuracies',
+                                             'Accuracies vs. MinToStops - Cross Validation',
+                                             img_fname,
+                                             ['Lower Bound', 'Accuracy Estimates', 'Upper Bound'])
