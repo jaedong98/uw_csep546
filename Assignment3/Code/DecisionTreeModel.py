@@ -252,15 +252,15 @@ def build_tree(xTrains, yTrains, min_to_stop=100):
 
 
 # Print a decision tree
-def print_tree(node, depth=0, indent='    '):
+def print_tree(node, depth=0, indent='...,'):
 
     if isinstance(node, dict):
         print('{}Feature {}: '.format(str(depth * indent), node['index']))
         num_label_1 = node['num_label_1']
         num_label_0 = node['num_label_0']
-        print('{}    >= 0.5:'.format(str(depth * indent)))
-        print('{}    Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
-        print('{}    < 0.5:'.format(str(depth * indent)))
+        print('{}...,>= 0.5:'.format(str(depth * indent)))
+        print('{}...,Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
+        print('{}...,< 0.5:'.format(str(depth * indent)))
         if 'left' in node:
             print_tree(node['left'], depth+1)
         if 'right' in node:
@@ -269,15 +269,15 @@ def print_tree(node, depth=0, indent='    '):
         print('%s[%s]' % (depth * indent, node))
 
 
-def write_tree(node, file_obj, depth=0, indent='    '):
+def write_tree(node, file_obj, depth=0, indent='...,'):
 
     if isinstance(node, dict):
         file_obj.write('\n{}Feature {}: '.format(str(depth * indent), node['index']))
         num_label_1 = node['num_label_1']
         num_label_0 = node['num_label_0']
-        file_obj.write('\n{}    >= 0.5:'.format(str(depth * indent)))
-        file_obj.write('\n{}    Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
-        file_obj.write('\n{}    < 0.5:'.format(str(depth * indent)))
+        file_obj.write('\n{}...,>= 0.5:'.format(str(depth * indent)))
+        file_obj.write('\n{}...,Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
+        file_obj.write('\n{}...,< 0.5:'.format(str(depth * indent)))
         if 'left' in node:
             write_tree(node['left'], file_obj, depth + 1)
         if 'right' in node:

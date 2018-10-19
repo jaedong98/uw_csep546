@@ -36,7 +36,21 @@ accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
 model = dtm.DecisionTreeModel()
 model.fit(xTrain, yTrain, min_to_stop)
 model.visualize()
+
+yTestPredicted = model.predict(xTest)
+accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+zn = 1.96
+N = len(yTrain)
+
+upper, lower = utils.calculate_bounds(accuracy, zn, N)
+results = "* Before changing feature selections"
+results += "\n  * Accuracy: {}, Lower: {}, Upper: {}".format(accuracy, lower, upper)
+print(results)
+
 with open(accuracy_md, 'w') as file_obj:
-    file_obj.write('Decision Tree with minToStop={}'.format(min_to_stop))
+    file_obj.write(results)
+    file_obj.write('\n  * Decision Tree with minToStop={}'.format(min_to_stop))
     model.visualize(file_obj)
+
+
 
