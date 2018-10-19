@@ -1,22 +1,23 @@
 from collections import Counter, namedtuple
 import math
-import numpy as np
 
-Leaf = namedtuple('Leaf', ['prediction'])
 
-class DecisionTree():
+class DecisionTreeModel(object):
 
-    def __init__(self, minToSplit=100):
-        self.minToSplit = minToSplit
+    def __init__(self):
+        self.tree = None
 
-    def fit(self, x, y):
-        pass
+    def fit(self, x, y, min_to_stop=100):
+        self.tree = build_tree(x, y, min_to_stop)
 
     def predict(self, xTest):
         pass
 
-    def visualize(self):
-        pass
+    def visualize(self, file_obj=None):
+        print_tree(self.tree)
+        if file_obj:
+            write_tree(self.tree, file_obj)
+
 
 
 def get_entropy_for_feature(feature_dict):

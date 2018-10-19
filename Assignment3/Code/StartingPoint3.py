@@ -33,9 +33,10 @@ yTest = yTestRaw
 
 min_to_stop = 100
 accuracy_md = os.path.join(report_path, 'prob2_part1_accuracy.md')
-tree = dtm.build_tree(xTrain, yTrain, min_to_stop)
-dtm.print_tree(tree)
+model = dtm.DecisionTreeModel()
+model.fit(xTrain, yTrain, min_to_stop)
+model.visualize()
 with open(accuracy_md, 'w') as file_obj:
     file_obj.write('Decision Tree with minToStop={}'.format(min_to_stop))
-    dtm.write_tree(tree, file_obj)
+    model.visualize(file_obj)
 
