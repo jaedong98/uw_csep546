@@ -29,8 +29,6 @@ yTests = yTestRaw
 
 class TestDecisionTreeModel(unittest.TestCase):
 
-    def test_get_split(self):
-        pass
 
     def test_entropy_S(self):
 
@@ -91,9 +89,19 @@ class TestDecisionTreeModel(unittest.TestCase):
 
     def test_get_split(self):
 
-        root = dtm.get_split(xTrains, yTrains)
-        print(root)
+        humidity = [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0]  # high = 0
+        wind = [0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1]
+        play_tennis = [0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0]
+        xTrains = [[h, w] for h, w in zip(humidity, wind)]
+        node = dtm.get_split(xTrains, play_tennis)
 
+        # pick humidity as a feature to split
+        self.assertTrue(node['index'] == 0)
+
+        # swap the orders in feature.
+        xTrains = [[w, h] for w, h in zip(wind, humidity)]
+        node = dtm.get_split(xTrains, play_tennis)
+        self.assertTrue(node['index'] == 1)
 
 if __name__ == '__main__':
     unittest.main()
