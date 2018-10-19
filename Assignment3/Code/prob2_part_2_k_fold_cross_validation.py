@@ -182,19 +182,10 @@ def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         f.write(table)
 
 
-if __name__ == '__main__':
-    # Loading data
-    (xRaw, yRaw) = utils.LoadRawData(kDataPath)
-    (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = utils.TrainTestSplit(xRaw,
-                                                                      yRaw)
+def process_cross_validation_with_min2stops(start, end, step, k, zn, N,
+                                            report_path=report_path):
 
-    start = 100
-    end = 1010
-    step = 10
-    k = 5
-    zn = 1.96
-    N = len(xTrainRaw)
-    accuracies = []
+
     cross_val_md = os.path.join(report_path,
                                 'cross_val_{}_{}_{}_numeric_feature.md'.format(start, end, step))
     with open(cross_val_md, 'w') as file_obj:
@@ -205,7 +196,7 @@ if __name__ == '__main__':
         for min_to_stop in [x for x in range(start, end, step)]:
             accu = calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
                                             fname='',
-                                            k=5,
+                                            k=k,
                                             min_to_stop=min_to_stop,
                                             featurize=utils.FeaturizeWNumericFeature,
                                             file_obj=file_obj)
@@ -233,3 +224,18 @@ if __name__ == '__main__':
                                              'Accuracies vs. MinToStops - Cross Validation',
                                              img_fname,
                                              ['Lower Bound', 'Accuracy Estimates', 'Upper Bound'])
+
+
+if __name__ == '__main__':
+    # Loading data
+    (xRaw, yRaw) = utils.LoadRawData(kDataPath)
+    (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = utils.TrainTestSplit(xRaw,
+                                                                      yRaw)
+
+    start = 100
+    end = 1010
+    step = 10
+    k = 5
+    zn = 1.96
+    N = len(xTrainRaw)
+    process_cross_validation_with_min2stops(start, end, step, k, zn, N)
