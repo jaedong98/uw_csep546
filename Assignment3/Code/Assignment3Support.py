@@ -322,7 +322,7 @@ def draw_weights(iter_cnts, weights,
     print("Saved/Updated image {}".format(img_fname))
 
 
-def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
+def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends, invert_yaxis=False):
     """
     accuracies: a list of list of (iter_cnt, accurarcy)s
     legends: a tuple/list of legends for each graphs
@@ -341,6 +341,10 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
 
     if legends:
         ax.legend(legends, loc='best')
+
+    if invert_yaxis:
+        ax.xaxis.tick_top()
+        ax.invert_yaxis()
     ax.grid()
     fig.savefig(img_fname)
     print("Saved/Updated image {}".format(img_fname))

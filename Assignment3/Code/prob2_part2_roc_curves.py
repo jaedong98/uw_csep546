@@ -7,7 +7,19 @@ import Assignment3Support as utils
 import EvaluationsStub as es
 import DecisionTreeModel as dtm
 
+"""
+What is an ROC curve?
 
+Ans. plot ( sensitivity vs (1 - specificity ) ) !!
+
+Let's assume, you have built a Logistic Regression model.
+
+1. while predicting, you need to give a threshold and based on that you'll get the predicted output and from that you can calculate sensitivity & specificity.
+2. Now, go back to the predicting step and give some 10 threshold values from 0 to 1.
+3. So, you have 10 sensitivity & specificity values!!
+4. Arrange them in the increasing order of (1-specificity).
+5. Draw the plot using these values.
+"""
 # File/Folder path
 kDataPath = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Data/SMSSpamCollection")
@@ -46,10 +58,10 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                             threshold=threshold,
                             featurize=utils.Featurize)
         original_fpr_fnr.append((ev.fpr, ev.fnr))
-    graphs.append(original_fpr_fnr)
+    graphs.append(sorted(original_fpr_fnr))
     legends.append('0.1 Length Feature')
 
-    for min_to_step in [450, 500, 550]:
+    for min_to_step in [420, 450, 500, 550]:
         cont_length_fpr_fnr = []
         for threshold in thresholds:
             ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
@@ -58,7 +70,7 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                 featurize=utils.FeaturizeWNumericFeature)
             print(ev)
             cont_length_fpr_fnr.append((ev.fpr, ev.fnr))
-        graphs.append(cont_length_fpr_fnr)
+        graphs.append(sorted(cont_length_fpr_fnr))
         legends.append('Cont. Length {} minToSteps'.format(min_to_step))
 
     start = thresholds[0]
@@ -67,9 +79,10 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     fname = '{}_{}_{}_{}.png'.format(inspect.stack()[0][3], start, end, step)
     img_fname = os.path.join(report_path, fname)
     utils.draw_accuracies(graphs,
-                          'False Positive Rate', 'False Negative Rate', 'ROC comparision',
+                          'False Positive Rate', 'False Negative Rate', '',
                           img_fname,
-                          legends=legends)
+                          legends=legends,
+                          invert_yaxis=True)
 
     cm_md = os.path.join(report_path, fname.replace('.png', '.md'))
     #with open(cm_md, 'w') as f:
@@ -87,7 +100,7 @@ if __name__ == '__main__':
     start = 0.01
     end = 1
     N = 10
-    thresholds = [t for t in np.linspace(start, end, N)]
+    thresholds = [x / N for x in range(N + 1)]
     compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                       thresholds,
                                       report_path=report_path)
