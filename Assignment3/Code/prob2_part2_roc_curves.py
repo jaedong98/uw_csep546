@@ -37,6 +37,8 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                       thresholds,
                                       report_path=report_path):
 
+    graphs = []
+    legends = []
     original_fpr_fnr = []
     for threshold in thresholds:
         ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
@@ -44,25 +46,30 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                             threshold=threshold,
                             featurize=utils.Featurize)
         original_fpr_fnr.append((ev.fpr, ev.fnr))
+    graphs.append(original_fpr_fnr)
+    legends.append('0.1 Length Feature')
 
-    cont_length_fpr_fnr = []
-    for threshold in thresholds:
-        ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                            min_to_step=500,
-                            threshold=threshold,
-                            featurize=utils.FeaturizeWNumericFeature)
-        print(ev)
-        cont_length_fpr_fnr.append((ev.fpr, ev.fnr))
+    for min_to_step in [450, 500, 550]:
+        cont_length_fpr_fnr = []
+        for threshold in thresholds:
+            ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+                                min_to_step=min_to_step,
+                                threshold=threshold,
+                                featurize=utils.FeaturizeWNumericFeature)
+            print(ev)
+            cont_length_fpr_fnr.append((ev.fpr, ev.fnr))
+        graphs.append(cont_length_fpr_fnr)
+        legends.append('Cont. Length {} minToSteps'.format(min_to_step))
 
     start = thresholds[0]
     end = thresholds[-1]
     step = thresholds[1] - thresholds[0]
     fname = '{}_{}_{}_{}.png'.format(inspect.stack()[0][3], start, end, step)
     img_fname = os.path.join(report_path, fname)
-    utils.draw_accuracies([sorted(original_fpr_fnr), sorted(cont_length_fpr_fnr)],
+    utils.draw_accuracies(graphs,
                           'False Positive Rate', 'False Negative Rate', 'ROC comparision',
                           img_fname,
-                          legends=['0/1 Length Feature', 'Continuous Length'])
+                          legends=legends)
 
     cm_md = os.path.join(report_path, fname.replace('.png', '.md'))
     #with open(cm_md, 'w') as f:
@@ -77,7 +84,7 @@ if __name__ == '__main__':
     (xTrainRaw, yTrainRaw, xTestRaw,
      yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
 
-    start = 0.1
+    start = 0.01
     end = 1
     N = 10
     thresholds = [t for t in np.linspace(start, end, N)]
