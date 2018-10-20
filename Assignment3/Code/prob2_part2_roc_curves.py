@@ -59,9 +59,9 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                             featurize=utils.Featurize)
         original_fpr_fnr.append((ev.fpr, ev.fnr))
     graphs.append(sorted(original_fpr_fnr))
-    legends.append('0.1 Length Feature')
+    legends.append('0/1 Length Feature')
 
-    for min_to_step in [420, 450, 500, 550]:
+    for min_to_step in [450]:
         cont_length_fpr_fnr = []
         for threshold in thresholds:
             ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
@@ -83,10 +83,6 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                           img_fname,
                           legends=legends,
                           invert_yaxis=True)
-
-    cm_md = os.path.join(report_path, fname.replace('.png', '.md'))
-    #with open(cm_md, 'w') as f:
-    #    f.write(table)
 
 
 if __name__ == '__main__':
