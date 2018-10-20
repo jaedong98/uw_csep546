@@ -68,7 +68,6 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                 min_to_step=min_to_step,
                                 threshold=threshold,
                                 featurize=utils.FeaturizeWNumericFeature)
-            print(ev)
             cont_length_fpr_fnr.append((ev.fpr, ev.fnr))
         graphs.append(sorted(cont_length_fpr_fnr))
         legends.append('Cont. Length {} minToSteps'.format(min_to_step))
@@ -95,7 +94,7 @@ if __name__ == '__main__':
 
     start = 0.01
     end = 1
-    N = 10
+    N = 1000
     thresholds = [x / N for x in range(N + 1)]
     compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                       thresholds,

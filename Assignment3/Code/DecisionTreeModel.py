@@ -310,7 +310,8 @@ def predict_w_threshold(node, example, threshold=0.5):
     Predict the value for an example given a tree(/node):
          {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
                 'num_label_1': groups[0][1].count(1),
-                'num_label_0': groups[0][1].count(0)}
+                'num_label_0': groups[0][1].count(0),
+          'threshold': 0.5 or midpoint of features}
     :param node:
     :param row:
     :return:
@@ -319,11 +320,15 @@ def predict_w_threshold(node, example, threshold=0.5):
         if isinstance(node['left'], dict):
             return predict_w_threshold(node['left'], example, threshold)
         else:
+            if node['left'] == 1:
+                return int(node['num_label_1'] / (node['num_label_1'] + node['num_label_0']) < threshold)
             return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) < threshold)
     else:
         if isinstance(node['right'], dict):
             return predict_w_threshold(node['right'], example, threshold)
         else:
+            if node['right'] == 1:
+                return int(node['num_label_1'] / (node['num_label_1'] + node['num_label_0']) < threshold)
             return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) < threshold)
 
 
