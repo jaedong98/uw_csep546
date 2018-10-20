@@ -180,14 +180,25 @@ def get_split(xTrains, yTrains):
     """
     i_gails = get_information_gains(xTrains, yTrains)
     feature_index = i_gails.index(max(i_gails))
+    threshold = get_feature_split_threshold(feature_index, xTrains)
     groups = split_by_feature(feature_index, xTrains, yTrains)
 
     return {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
             'num_label_1': groups[0][1].count(1),
-            'num_label_0': groups[0][1].count(0)}
+            'num_label_0': groups[0][1].count(0),
+            'threshold': threshold}
 
 
-def split_by_feature(feature_index, xTrains, yTrains):
+def get_feature_split_threshold(feature_index, xTrains):
+    # gather all values of feature xTrain[i]
+    values_by_features = [x for x in zip(*xTrains)]
+    unique_values = list(set(values_by_features[feature_index]))
+    if set(unique_values) == set([0, 1]):
+        return 0.5
+    return (max(unique_values) - min(unique_values)) / 2
+
+
+def split_by_feature(feature_index, xTrains, yTrains, threshold=None):
     """
     Calculates the threshold based on the feature values at i and split data
     into two groups.
@@ -205,10 +216,8 @@ def split_by_feature(feature_index, xTrains, yTrains):
         raise IndexError(
             "Feature index({}) is outside of xTrains".format(feature_index))
 
-    # gather all values of feature xTrain[i]
-    values_by_features = [x for x in zip(*xTrains)]
-    unique_values = list(set(values_by_features[feature_index]))
-    threshold = (max(unique_values) - min(unique_values)) / 2
+    if not threshold:
+        threshold = get_feature_split_threshold(feature_index, xTrains)
 
     l_xTrains, l_yTrains = [], []
     r_xTrains, r_yTrains = [], []
@@ -222,7 +231,7 @@ def split_by_feature(feature_index, xTrains, yTrains):
 
     print("{} samples are splitted into L({}), R({})".format(
         len(xTrains), len(l_xTrains), len(r_xTrains)))
-    return ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains))
+    return (l_xTrains, l_yTrains), (r_xTrains, r_yTrains)
 
 
 def split(node, min_to_stop=100):
@@ -268,9 +277,9 @@ def print_tree(node, depth=0, indent='...,'):
         print('{}Feature {}: '.format(str(depth * indent), node['index']))
         num_label_1 = node['num_label_1']
         num_label_0 = node['num_label_0']
-        print('{}...,>= 0.5:'.format(str(depth * indent)))
+        print('{}...,>= {}:'.format(str(depth * indent), node['threshold']))
         print('{}...,Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
-        print('{}...,< 0.5:'.format(str(depth * indent)))
+        print('{}...,< {}:'.format(str(depth * indent), node['threshold']))
         if 'left' in node:
             print_tree(node['left'], depth+1)
         if 'right' in node:
@@ -285,9 +294,9 @@ def write_tree(node, file_obj, depth=0, indent='...,'):
         file_obj.write('\n{}Feature {}: '.format(str(depth * indent), node['index']))
         num_label_1 = node['num_label_1']
         num_label_0 = node['num_label_0']
-        file_obj.write('\n{}...,>= 0.5:'.format(str(depth * indent)))
+        file_obj.write('\n{}...,>= {}:'.format(str(depth * indent), node['threshold']))
         file_obj.write('\n{}...,Leaf: {} vs {}'.format(str((depth + 1) * indent), num_label_1, num_label_0))
-        file_obj.write('\n{}...,< 0.5:'.format(str(depth * indent)))
+        file_obj.write('\n{}...,< {}:'.format(str(depth * indent), node['threshold']))
         if 'left' in node:
             write_tree(node['left'], file_obj, depth + 1)
         if 'right' in node:
@@ -306,7 +315,7 @@ def predict_w_threshold(node, example, threshold=0.5):
     :param row:
     :return:
     """
-    if example[node['index']] >= 0.5:
+    if example[node['index']] >= node['threshold']:
         if isinstance(node['left'], dict):
             return predict_w_threshold(node['left'], example, threshold)
         else:
