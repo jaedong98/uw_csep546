@@ -10,11 +10,14 @@ class DecisionTreeModel(object):
     def fit(self, x, y, min_to_stop=100):
         self.tree = build_tree(x, y, min_to_stop)
 
-    def predict(self, xTest):
+    def predict(self, xTest, threshold=None):
 
         predictions = []
         for example in xTest:
-            predictions.append(predict(self.tree, example))
+            if threshold:
+                predictions.append(predict_w_threshold(self.tree, example, threshold))
+            else:
+                predictions.append(predict(self.tree, example))
 
         return predictions
 
@@ -307,12 +310,12 @@ def predict_w_threshold(node, example, threshold=0.5):
         if isinstance(node['left'], dict):
             return predict_w_threshold(node['left'], example, threshold)
         else:
-            return node['num_label_1'] / node['num_label_0'] >= threshold
+            return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) < threshold)
     else:
         if isinstance(node['right'], dict):
             return predict_w_threshold(node['right'], example, threshold)
         else:
-            return node['num_label_1'] / node['num_label_0'] < threshold
+            return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) < threshold)
 
 
 def predict(node, example):

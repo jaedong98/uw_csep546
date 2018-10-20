@@ -48,7 +48,7 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     cont_length_fpr_fnr = []
     for threshold in thresholds:
         ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                            min_to_step=400,
+                            min_to_step=500,
                             threshold=threshold,
                             featurize=utils.FeaturizeWNumericFeature)
         print(ev)
