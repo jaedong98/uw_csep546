@@ -337,7 +337,7 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends):
 
     for accus in accuracies:
         xs, ys = zip(*accus)
-        ax.plot(xs, ys)
+        ax.plot(xs, ys, '-*')
 
     if legends:
         ax.legend(legends, loc='best')

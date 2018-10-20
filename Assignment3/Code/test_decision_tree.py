@@ -106,7 +106,6 @@ class TestDecisionTreeModel(unittest.TestCase):
         node = dtm.get_split(xTrains, play_tennis)
         self.assertTrue(node['index'] == 1)
 
-
     def test_split(self):
 
         # Given a node and grow tree recursively until it meets the stop requirements.

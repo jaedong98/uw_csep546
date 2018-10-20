@@ -293,6 +293,28 @@ def write_tree(node, file_obj, depth=0, indent='...,'):
         file_obj.write('\n%s[%s]' % (depth * indent, node))
 
 
+def predict_w_threshold(node, example, threshold=0.5):
+    """
+    Predict the value for an example given a tree(/node):
+         {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
+                'num_label_1': groups[0][1].count(1),
+                'num_label_0': groups[0][1].count(0)}
+    :param node:
+    :param row:
+    :return:
+    """
+    if example[node['index']] >= 0.5:
+        if isinstance(node['left'], dict):
+            return predict_w_threshold(node['left'], example, threshold)
+        else:
+            return node['num_label_1'] / node['num_label_0'] >= threshold
+    else:
+        if isinstance(node['right'], dict):
+            return predict_w_threshold(node['right'], example, threshold)
+        else:
+            return node['num_label_1'] / node['num_label_0'] < threshold
+
+
 def predict(node, example):
     """
     Predict the value for an example given a tree(/node):

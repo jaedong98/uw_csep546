@@ -104,6 +104,7 @@ def ExecuteAll(y, yPredicted):
     print("FPR:", FalsePositiveRate(y, yPredicted))
     print("FNR:", FalseNegativeRate(y, yPredicted))
 
+
 def EvaluateAll(y, yPredicted):
 
     results = "* Statistics: "
@@ -117,7 +118,8 @@ def EvaluateAll(y, yPredicted):
 
     return results
 
-class Evaluation():
+
+class Evaluation(object):
 
     def __init__(self, y, yPredicted):
         self.accuracy = Accuracy(y, yPredicted)

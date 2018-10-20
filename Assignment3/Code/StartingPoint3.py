@@ -25,8 +25,9 @@ print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 yTrain = yTrainRaw
 yTest = yTestRaw
 
+
 # part 1
-def generate_accuray_report(min_to_stop, report_path=report_path):
+def generate_accuray_report(xTrain, yTrain, xTest, yTest, min_to_stop, report_path=report_path):
     accuracy_md = os.path.join(report_path,
                                'prob2_part1_accuracy_m2s{}.md'.format(min_to_stop))
     model = dtm.DecisionTreeModel()
@@ -50,6 +51,6 @@ def generate_accuray_report(min_to_stop, report_path=report_path):
 
 
 if __name__ == "__main__":
-    generate_accuray_report(min_to_stop=100)
+    generate_accuray_report(xTrain, yTrain, xTest, yTest, min_to_stop=100)
 
 

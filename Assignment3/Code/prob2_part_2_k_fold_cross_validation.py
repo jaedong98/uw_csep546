@@ -1,10 +1,5 @@
-import collections
-import inspect
 import itertools
-import matplotlib.pyplot as plt
-import numpy as np
 import os
-import time
 
 import Assignment3Support as utils
 import EvaluationsStub as ev
@@ -128,66 +123,13 @@ def calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
     return accuracy
 
 
-def compare_models_by_cross_validation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                                       N=10,
-                                       max_iters=50000,
-                                       iter_step=1000,
-                                       step=0.01,
-                                       initial_w0=0.0,
-                                       k=5,
-                                       zn=1.96,
-                                       report_path=report_path):
-
-    yTrain = yTrainRaw
-    yTest = yTestRaw
-    # Top N frequency
-    fname = os.path.join(
-        report_path, 'cross_validation_by_frequency_folding_evals_{}.md'.format(N))
-    accuracy_by_frequency = calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
-                                                     N=N,
-                                                     max_iters=max_iters,
-                                                     iter_step=iter_step,
-                                                     step=step,
-                                                     initial_w0=initial_w0,
-                                                     k=k,
-                                                     fname=fname,
-                                                     selection_by='frequency')
-    # ub_f, lb_f = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
-
-    # Top N Mutual Information
-    fname = os.path.join(
-        report_path, 'cross_validation_by_mi_folding_evals_{}.md'.format(N))
-    accuracy_by_mi = calculate_accuracy_by_cv(xTrainRaw, xTestRaw, yTrainRaw, yTestRaw,
-                                              N=N,
-                                              max_iters=max_iters,
-                                              iter_step=iter_step,
-                                              step=step,
-                                              initial_w0=initial_w0,
-                                              k=k,
-                                              fname=fname,
-                                              selection_by='mi')
-    # ub_m, lb_m = utils.calculate_bounds(accuracy_by_frequency, zn, len(xTrain))
-
-    # report table (including upper and lower bounds)
-    accuracies = [accuracy_by_frequency, accuracy_by_mi]
-    legends = ["Top 10 Frequency", "Top 10 MI "]
-    table = utils.table_for_cross_validation_accuracy_estimate(accuracies,
-                                                               legends,
-                                                               len(xTrainRaw),
-                                                               N, zn)
-    print(table)
-    cm_md = os.path.join(report_path,
-                         '{}_N{}_k{}.md'.format(inspect.stack()[0][3], N, k))
-    with open(cm_md, 'w') as f:
-        f.write(table)
-
-
 def process_cross_validation_with_min2stops(start, end, step, k, zn, N,
                                             report_path=report_path):
 
-
     cross_val_md = os.path.join(report_path,
-                                'cross_val_{}_{}_{}_numeric_feature.md'.format(start, end, step))
+                                'cross_val_{}_{}_{}_numeric_feature.md'
+                                .format(start, end, step))
+
     with open(cross_val_md, 'w') as file_obj:
         min_to_stops = []
         accuracies = []
