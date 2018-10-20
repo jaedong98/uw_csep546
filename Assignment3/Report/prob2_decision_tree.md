@@ -301,7 +301,7 @@ Feature 1:
 
 * ROC curve was generated as below.
   
-![compare_roc_curves_by_min_to_stop_0.0_1.0_0.1](compare_roc_curves_by_min_to_stop_0.0_1.0_0.1.png)
+![compare_roc_curves_by_min_to_stop_0.0_1.0_0.001](compare_roc_curves_by_min_to_stop_0.0_1.0_0.001.png)
 
 * Best accuracy 0.9232424677187948 with MinToStop 420
 * Model visualization with min to stop 420
