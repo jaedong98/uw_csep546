@@ -52,14 +52,6 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     graphs = []
     legends = []
     original_fpr_fnr = []
-    for threshold in thresholds:
-        ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-                            min_to_step=100,
-                            threshold=threshold,
-                            featurize=utils.Featurize)
-        original_fpr_fnr.append((ev.fpr, ev.fnr))
-    graphs.append(sorted(original_fpr_fnr))
-    legends.append('0/1 Length Feature')
 
     for min_to_step in [420]:
         cont_length_fpr_fnr = []
@@ -68,10 +60,26 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                 min_to_step=min_to_step,
                                 threshold=threshold,
                                 featurize=utils.FeaturizeWNumericFeature)
+            if threshold == 0:
+                assert (ev.fpr == 0.0), ev
+            print(ev)
             cont_length_fpr_fnr.append((ev.fpr, ev.fnr))
-        graphs.append(sorted(cont_length_fpr_fnr))
+        graphs.append(cont_length_fpr_fnr)
         legends.append('Cont. Length {} minToSteps'.format(min_to_step))
 
+    for threshold in thresholds:
+        ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+                            min_to_step=100,
+                            threshold=threshold,
+                            featurize=utils.Featurize)
+        if threshold == 0:
+            assert(ev.fpr == 0.0), ev
+        print(ev)
+        original_fpr_fnr.append((ev.fpr, ev.fnr))
+    graphs.append(original_fpr_fnr)
+    legends.append('0/1 Length Feature')
+
+    # plotting
     start = thresholds[0]
     end = thresholds[-1]
     step = thresholds[1] - thresholds[0]
@@ -92,7 +100,7 @@ if __name__ == '__main__':
     (xTrainRaw, yTrainRaw, xTestRaw,
      yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
 
-    start = 0.01
+    start = 0
     end = 1
     N = 1000
     thresholds = [x / N for x in range(N + 1)]

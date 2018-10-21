@@ -122,8 +122,13 @@ def EvaluateAll(y, yPredicted):
 class Evaluation(object):
 
     def __init__(self, y, yPredicted):
+        self.y = y
+        self.yPredicted = yPredicted
         self.accuracy = Accuracy(y, yPredicted)
         self.precision = Precision(y, yPredicted)
         self.recall = Recall(y, yPredicted)
         self.fpr = FalsePositiveRate(y, yPredicted)
         self.fnr = FalseNegativeRate(y, yPredicted)
+
+    def __repr__(self):
+        return EvaluateAll(self.y, self.yPredicted)

@@ -14,10 +14,11 @@ class DecisionTreeModel(object):
 
         predictions = []
         for example in xTest:
-            if threshold:
-                predictions.append(predict_w_threshold(self.tree, example, threshold))
-            else:
+            if threshold is None:
                 predictions.append(predict(self.tree, example))
+            else:
+                predictions.append(predict_w_threshold(self.tree, example, threshold))
+
 
         return predictions
 
@@ -179,6 +180,8 @@ def get_split(xTrains, yTrains):
                                   'groups': [((examples), (ys)), ((examples), (ys))]}
     """
     i_gails = get_information_gains(xTrains, yTrains)
+    if sum(i_gails) == 0.0:
+        print("No more gains found.")
     feature_index = i_gails.index(max(i_gails))
     threshold = get_feature_split_threshold(feature_index, xTrains)
     groups = split_by_feature(feature_index, xTrains, yTrains)
@@ -195,7 +198,9 @@ def get_feature_split_threshold(feature_index, xTrains):
     unique_values = list(set(values_by_features[feature_index]))
     if set(unique_values) == set([0, 1]):
         return 0.5
-    return (max(unique_values) - min(unique_values)) / 2
+    if unique_values == [1] or unique_values == [0]:
+        return 0.5
+    return (max(unique_values) - min(unique_values)) / 2.
 
 
 def split_by_feature(feature_index, xTrains, yTrains, threshold=None):
@@ -320,16 +325,28 @@ def predict_w_threshold(node, example, threshold=0.5):
         if isinstance(node['left'], dict):
             return predict_w_threshold(node['left'], example, threshold)
         else:
+            if (node['num_label_1'] + node['num_label_0']) == 0:
+                return node['right']
+            if node['num_label_1'] == 0:
+                return 0
+            if node['num_label_0'] == 0:
+                return 1
             if node['left'] == 1:
-                return int(node['num_label_1'] / (node['num_label_1'] + node['num_label_0']) < threshold)
-            return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) < threshold)
+                return int(node['num_label_1'] / (node['num_label_1'] + node['num_label_0']) <= threshold)
+            return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) <= threshold)
     else:
         if isinstance(node['right'], dict):
             return predict_w_threshold(node['right'], example, threshold)
         else:
+            if (node['num_label_1'] + node['num_label_0']) == 0:
+                return node['right']
+            if node['num_label_1'] == 0:
+                return 0
+            if node['num_label_0'] == 0:
+                return 1
             if node['right'] == 1:
-                return int(node['num_label_1'] / (node['num_label_1'] + node['num_label_0']) < threshold)
-            return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) < threshold)
+                return int(node['num_label_1'] / (node['num_label_1'] + node['num_label_0']) <= threshold)
+            return int(node['num_label_0'] / (node['num_label_1'] + node['num_label_0']) <= threshold)
 
 
 def predict(node, example):
