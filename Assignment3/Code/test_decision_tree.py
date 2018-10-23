@@ -1,21 +1,5 @@
 import unittest
-import os
-import Assignment3Support as utils
 import DecisionTreeModel as dtm
-
-# File/Folder path
-kDataPath = os.path.join(os.path.dirname(
-    os.path.dirname(__file__)), r"Data/SMSSpamCollection")
-
-# Loading data
-(xRaw, yRaw) = utils.LoadRawData(kDataPath)
-
-(xTrainRaw, yTrainRaw, xTestRaw,
- yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
-
-(xTrains, xTests) = utils.Featurize(xTrainRaw, xTestRaw)
-yTrains = yTrainRaw
-yTests = yTestRaw
 
 
 class TestDecisionTreeModel(unittest.TestCase):
