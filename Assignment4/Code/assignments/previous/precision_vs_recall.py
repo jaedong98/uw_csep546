@@ -5,9 +5,8 @@ import numpy as np
 import os
 import time
 
-import Assignment3Support as utils
-import EvaluationsStub
-import LogisticRegressionModel as lgm
+import utils.Assignment3Support as utils
+import utils.EvaluationsStub
 
 import features_by_mi as fbm
 
@@ -50,7 +49,7 @@ def run_logistic_regression_w_threshold(xTrainRaw, xTestRaw, yTrain, yTest, N=10
     for predict_threshold in predict_thresholds:
 
         yTestPredicted = model.predict(xTest, predict_threshold)
-        evaluation = EvaluationsStub.Evaluation(yTest, yTestPredicted)
+        evaluation = utils.EvaluationsStub.Evaluation(yTest, yTestPredicted)
         precisions_vs_recalls.append((evaluation.recall, evaluation.precision))
         thresholds_fp.append((predict_threshold, evaluation.fpr))
         thresholds_fn.append((predict_threshold, evaluation.fnr))

@@ -1,8 +1,8 @@
 import os
 
-import Assignment3Support as utils
-import EvaluationsStub
-import DecisionTreeModel as dtm
+import utils.Assignment3Support as utils
+import utils.EvaluationsStub
+import models.DecisionTreeModel as dtm
 # File/Folder path
 kDataPath = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Data/SMSSpamCollection")

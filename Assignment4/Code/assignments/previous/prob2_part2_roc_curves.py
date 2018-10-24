@@ -3,9 +3,9 @@ import os
 
 import numpy as np
 
-import Assignment3Support as utils
-import EvaluationsStub as es
-import DecisionTreeModel as dtm
+import utils.Assignment3Support as utils
+import utils.EvaluationsStub as es
+import model.DecisionTreeModel as dtm
 
 """
 What is an ROC curve?

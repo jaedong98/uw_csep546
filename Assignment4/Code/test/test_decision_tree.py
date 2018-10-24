@@ -1,5 +1,5 @@
 import unittest
-import DecisionTreeModel as dtm
+import model.DecisionTreeModel as dtm
 
 
 class TestDecisionTreeModel(unittest.TestCase):

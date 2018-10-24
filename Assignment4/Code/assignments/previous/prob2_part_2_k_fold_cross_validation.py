@@ -1,9 +1,9 @@
 import itertools
 import os
 
-import Assignment3Support as utils
-import EvaluationsStub as ev
-import DecisionTreeModel as dtm
+import utils.Assignment3Support as utils
+import utils.EvaluationsStub as ev
+import models.DecisionTreeModel as dtm
 
 
 # File/Folder path

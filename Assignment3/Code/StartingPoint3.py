@@ -1,8 +1,8 @@
 import os
 
-import Assignment3Support as utils
-import EvaluationsStub
-import DecisionTreeModel as dtm
+import utils.Assignment3Support as utils
+import utils.EvaluationsStub
+import model.DecisionTreeModel as dtm
 # File/Folder path
 kDataPath = os.path.join(os.path.dirname(
     os.path.dirname(__file__)), r"Data/SMSSpamCollection")
@@ -35,7 +35,7 @@ def generate_accuray_report(xTrain, yTrain, xTest, yTest, min_to_stop, report_pa
     model.visualize()
 
     yTestPredicted = model.predict(xTest)
-    accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+    accuracy = utils.EvaluationsStub.Accuracy(yTest, yTestPredicted)
     zn = 1.96
     N = len(yTrain)
 
