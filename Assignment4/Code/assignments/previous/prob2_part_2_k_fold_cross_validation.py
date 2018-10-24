@@ -1,7 +1,7 @@
 import itertools
 import os
 
-import utils.Assignment3Support as utils
+import utils.Assignment3Support as sup
 import utils.EvaluationsStub as ev
 import models.DecisionTreeModel as dtm
 
@@ -66,7 +66,7 @@ def calculate_accuracy_by_cv(xTrainRaw, yTrainRaw,
                              fname='',
                              k=5,
                              min_to_stop=100,
-                             featurize=utils.FeaturizeWNumericFeature,
+                             featurize=sup.FeaturizeWNumericFeature,
                              file_obj=None):
     """
     COPIED from homework2 but
@@ -140,9 +140,9 @@ def process_cross_validation_with_min2stops(start, end, step, k, zn, N,
                                             fname='',
                                             k=k,
                                             min_to_stop=min_to_stop,
-                                            featurize=utils.FeaturizeWNumericFeature,
+                                            featurize=sup.FeaturizeWNumericFeature,
                                             file_obj=file_obj)
-            upper, lower = utils.calculate_bounds(accu, zn, N)
+            upper, lower = sup.calculate_bounds(accu, zn, N)
             min_to_stops.append(min_to_stop)
             accuracies.append((lower, accu, upper))
 
@@ -159,7 +159,7 @@ def process_cross_validation_with_min2stops(start, end, step, k, zn, N,
                                  'prob2_part2_cross_val_accuracy_{}_{}_{}_numeric_feature.png'
                                  .format(start, end, step))
 
-        utils.draw_accuracies_vs_min_to_stps(min_to_stops,
+        sup.draw_accuracies_vs_min_to_stps(min_to_stops,
                                              accuracies,
                                              'MinToStops',
                                              'Accuracies',
@@ -170,8 +170,8 @@ def process_cross_validation_with_min2stops(start, end, step, k, zn, N,
 
 if __name__ == '__main__':
     # Loading data
-    (xRaw, yRaw) = utils.LoadRawData(kDataPath)
-    (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = utils.TrainTestSplit(xRaw,
+    (xRaw, yRaw) = sup.LoadRawData(kDataPath)
+    (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = sup.TrainTestSplit(xRaw,
                                                                       yRaw)
 
     start = 100

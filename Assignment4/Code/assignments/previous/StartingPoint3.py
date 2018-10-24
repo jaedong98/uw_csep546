@@ -1,6 +1,6 @@
 import os
 
-import utils.Assignment3Support as utils
+import utils.Assignment3Support as sup
 import utils.EvaluationsStub
 import models.DecisionTreeModel as dtm
 # File/Folder path
@@ -12,16 +12,16 @@ report_path = os.path.join(os.path.dirname(
 
 
 # Loading data
-(xRaw, yRaw) = utils.LoadRawData(kDataPath)
+(xRaw, yRaw) = sup.LoadRawData(kDataPath)
 
 # Train-Test split
 (xTrainRaw, yTrainRaw, xTestRaw,
- yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
+ yTestRaw) = sup.TrainTestSplit(xRaw, yRaw)
 
 print("Train is %f percent spam." % (sum(yTrainRaw)/len(yTrainRaw)))
 print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 
-(xTrain, xTest) = utils.Featurize(xTrainRaw, xTestRaw)
+(xTrain, xTest) = sup.Featurize(xTrainRaw, xTestRaw)
 yTrain = yTrainRaw
 yTest = yTestRaw
 
@@ -35,11 +35,11 @@ def generate_accuray_report(xTrain, yTrain, xTest, yTest, min_to_stop, report_pa
     model.visualize()
 
     yTestPredicted = model.predict(xTest)
-    accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+    accuracy = utils.EvaluationsStub.Accuracy(yTest, yTestPredicted)
     zn = 1.96
     N = len(yTrain)
 
-    upper, lower = utils.calculate_bounds(accuracy, zn, N)
+    upper, lower = sup.calculate_bounds(accuracy, zn, N)
     results = "* Before changing feature selections"
     results += "\n  * Accuracy: {}, Lower: {}, Upper: {}".format(accuracy, lower, upper)
     print(results)

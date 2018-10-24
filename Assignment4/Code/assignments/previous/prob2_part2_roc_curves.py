@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-import utils.Assignment3Support as utils
+import utils.Assignment3Support as sup
 import utils.EvaluationsStub as es
 import model.DecisionTreeModel as dtm
 
@@ -31,7 +31,7 @@ report_path = os.path.join(os.path.dirname(
 def get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                    min_to_step,
                    threshold,
-                   featurize=utils.Featurize):
+                   featurize=sup.Featurize):
 
     yTrain = yTrainRaw
     yTest = yTestRaw
@@ -59,7 +59,7 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
             ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                 min_to_step=min_to_step,
                                 threshold=threshold,
-                                featurize=utils.FeaturizeWNumericFeature)
+                                featurize=sup.FeaturizeWNumericFeature)
             if threshold == 0:
                 assert (ev.fpr == 0.0), ev
             print(ev)
@@ -71,7 +71,7 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         ev = get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                             min_to_step=100,
                             threshold=threshold,
-                            featurize=utils.Featurize)
+                            featurize=sup.Featurize)
         if threshold == 0:
             assert(ev.fpr == 0.0), ev
         print(ev)
@@ -85,7 +85,7 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     step = thresholds[1] - thresholds[0]
     fname = '{}_{}_{}_{}.png'.format(inspect.stack()[0][3], start, end, step)
     img_fname = os.path.join(report_path, fname)
-    utils.draw_accuracies(graphs,
+    sup.draw_accuracies(graphs,
                           'False Positive Rate', 'False Negative Rate', '',
                           img_fname,
                           legends=legends,
@@ -94,11 +94,11 @@ def compare_roc_curves_by_min_to_stop(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
 if __name__ == '__main__':
     # Loading data
-    (xRaw, yRaw) = utils.LoadRawData(kDataPath)
+    (xRaw, yRaw) = sup.LoadRawData(kDataPath)
 
     # Train-Test split
     (xTrainRaw, yTrainRaw, xTestRaw,
-     yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
+     yTestRaw) = sup.TrainTestSplit(xRaw, yRaw)
 
     start = 0
     end = 1

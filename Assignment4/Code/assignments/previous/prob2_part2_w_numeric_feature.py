@@ -1,6 +1,6 @@
 import os
 
-import utils.Assignment3Support as utils
+import utils.Assignment3Support as sup
 import utils.EvaluationsStub
 import models.DecisionTreeModel as dtm
 # File/Folder path
@@ -12,16 +12,16 @@ report_path = os.path.join(os.path.dirname(
 
 
 # Loading data
-(xRaw, yRaw) = utils.LoadRawData(kDataPath)
+(xRaw, yRaw) = sup.LoadRawData(kDataPath)
 
 # Train-Test split
 (xTrainRaw, yTrainRaw, xTestRaw,
- yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
+ yTestRaw) = sup.TrainTestSplit(xRaw, yRaw)
 
 print("Train is %f percent spam." % (sum(yTrainRaw)/len(yTrainRaw)))
 print("Test is %f percent spam." % (sum(yTestRaw)/len(yTestRaw)))
 
-(xTrain, xTest) = utils.FeaturizeWNumericFeature(xTrainRaw, xTestRaw)
+(xTrain, xTest) = sup.FeaturizeWNumericFeature(xTrainRaw, xTestRaw)
 yTrain = yTrainRaw
 yTest = yTestRaw
 
@@ -41,11 +41,11 @@ for min_to_stop in [x for x in range(start, end, step)]:
     model.visualize()
 
     yTestPredicted = model.predict(xTest)
-    accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+    accuracy = utils.EvaluationsStub.Accuracy(yTest, yTestPredicted)
     zn = 1.96
     N = len(yTrain)
 
-    upper, lower = utils.calculate_bounds(accuracy, zn, N)
+    upper, lower = sup.calculate_bounds(accuracy, zn, N)
 
     min_to_stops.append(min_to_stop)
     accuracies.append((lower, accuracy, upper))
@@ -59,7 +59,7 @@ img_fname = os.path.join(report_path,
                          'prob2_part2_accuracy_{}_{}_{}.png'
                          .format(start, end, step))
 
-utils.draw_accuracies_vs_min_to_stps(min_to_stops,
+sup.draw_accuracies_vs_min_to_stps(min_to_stops,
                                      accuracies,
                                      'MinToStops',
                                      'Accuracies',
