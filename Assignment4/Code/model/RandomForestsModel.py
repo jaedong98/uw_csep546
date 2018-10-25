@@ -1,4 +1,5 @@
 from collections import Counter
+from joblib import Parallel, delayed
 import math
 import random
 
@@ -41,7 +42,9 @@ class RandomForestModel(object):
 
             xs.append(x)
 
-        self.trees = [build_tree(x, y, min_to_split) for x in xs]
+        # self.trees = [build_tree(x, y, min_to_split) for x in xs]
+        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split)
+                                        for x in xs)
 
     def predict(self, xTest, threshold=None):
 
