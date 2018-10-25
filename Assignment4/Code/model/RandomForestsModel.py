@@ -1,14 +1,46 @@
-from collections import Counter, namedtuple
+from collections import Counter
 import math
+import random
+
+from utils.bootstrap_sampling import get_bagged_samples
+from utils.feature_restriction import select_random_indices, restrict_features
 
 
-class DecisionTreeModel(object):
+class RandomForestModel(object):
 
-    def __init__(self):
-        self.tree = None
+    def __init__(self,
+                 numTrees=10,
+                 use_bagging=False,
+                 feature_restriction=0,
+                 seed=0):
 
-    def fit(self, x, y, min_to_stop=100):
-        self.tree = build_tree(x, y, min_to_stop)
+        self.numTrees = numTrees
+        self.use_bagging = use_bagging
+        self.feature_restriction = feature_restriction
+        self.trees = []
+        self.selected_indices = []  # selected feature indices
+        self.seed = seed
+
+    def fit(self, x, y, min_to_split=2):
+
+        xs = []
+        random.seed(self.seed)
+        for _ in range(self.numTrees):
+            seed = random.randint(0, self.numTrees)
+            # feature restriction: different random set for each tree
+            if self.feature_restriction > 0:
+                selected_indices = select_random_indices(len(x[0]),
+                                                         self.feature_restriction,
+                                                         seed=seed)
+
+                x = restrict_features(x, selected_indices)
+
+            if self.use_bagging:
+                x = get_bagged_samples(x, seed=self.seed)
+
+            xs.append(x)
+
+        self.trees = [build_tree(x, y, min_to_split) for x in xs]
 
     def predict(self, xTest, threshold=None):
 
@@ -19,14 +51,12 @@ class DecisionTreeModel(object):
             else:
                 predictions.append(predict_w_threshold(self.tree, example, threshold))
 
-
         return predictions
 
     def visualize(self, file_obj=None):
         print_tree(self.tree)
         if file_obj:
             write_tree(self.tree, file_obj)
-
 
 
 def get_entropy_for_feature(feature_dict):

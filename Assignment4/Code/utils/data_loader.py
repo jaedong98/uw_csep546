@@ -21,7 +21,7 @@ def get_split_data():
 
 def get_xy_train_raw():
     """
-    :return: xTrainRaw, yTrainRaw
+    :return: xTrainRaw with noise, yTrainRaw
     """
     (xTrainRawOriginal, yTrainRawOriginal, _, _) = get_split_data()
     return noise.MakeProblemHarder(xTrainRawOriginal, yTrainRawOriginal)
@@ -29,7 +29,7 @@ def get_xy_train_raw():
 
 def get_xy_test_raw():
     """
-    :return: xTestRaw, yTestRaw
+    :return: xTestRaw with noise, yTestRaw
     """
     (_, _, xTestRawOriginal, yTestRawOriginal) = get_split_data()
     return noise.MakeProblemHarder(xTestRawOriginal, yTestRawOriginal)
@@ -39,7 +39,7 @@ def get_featurized_xs_ys(numFrequentWords=0,
                          numMutualInformationWords=295,
                          includeHandCraftedFeatures=True):
     """
-    :return: xTrain, xTest, yTrain, yTest
+    :return: xTrain with noise, xTest with noise, yTrain, yTest
     """
     xTrainRaw, yTrainRaw = get_xy_train_raw()
     xTestRaw, yTestRaw = get_xy_test_raw()

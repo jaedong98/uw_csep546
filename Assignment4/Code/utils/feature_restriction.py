@@ -5,7 +5,7 @@ def restrict_features(data, selected_indices):
     """
     Restircts features by selecting features in each sample.
 
-    :param data: xTrain or xTest (a list of feature lists)
+    :param data: xTrain or xTest (a list of samples(feature lists))
     :param selected_indices: N randomly selected feature index.
     :return: a list of 'selected' feature lists
     """
