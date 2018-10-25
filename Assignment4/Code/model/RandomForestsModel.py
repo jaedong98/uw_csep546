@@ -20,6 +20,7 @@ class RandomForestModel(object):
         self.trees = []
         self.selected_indices = []  # selected feature indices
         self.seed = seed
+        self.predictions = []
 
     def fit(self, x, y, min_to_split=2):
 
@@ -44,19 +45,32 @@ class RandomForestModel(object):
 
     def predict(self, xTest, threshold=None):
 
-        predictions = []
-        for example in xTest:
-            if threshold is None:
-                predictions.append(predict(self.tree, example))
-            else:
-                predictions.append(predict_w_threshold(self.tree, example, threshold))
+        self.predictions = []
+        for tree in self.trees:
 
-        return predictions
+            i_predictions = []
+            for example in xTest:
+                if threshold is None:
+                    i_predictions.append(predict(tree, example))
+                else:
+                    i_predictions.append(predict_w_threshold(tree,
+                                                             example,
+                                                             threshold))
+            self.predictions.append(i_predictions)
+
+        prediction_votes = []
+        for combines in zip(*self.predictions):
+            voted = Counter(combines).most_common(1)[0][0]
+            prediction_votes.append(voted)
+
+        return prediction_votes
 
     def visualize(self, file_obj=None):
-        print_tree(self.tree)
-        if file_obj:
-            write_tree(self.tree, file_obj)
+        for tree in self.trees:
+            print_tree(tree)
+            if file_obj:
+                write_tree(tree, file_obj)
+            file_obj.write("*" * 80)
 
 
 def get_entropy_for_feature(feature_dict):
