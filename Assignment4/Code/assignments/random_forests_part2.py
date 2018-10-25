@@ -1,4 +1,5 @@
 import os
+import time
 from Assignment4.Code import report_path
 from assignments.randome_forests_part1 import calculate_accuracies
 from utils.Assignment4Support import draw_random_forest_accuracy_variances
@@ -11,7 +12,6 @@ configs = [{'min_to_split': 2, 'use_bagging': True, 'feature_restriction': 20},
 
 def generate_comparision_accuracies(numTrees_options=[1, 20, 40, 60, 80],
                                     configs=configs):
-
 
     accuracies_per_config = []
     for config in configs:
@@ -43,4 +43,7 @@ def report(numTrees_options=[1, 20, 40, 60, 80], configs=configs):
 
 
 if __name__ == '__main__':
+    tic = time.time()
     report(numTrees_options=[1, 20, 40, 60, 80])
+    print('{} mins'.format((time.time() - tic) / 60.))
+

@@ -19,30 +19,35 @@ def get_split_data():
     return sup.TrainTestSplit(xRaw, yRaw)
 
 
-def get_xy_train_raw():
+def get_xy_train_raw(with_noise=True):
     """
     :return: xTrainRaw with noise, yTrainRaw
     """
     (xTrainRawOriginal, yTrainRawOriginal, _, _) = get_split_data()
-    return noise.MakeProblemHarder(xTrainRawOriginal, yTrainRawOriginal)
+    if with_noise:
+        return noise.MakeProblemHarder(xTrainRawOriginal, yTrainRawOriginal)
+    return xTrainRawOriginal, yTrainRawOriginal
 
 
-def get_xy_test_raw():
+def get_xy_test_raw(with_noise=True):
     """
     :return: xTestRaw with noise, yTestRaw
     """
     (_, _, xTestRawOriginal, yTestRawOriginal) = get_split_data()
-    return noise.MakeProblemHarder(xTestRawOriginal, yTestRawOriginal)
+    if with_noise:
+        return noise.MakeProblemHarder(xTestRawOriginal, yTestRawOriginal)
+    return xTestRawOriginal, yTestRawOriginal
 
 
 def get_featurized_xs_ys(numFrequentWords=0,
                          numMutualInformationWords=295,
-                         includeHandCraftedFeatures=True):
+                         includeHandCraftedFeatures=True,
+                         with_noise=True):
     """
     :return: xTrain with noise, xTest with noise, yTrain, yTest
     """
-    xTrainRaw, yTrainRaw = get_xy_train_raw()
-    xTestRaw, yTestRaw = get_xy_test_raw()
+    xTrainRaw, yTrainRaw = get_xy_train_raw(with_noise)
+    xTestRaw, yTestRaw = get_xy_test_raw(with_noise)
 
     xTrain, xTest = sup.FeaturizeExt(xTrainRaw,
                                      yTrainRaw,

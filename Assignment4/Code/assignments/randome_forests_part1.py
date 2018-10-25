@@ -10,12 +10,13 @@ def calculate_accuracies(numTrees=10,
                          use_bagging=True,
                          feature_restriction=0,
                          min_to_split=2,
-                         seed=10):
+                         seed=1000000,
+                         with_noise=True):
     rfm = RandomForestModel(numTrees=numTrees,
                             use_bagging=use_bagging,
                             feature_restriction=feature_restriction,
                             seed=seed)
-    xTrain, xTest, yTrain, yTest = get_featurized_xs_ys()
+    xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(with_noise)
     rfm.fit(xTrain, yTrain, min_to_split=min_to_split)
     yTestPredicted = rfm.predict(xTest)
     accuracies = [Evaluation(yTest, yTestPredicted).accuracy]
@@ -30,13 +31,15 @@ def create_accuracy_comparison_tables(numTrees=10,
                                       feature_restriction=0,
                                       min_to_split=2,
                                       seed=10,
-                                      w=25):
+                                      w=25,
+                                      with_noise=True):
 
     accuracies = calculate_accuracies(numTrees,
                                       use_bagging,
                                       feature_restriction,
                                       min_to_split,
-                                      seed)
+                                      seed,
+                                      with_noise)
     table = '|'
     table += str('{}|' * 2).format(*[s.center(w) for s in ["Trees", "Accuracies"]])
     tree_names = ['Full'.center(w)] + ['Tree {}'.center(w).format(i) for i in range(numTrees)]
@@ -60,13 +63,25 @@ def create_accuracy_comparison_tables(numTrees=10,
         f.write('\nMinToSplit: {}'.format(min_to_split))
         f.write('\nSeed for random: {}'.format(seed))
 
+    print("Generated report: {}".format(md))
     return accuracies[0]
 
 
 if __name__ == '__main__':
 
-    create_accuracy_comparison_tables(numTrees=10,
-                                      use_bagging=True,
-                                      feature_restriction=0,
-                                      min_to_split=2,
-                                      seed=10)
+    config = -1
+
+    if config == -1:  # basic configuration
+        create_accuracy_comparison_tables(numTrees=10,
+                                          use_bagging=True,
+                                          feature_restriction=0,
+                                          min_to_split=2,
+                                          seed=10)
+
+    if config == 2:
+        create_accuracy_comparison_tables(numTrees=1,
+                                          use_bagging=False,
+                                          feature_restriction=20,
+                                          min_to_split=2,
+                                          seed=10,
+                                          with_noise=True)
