@@ -4,6 +4,7 @@ import numpy as np
 import time
 import model.LogisticRegressionModel as lgm
 import utils.EvaluationsStub
+from utils.feature_selection_mi import extract_features_by_mi
 
 
 def LoadRawData(path):
@@ -58,13 +59,55 @@ def TrainTestSplit(x, y, percentTest=.25):
     return (xTrain, yTrain, xTest, yTest)
 
 
+def featurize_raw_data(raw_data, words_by_mi):
+    words = ['call', 'to', 'your']
+    train = []
+    for x in raw_data:
+        features = []
+
+        # Have a feature for longer texts
+        if len(x) > 40:
+            features.append(1)
+        else:
+            features.append(0)
+
+        # Have a feature for texts with numbers in them
+        if any(i.isdigit() for i in x):
+            features.append(1)
+        else:
+            features.append(0)
+
+        # Have features for a few words
+        for word in words:
+            if word in x:
+                features.append(1)
+            else:
+                features.append(0)
+
+        # Have features for a few words
+        for word in words_by_mi:
+            if word in x:
+                features.append(1)
+            else:
+                features.append(0)
+
+        train.append(features)
+    return train
+
+
 def FeaturizeExt(xTrainRaw,
                  yTrainRaw,
                  xTestRaw,
-                 numFrequentWords,
-                 numMutualInformationWords,
-                 includeHandCraftedFeatures):
-    pass
+                 numFrequentWords=0,
+                 numMutualInformationWords=295,
+                 includeHandCraftedFeatures=True):
+    fs = extract_features_by_mi(xTrainRaw, yTrainRaw, numMutualInformationWords)
+    words_by_mi = [f[0] for f in fs]
+
+    xTrain = featurize_raw_data(xTrainRaw, words_by_mi)
+    xTest = featurize_raw_data(xTestRaw, words_by_mi)
+
+    return xTrain, xTest
 
 
 def Featurize(xTrainRaw, xTestRaw):
