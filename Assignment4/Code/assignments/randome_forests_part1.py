@@ -10,7 +10,7 @@ def calculate_accuracies(numTrees=10,
                          use_bagging=True,
                          feature_restriction=0,
                          min_to_split=2,
-                         seed=1000000,
+                         seed=0,
                          with_noise=True):
     rfm = RandomForestModel(numTrees=numTrees,
                             use_bagging=use_bagging,
@@ -79,9 +79,9 @@ if __name__ == '__main__':
                                           seed=10)
 
     if config == 2:
-        create_accuracy_comparison_tables(numTrees=1,
+        create_accuracy_comparison_tables(numTrees=20,
                                           use_bagging=False,
                                           feature_restriction=20,
                                           min_to_split=2,
-                                          seed=10,
+                                          seed=0,
                                           with_noise=True)

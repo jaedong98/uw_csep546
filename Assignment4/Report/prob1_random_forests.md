@@ -24,3 +24,16 @@ Use Bagging: True
 Feature Restriction: 0
 MinToSplit: 2
 Seed for random: 10
+
+
+#### Run parameter sweeps for numTrees in: [1, 20, 40, 60, 80], for each of these settings:
+
+* Config 0 - minSplit = 2, Bagging, and FeatureRestriction = 20
+* Config 1 - minSplit of 50, Bagging, and FeatureRestriction = 20
+* Config 2 - minSplit = 2, NO Bagging, and FeatureRestriction = 20
+* Config 3 - minSplit = 2, Bagging, and NO FeatureRestriction = 0
+
+##### Produce a plot with numTrees on x-axis and the hold-out set accuracy for each of these variations on the y-axis (that means 4 lines).
+
+![prob2_part2_accuracy_cmp_[1, 20, 40, 60, 80]_randseed_0](prob2_part2_accuracy_cmp_1_20_40_60_80_randseed_0.png)
+
