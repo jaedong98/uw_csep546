@@ -1,3 +1,6 @@
+import random
+
+
 def restrict_features(data, selected_indices):
     """
     Restircts features by selecting features in each sample.
@@ -24,3 +27,8 @@ def restrict_features(data, selected_indices):
         raise AssertionError("Missing data in output.")
 
     return selected_data
+
+
+def select_random_indices(original_features_cnt, num_to_select, seed=10):
+    random.seed(seed)
+    return random.sample(range(0, original_features_cnt - 1), num_to_select)
