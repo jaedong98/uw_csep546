@@ -1,5 +1,6 @@
 import random
 
+
 def get_bagging_indices(sample_size, seed=0):
     """
 
@@ -16,3 +17,19 @@ def get_bagging_indices(sample_size, seed=0):
         raise AssertionError("Unmatched bagging size {} vs {}"
                              .format(len(bagging_indices), sample_size))
     return bagging_indices
+
+
+def get_bagged_samples(samples, seed=0):
+    """
+    Bootstraptes samples.
+
+    :param samples: a list of samples, either xTrains or xTests
+    :param seed:
+    :return:
+    """
+    bagging_indices = get_bagging_indices(len(samples), seed)
+    new_samples = []
+    for i in bagging_indices:
+        new_samples.append(samples[i])
+
+    return new_samples
