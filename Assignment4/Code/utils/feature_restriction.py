@@ -31,4 +31,7 @@ def restrict_features(data, selected_indices):
 
 def select_random_indices(original_features_cnt, num_to_select, seed=0):
     random.seed(seed)
-    return random.sample(range(0, original_features_cnt - 1), num_to_select)
+    try:
+        return random.sample(range(0, original_features_cnt), num_to_select)
+    except ValueError as ve:
+        raise ve

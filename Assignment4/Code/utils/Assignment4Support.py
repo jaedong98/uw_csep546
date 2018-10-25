@@ -336,6 +336,21 @@ def draw_single_plot(tuples, xlabel, ylabel, title, img_fname, legends=None):
     print("Saved/Updated image {}".format(img_fname))
 
 
+def draw_random_forest_accuracy_variances(accuracies,
+                                          xlabel,
+                                          ylabel,
+                                          title,
+                                          img_fname,
+                                          legends):
+    """
+    accuracies: a list of list of (iter_cnt, accurarcy)s
+    """
+    draw_accuracies(accuracies,
+                    xlabel, ylabel,
+                    title, img_fname,
+                    legends)
+
+
 def draw_accuracies_vs_min_to_stps(min_to_stops, accuracies,
                                    xlabel, ylabel,
                                    title, img_fname,
@@ -406,6 +421,7 @@ def draw_comparison(data, xlabel, ylabel, title, img_fname, legends):
     """
     draw_accuracies(data, xlabel, ylabel, title, img_fname, legends)
 
+
 def write_csv(data, csv_fname, headers=[]):
 
     with open(csv_fname, 'w') as f:
@@ -413,6 +429,7 @@ def write_csv(data, csv_fname, headers=[]):
             f.write(','.join(headers))
         for r in data:
             f.write('\n{}'.format(','.join([str(x) for x in r])))
+
 
 def accuracy_table(accuracies, features, w=20):
 

@@ -6,12 +6,11 @@ from utils.EvaluationsStub import Evaluation
 from utils.data_loader import get_featurized_xs_ys
 
 
-def create_accuracy_comparison_tables(numTrees=10,
-                                      use_bagging=True,
-                                      feature_restriction=0,
-                                      min_to_split=2,
-                                      seed=10,
-                                      w=25):
+def calculate_accuracies(numTrees=10,
+                         use_bagging=True,
+                         feature_restriction=0,
+                         min_to_split=2,
+                         seed=10):
     rfm = RandomForestModel(numTrees=numTrees,
                             use_bagging=use_bagging,
                             feature_restriction=feature_restriction,
@@ -23,6 +22,21 @@ def create_accuracy_comparison_tables(numTrees=10,
     for prediction in rfm.predictions:
         accuracies.append(Evaluation(yTest, prediction).accuracy)
 
+    return accuracies
+
+
+def create_accuracy_comparison_tables(numTrees=10,
+                                      use_bagging=True,
+                                      feature_restriction=0,
+                                      min_to_split=2,
+                                      seed=10,
+                                      w=25):
+
+    accuracies = calculate_accuracies(numTrees,
+                                      use_bagging,
+                                      feature_restriction,
+                                      min_to_split,
+                                      seed)
     table = '|'
     table += str('{}|' * 2).format(*[s.center(w) for s in ["Trees", "Accuracies"]])
     tree_names = ['Full'.center(w)] + ['Tree {}'.center(w).format(i) for i in range(numTrees)]
@@ -45,6 +59,8 @@ def create_accuracy_comparison_tables(numTrees=10,
         f.write('\nFeature Restriction: {}'.format(feature_restriction))
         f.write('\nMinToSplit: {}'.format(min_to_split))
         f.write('\nSeed for random: {}'.format(seed))
+
+    return accuracies[0]
 
 
 if __name__ == '__main__':
