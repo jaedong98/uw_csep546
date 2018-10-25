@@ -1,11 +1,9 @@
 import collections
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import os
 import time
-import LogisticRegressionModel as lgm
-import EvaluationsStub
+import model.LogisticRegressionModel as lgm
+import utils.EvaluationsStub
 
 
 def LoadRawData(path):
@@ -58,6 +56,15 @@ def TrainTestSplit(x, y, percentTest=.25):
     yTrain = y[numTest:]
 
     return (xTrain, yTrain, xTest, yTest)
+
+
+def FeaturizeExt(xTrainRaw,
+                 yTrainRaw,
+                 xTestRaw,
+                 numFrequentWords,
+                 numMutualInformationWords,
+                 includeHandCraftedFeatures):
+    pass
 
 
 def Featurize(xTrainRaw, xTestRaw):
@@ -448,7 +455,7 @@ def logistic_regression_by_features(xTrainRaw, xTestRaw, yTrain, yTest, features
         yTestPredicted = model.predict(xTest, threshold=predict_threshold)
         test_loss = model.loss(xTest, yTest)
         iter_cnt_vs_loss.append((iter_cnt, test_loss))
-        test_accuracy = EvaluationsStub.Accuracy(yTest, yTestPredicted)
+        test_accuracy = utils.EvaluationsStub.Accuracy(yTest, yTestPredicted)
         iter_cnt_vs_accuracy.append((iter_cnt, test_accuracy))
         print("%d, %f, %f" % (iter_cnt, test_loss, test_accuracy))
 
