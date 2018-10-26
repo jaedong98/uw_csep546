@@ -43,8 +43,6 @@ class BestSpamModel(object):
     def predict(self, xTests, threshold=None):
         xTests_w_0 = [[1] + x for x in xTests]
         self.lg_pred = self.lg.predict(xTests_w_0)
-        return self.lg_pred
-
         self.dt_pred = self.dt.predict(xTests)
         self.rf_pred = self.rf.predict(xTests)
 
