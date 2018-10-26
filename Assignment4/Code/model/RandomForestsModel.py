@@ -28,23 +28,23 @@ class RandomForestModel(object):
         xs = []
         random.seed(self.seed)
         for _ in range(self.numTrees):
-            seed = random.randint(0, self.numTrees)
+            # seed = random.randint(0, self.numTrees)
             # feature restriction: different random set for each tree
             if self.feature_restriction > 0:
                 selected_indices = select_random_indices(len(x[0]),
                                                          self.feature_restriction,
-                                                         seed=seed)
+                                                         seed=None)
 
                 x = restrict_features(x, selected_indices)
 
             if self.use_bagging:
-                x = get_bagged_samples(x, seed=self.seed)
+                x = get_bagged_samples(x, seed=None)
 
             xs.append(x)
 
         # self.trees = [build_tree(x, y, min_to_split) for x in xs]
-        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split)
-                                        for x in xs)
+        self.trees = Parallel(n_jobs=12)(delayed(build_tree)(x, y, min_to_split)
+                                         for x in xs)
 
     def predict(self, xTest, threshold=None):
 

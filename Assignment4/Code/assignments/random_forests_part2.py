@@ -35,7 +35,7 @@ def report(numTrees_options=[1, 20, 40, 60, 80], configs=configs, seed=0):
     xlabel = 'numTrees'
     ylabel = 'Accuracies'
     title = 'Random Forests Accuracy Comparison'
-    fname = 'prob2_part2_accuracy_cmp_{}_randseed_{}.png'\
+    fname = 'prob1_part2_accuracy_cmp_{}_randseed_{}.png'\
         .format('_'.join([str(n) for n in numTrees_options]), seed)
     img_fname = os.path.join(report_path, fname)
     legends = ['Config {}'.format(i) for i in range(len(configs))]

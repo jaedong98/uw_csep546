@@ -9,7 +9,8 @@ def get_bagging_indices(sample_size, seed=0):
     :return: a list of indices randomly generated in range(0, sample_size)
     """
     bagging_indices = []
-    random.seed(seed)
+    if seed is not None:
+        random.seed(seed)
     for _ in range(sample_size):
         bagging_indices.append(random.randint(0, sample_size - 1))
 
