@@ -74,7 +74,7 @@ if __name__ == '__main__':
     if config == -1:  # basic configuration
         create_accuracy_comparison_tables(numTrees=10,
                                           use_bagging=True,
-                                          feature_restriction=0,
+                                          feature_restriction=20,
                                           min_to_split=2,
                                           seed=10)
 
