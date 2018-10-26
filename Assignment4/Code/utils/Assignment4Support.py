@@ -101,8 +101,11 @@ def FeaturizeExt(xTrainRaw,
                  numFrequentWords=0,
                  numMutualInformationWords=295,
                  includeHandCraftedFeatures=True):
-    fs = extract_features_by_mi(xTrainRaw, yTrainRaw, numMutualInformationWords)
-    words_by_mi = [f[0] for f in fs]
+
+    words_by_mi = []
+    if numMutualInformationWords > 0:
+        fs = extract_features_by_mi(xTrainRaw, yTrainRaw, numMutualInformationWords)
+        words_by_mi = [f[0] for f in fs]
 
     xTrain = featurize_raw_data(xTrainRaw, words_by_mi)
     xTest = featurize_raw_data(xTestRaw, words_by_mi)

@@ -33,6 +33,8 @@ def select_random_indices(original_features_cnt, num_to_select, seed=0):
     if seed is not None:
         random.seed(seed)
     try:
+        if num_to_select > original_features_cnt:
+            num_to_select = original_features_cnt
         return random.sample(range(0, original_features_cnt), num_to_select)
     except ValueError as ve:
         raise ve

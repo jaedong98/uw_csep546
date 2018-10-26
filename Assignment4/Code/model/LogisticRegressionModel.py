@@ -1,6 +1,11 @@
 from collections import OrderedDict
+import hashlib
 import math
 import numpy as np
+import os
+import pickle
+
+from model import cache_dir
 
 
 class LogisticRegressionModel(object):
@@ -18,6 +23,15 @@ class LogisticRegressionModel(object):
         self.training_loss = 0
 
     def fit(self, xTrain, yTrain, iterations, step=0.01):
+
+        hash_str = '{}_{}_{}_{}'.format(xTrain, yTrain, iterations, step).encode()
+        lg_hash = hashlib.sha256(hash_str).hexdigest()
+        lg_pkl = os.path.join(cache_dir, '{}.pkl'.format(lg_hash))
+        if os.path.exists(lg_pkl):
+            with open(lg_pkl, 'rb') as f:
+                self.weights = [float(w) for w in pickle.load(f).split(',')]
+            print("Found pickled weights.")
+            return
 
         if len(self.weights) != len(xTrain[0]):
             raise ValueError("Not aligned data. We assume feature vector to "
@@ -41,8 +55,10 @@ class LogisticRegressionModel(object):
         for w, w_des in zip(self.weights, zip(*weights_descents)):
             n_weights.append(w - sum(w_des))
         self.weights = n_weights
-        self.training_loss = self.loss_calculator(yTrainPredicted, yTrain)
-
+        # self.training_loss = self.loss_calculator(yTrainPredicted, yTrain)
+        with open(lg_pkl, 'wb') as f:
+            self.weights = pickle.dump(','.join([str(w) for w in self.weights]), f)
+            print("Saved weights in pickle {}".format(lg_pkl))
 
     def loss_calculator(self, yPredicted, ys):
         log = math.log
