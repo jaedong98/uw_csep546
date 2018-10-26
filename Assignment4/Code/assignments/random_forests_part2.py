@@ -25,7 +25,7 @@ def generate_comparision_accuracies(numTrees_options=[1, 20, 40, 60, 80],
             accuracy = calculate_accuracies(**config)[0]
             accuracies.append((numTrees, accuracy))
         accuracies_per_config.append(accuracies)
-
+        print("Accuracies: {}".format(accuracies))
     return accuracies_per_config
 
 
@@ -50,6 +50,6 @@ def report(numTrees_options=[1, 20, 40, 60, 80], configs=configs, seed=0):
 if __name__ == '__main__':
 
     tic = time.time()
-    report(numTrees_options=[1, 20, 40, 60, 80], seed=0)
+    report(numTrees_options=[1, 20, 40, 60, 80], seed=10000)
     print('{} mins'.format((time.time() - tic) / 60.))
 

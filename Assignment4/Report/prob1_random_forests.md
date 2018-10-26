@@ -35,5 +35,5 @@ Seed for random: 10
 
 ##### Produce a plot with numTrees on x-axis and the hold-out set accuracy for each of these variations on the y-axis (that means 4 lines).
 
-![prob1_part2_accuracy_cmp_[1, 20, 40, 60, 80]_randseed_0](prob1_part2_accuracy_cmp_1_20_40_60_80_randseed_0.png)
+![prob1_part2_accuracy_cmp_[1, 20, 40, 60, 80]_randseed_10000](prob1_part2_accuracy_cmp_1_20_40_60_80_randseed_10000.png)
 

@@ -69,7 +69,7 @@ def create_accuracy_comparison_tables(numTrees=10,
 
 if __name__ == '__main__':
 
-    config = -1
+    config = 2
 
     if config == -1:  # basic configuration
         create_accuracy_comparison_tables(numTrees=10,
@@ -83,5 +83,5 @@ if __name__ == '__main__':
                                           use_bagging=False,
                                           feature_restriction=20,
                                           min_to_split=2,
-                                          seed=0,
+                                          seed=10000,
                                           with_noise=True)
