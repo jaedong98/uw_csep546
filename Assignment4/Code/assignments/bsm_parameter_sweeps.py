@@ -112,10 +112,10 @@ if __name__ == '__main__':
         'use_bagging': True,  # random forest.
         'num_trees': 40,  # random forest
         'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 0,  # 0 means False, N > 0 means select top N words based on mi.
-        'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
+        'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
     }
     parameter_sweeps_by_min_to_stop(config=config,
                                     with_noise=False)
     parameter_sweeps_by_feature_restriction(config=config,
-                                            with_noise=True)
+                                            with_noise=False)

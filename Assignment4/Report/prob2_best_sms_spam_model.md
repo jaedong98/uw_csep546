@@ -27,14 +27,14 @@ For the model bagged with three base learners, Logistic Regression, Decision Tre
 ```python
 # Example of parameters with default value
 config = {
-    'num_iteration': 40000,  # logistic regression
+    'num_iteration': 10000,  # logistic regression
     'min_to_stop': 100,  # decision tree and random forest
     'feature_restriction': 20,  # random forest
     'use_bagging': True,  # random forest.
     'num_trees': 40,  # random forest
     'feature_restriction': 20,  # random forest
-    'feature_selection_by_mi': 0  # 0 means False, N > 0 means select top N words based on mi.
-    'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
+    'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
+    'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
 }
 ```
 
