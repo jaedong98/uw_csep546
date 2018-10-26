@@ -217,9 +217,10 @@ def split_by_feature(feature_index, xTrains, yTrains, threshold=None):
         raise ValueError("Unmatched xTrains({}) and yTrains({})".format(
             len(xTrains), len(yTrains)))
 
-    if feature_index > len(xTrains):
+    if feature_index > len(xTrains[0]):
         raise IndexError(
-            "Feature index({}) is outside of xTrains".format(feature_index))
+            "Feature index({}) is outside of xTrains of {}s"
+            .format(feature_index, len(xTrains[0])))
 
     if not threshold:
         threshold = get_feature_split_threshold(feature_index, xTrains)

@@ -25,7 +25,7 @@ class LogisticRegressionModel(object):
                                  len(self.weights), len(xTrain[0])))
 
         print("Fitting training dataset with {} iteration".format(iterations))
-        print("Initial: {}".format(self.weights))
+        # print("Initial: {}".format(self.weights))
         cnt = 0
         n = len(xTrain)
         dot = np.dot
@@ -58,7 +58,7 @@ class LogisticRegressionModel(object):
 
         exp = math.exp
         dot = np.dot
-        return [1.0 / (1.0 + exp(-dot(d , self.weights))) for d in x]
+        return [1.0 / (1.0 + exp(-dot(d, self.weights))) for d in x]
 
     def predict(self, x, threshold=None):
         if not threshold:

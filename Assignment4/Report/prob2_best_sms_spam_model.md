@@ -21,3 +21,38 @@
 ##### Include an ROC curve comparing the first model you tried with your final best model. Clearly label what they are.
 
 ##### Describe your best model and parameter settings. Include the estimate of the accuracy your best model achieves using cross validation on the training data and the estimate you get on the hold-out test set.
+
+For the model bagged with three base learners, Logistic Regression, Decision Tree, and Random Forests, I chose parameters below:
+
+```python
+# Example of parameters with default value
+config = {
+    'num_iteration': 40000,  # logistic regression
+    'min_to_stop': 100,  # decision tree and random forest
+    'feature_restriction': 20,  # random forest
+    'use_bagging': True,  # random forest.
+    'num_trees': 40,  # random forest
+    'feature_restriction': 20,  # random forest
+    'feature_selection_by_mi': 0  # 0 means False, N > 0 means select top N words based on mi.
+    'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
+}
+```
+
+* Feature Selection Improvement by 
+  1. number of frequency
+  2. mutual information
+  3. accuracy
+   ![feature_selection_accuracy](img/feature_selection_accuracy.png)
+
+* Catagory Mistakes
+  * Here are top 20 words found as a category mistakes.
+    1. FPR
+    2. FNR
+
+
+* Improvement
+  * Determine words to add using category mistakes. This will be included in feature selection.
+
+  * Compare with ROC curves. The default configuration vs Best Configuration (with improvement items)
+    *  Here is the best configuration setting. I decided to use them ...
+    *  Accuracy Estimate based on the *cross validation* is ...
