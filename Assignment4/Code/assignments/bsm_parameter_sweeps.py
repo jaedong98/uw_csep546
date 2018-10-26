@@ -7,7 +7,7 @@ from utils.EvaluationsStub import Evaluation
 from utils.data_loader import get_featurized_xs_ys
 
 config = {
-    'iterations': 50000,  # logistic regression
+    'iterations': 10000,  # logistic regression
     'min_to_stop': 100,  # decision tree and random forest
     'feature_restriction': 20,  # random forest
     'use_bagging': True,  # random forest.
@@ -19,13 +19,15 @@ config = {
 
 
 def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 50, 100, 200, 400],
-                                    config=config):
+                                    config=config,
+                                    with_noise=True):
 
     accuracies = []
     test_accuracies = []
     for min_to_stop in min_to_stops:
         mi_words = config['feature_selection_by_mi']
-        xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_words)
+        xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_words,
+                                                             with_noise=with_noise)
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             use_bagging=config['use_bagging'],
@@ -60,13 +62,15 @@ def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 50, 100, 200, 400],
 
 
 def parameter_sweeps_by_feature_restriction(feature_restrictions=[0, 20, 50, 100, 200],
-                                            config=config):
+                                            config=config,
+                                            with_noise=True):
 
     accuracies = []
     test_accuracies = []
     for feature_restriction in feature_restrictions:
         mi_words = config['feature_selection_by_mi']
-        xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_words)
+        xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_words,
+                                                             with_noise=with_noise)
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             use_bagging=config['use_bagging'],
@@ -102,14 +106,16 @@ def parameter_sweeps_by_feature_restriction(feature_restrictions=[0, 20, 50, 100
 
 if __name__ == '__main__':
     config = {
-        'iterations': 5000,  # logistic regression
-        'min_to_stop': 100,  # decision tree and random forest
-        'feature_restriction': 20,  # random forest
+        'iterations': 10000,  # logistic regression
+        'min_to_stop': 2,  # decision tree and random forest
+        'feature_restriction': 100,  # random forest
         'use_bagging': True,  # random forest.
         'num_trees': 40,  # random forest
         'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_mi': 0,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
     }
-    parameter_sweeps_by_min_to_stop(config=config)
-    parameter_sweeps_by_feature_restriction(config=config)
+    parameter_sweeps_by_min_to_stop(config=config,
+                                    with_noise=False)
+    parameter_sweeps_by_feature_restriction(config=config,
+                                            with_noise=True)

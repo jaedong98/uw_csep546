@@ -1,30 +1,19 @@
 import collections
-import matplotlib.pyplot as plt
 import math
-import numpy as np
 import os
-import time
 
-import Assignment3Support as utils
-import EvaluationsStub
-import LogisticRegressionModel as lgm
-
-# File/Folder path
-kDataPath = os.path.join(os.path.dirname(
-    os.path.dirname(__file__)), r"Data/SMSSpamCollection")
-
-report_path = os.path.join(os.path.dirname(
-    os.path.dirname(__file__)), r"Report")
+import utils.Assignment4Support as sup
+from Assignment4.Code import kDataPath, report_path
 
 N = 10
 
 # Loading data
-(xRaw, yRaw) = utils.LoadRawData(kDataPath)
+(xRaw, yRaw) = sup.LoadRawData(kDataPath)
 
 # Train-Test split
 # TODO: splitting data into train, validation, test?
 (xTrainRaw, yTrainRaw, xTestRaw,
- yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
+ yTestRaw) = sup.TrainTestSplit(xRaw, yRaw)
 
 
 def calculate_mi2(y0_counter, y1_counter, top=10):
@@ -59,7 +48,7 @@ def calculate_mi2(y0_counter, y1_counter, top=10):
             + (n01/n) * math.log2((n*n01 + 1) / (n0_ * n_1))\
             + (n10/n) * math.log2((n*n10 + 1) / (n1_ * n_0))\
             + (n00/n) * math.log2((n*n00 + 1) / (n0_ * n_0))
-        mi_tables[f] = utils.table_for_mi(n11, n10, n01, n00, f)
+        mi_tables[f] = sup.table_for_mi(n11, n10, n01, n00, f)
 
     tops = mi.most_common(top)
     tables = [mi_tables[x[0]] for x in tops]
@@ -98,7 +87,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
 
     features, mi_tables = extract_features_by_mi(xTrainRaw, yTrainRaw, N)
 
-    table = utils.selected_features_table(
+    table = sup.selected_features_table(
         features, ["Features", "Mutual Information"], w=25)
 
     table_md = os.path.join(report_path, 'features_selected_by_mi.md')
@@ -123,7 +112,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     img_fname = os.path.join(report_path, fname)
     
     title = "Accuracy Over Iteration by Top {} MI.".format(N)
-    iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy = sup.logistic_regression_by_features(xTrainRaw, xTestRaw,
                                                                                    yTrain, yTest,
                                                                                    features, iter_step,
                                                                                    resolution, initial_w0,
@@ -134,7 +123,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
 
 if __name__ == '__main__':
     (xTrainRaw, yTrainRaw, xTestRaw,
-     yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
+     yTestRaw) = sup.TrainTestSplit(xRaw, yRaw)
     yTrain = yTrainRaw
     yTest = yTestRaw
     run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,

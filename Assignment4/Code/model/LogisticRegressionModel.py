@@ -47,14 +47,18 @@ class LogisticRegressionModel(object):
         weights_descents = []
         while cnt < iterations:
             yTrainPredicted = self.calculate_yhats(xTrain)
-            ys_delta = array(yTrainPredicted) - array(yTrain)
-            weights_descents.append([step * dot(ys_delta, xs) / n for xs in zip(*xTrain)])
+            #ys_delta = array(yTrainPredicted) - array(yTrain)
+            #weights_descents.append([step * dot(ys_delta, xs) / n for xs in zip(*xTrain)])
+            for i, xs in enumerate(zip(*xTrain)):
+                ys_delta = np.array(yTrainPredicted) - np.array(yTrain)
+                self.weights[i] = self.weights[i] - step * (np.dot(ys_delta, xs) / n)
+
             cnt += 1
 
-        n_weights = []
-        for w, w_des in zip(self.weights, zip(*weights_descents)):
-            n_weights.append(w - sum(w_des))
-        self.weights = n_weights
+        #n_weights = []
+        #for w, w_des in zip(self.weights, zip(*weights_descents)):
+        #    n_weights.append(w - sum(w_des))
+        #self.weights = n_weights
         # self.training_loss = self.loss_calculator(yTrainPredicted, yTrain)
         with open(lg_pkl, 'wb') as f:
             pickle.dump(','.join([str(w) for w in self.weights]), f)
@@ -63,7 +67,6 @@ class LogisticRegressionModel(object):
     def loss_calculator(self, yPredicted, ys):
         log = math.log
         return sum([log(1.0 - y_hat) if y == 0 else -y * log(y_hat) for y_hat, y in zip(yPredicted, ys)])
-
 
     def loss(self, xTest, yTest):
 

@@ -67,5 +67,5 @@ if __name__ == '__main__':
     yTrain = yTrainRaw
     yTest = yTestRaw
     run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
-                         max_iters=500, iter_step=100, step=0.01,
+                         max_iters=10000, iter_step=100, step=0.01,
                          initial_w0=0.0)

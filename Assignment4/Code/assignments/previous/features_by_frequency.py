@@ -1,23 +1,13 @@
 import collections
-import matplotlib.pyplot as plt
-import numpy as np
 import os
-import time
 
-import Assignment2Support as utils
-import EvaluationsStub
-import LogisticRegressionModel as lgm
-
-# File/Folder path
-kDataPath = os.path.join(os.path.dirname(
-    os.path.dirname(__file__)), r"Data/SMSSpamCollection")
-
-report_path = os.path.join(os.path.dirname(
-    os.path.dirname(__file__)), r"Report")
+import utils.Assignment4Support as sup
 
 
 # Loading data
-(xRaw, yRaw) = utils.LoadRawData(kDataPath)
+from Assignment4.Code import kDataPath, report_path
+
+(xRaw, yRaw) = sup.LoadRawData(kDataPath)
 
 
 def extract_features_by_frequency(xTrainRaw, N):
@@ -38,7 +28,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
     """
     features = extract_features_by_frequency(xTrainRaw, N)
 
-    table = utils.selected_features_table(features, ["Features", "Frequency"])
+    table = sup.selected_features_table(features, ["Features", "Frequency"])
 
     table_md = os.path.join(
         report_path, 'features_selected_by_top_{}_frequenct_words.md'.format(N))
@@ -53,7 +43,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
         fname = 'iter_cnt_vs_accuracy_by_frequency_{}_N{}.png'.format(max_iters, N)
     img_fname = os.path.join(report_path, fname)
     title = "Accuracy Over Iteration by Top {} Frequency Features.".format(N)
-    iter_cnt_vs_loss, iter_cnt_vs_accuracy = utils.logistic_regression_by_features(xTrainRaw, xTestRaw,
+    iter_cnt_vs_loss, iter_cnt_vs_accuracy = sup.logistic_regression_by_features(xTrainRaw, xTestRaw,
                                                  yTrain, yTest,
                                                  features, iter_step,
                                                  resolution, initial_w0,
@@ -63,7 +53,7 @@ def run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,
 
 if __name__ == '__main__':
     (xTrainRaw, yTrainRaw, xTestRaw,
-     yTestRaw) = utils.TrainTestSplit(xRaw, yRaw)
+     yTestRaw) = sup.TrainTestSplit(xRaw, yRaw)
     yTrain = yTrainRaw
     yTest = yTestRaw
     run_gradient_descent(xTrainRaw, xTestRaw, yTrain, yTest, N=10,

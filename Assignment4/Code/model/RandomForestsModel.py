@@ -65,6 +65,7 @@ class RandomForestModel(object):
         prediction_votes = []
         for combines in zip(*self.predictions):
             voted = Counter(combines).most_common(1)[0][0]
+            # print("0s {} vs 1s {}".format(combines.count(0), combines.count(1)))
             prediction_votes.append(voted)
 
         return prediction_votes
