@@ -20,6 +20,9 @@ class BestSpamModel(object):
                                        use_bagging=use_bagging,
                                        feature_restriction=feature_restriction,
                                        seed=seed)
+        self.lg_pred = []
+        self.dt_pred = []
+        self.rf_pred = []
 
     def fit(self, xTrains, yTrains, iterations, min_to_stop):
 
@@ -39,12 +42,12 @@ class BestSpamModel(object):
 
     def predict(self, xTests, threshold=None):
         xTests_w_0 = [[1] + x for x in xTests]
-        lg_pred = self.lg.predict(xTests_w_0)
-        dt_pred = self.dt.predict(xTests)
-        rf_pred = self.rf.predict(xTests)
+        self.lg_pred = self.lg.predict(xTests_w_0)
+        self.dt_pred = self.dt.predict(xTests)
+        self.rf_pred = self.rf.predict(xTests)
 
         predictions = []
-        for l, d, r in zip(lg_pred, dt_pred, rf_pred):
+        for l, d, r in zip(self.lg_pred, self.dt_pred, self.rf_pred):
             if threshold is None:
                 mc = collections.Counter([l, d, r]).most_common(1)[0][0]
                 predictions.append(mc)

@@ -180,8 +180,8 @@ def get_split(xTrains, yTrains):
                                   'groups': [((examples), (ys)), ((examples), (ys))]}
     """
     i_gails = get_information_gains(xTrains, yTrains)
-    if sum(i_gails) == 0.0:
-        print("No more gains found.")
+    #if sum(i_gails) == 0.0:
+    #    print("No more gains found.")
     feature_index = i_gails.index(max(i_gails))
     threshold = get_feature_split_threshold(feature_index, xTrains)
     groups = split_by_feature(feature_index, xTrains, yTrains)
@@ -235,8 +235,8 @@ def split_by_feature(feature_index, xTrains, yTrains, threshold=None):
             r_xTrains.append(xTrain)
             r_yTrains.append(yTrain)
 
-    print("{} samples are splitted into L({}), R({})".format(
-        len(xTrains), len(l_xTrains), len(r_xTrains)))
+    #print("{} samples are splitted into L({}), R({})".format(
+    #    len(xTrains), len(l_xTrains), len(r_xTrains)))
     return (l_xTrains, l_yTrains), (r_xTrains, r_yTrains)
 
 

@@ -57,7 +57,7 @@ class LogisticRegressionModel(object):
         self.weights = n_weights
         # self.training_loss = self.loss_calculator(yTrainPredicted, yTrain)
         with open(lg_pkl, 'wb') as f:
-            self.weights = pickle.dump(','.join([str(w) for w in self.weights]), f)
+            pickle.dump(','.join([str(w) for w in self.weights]), f)
             print("Saved weights in pickle {}".format(lg_pkl))
 
     def loss_calculator(self, yPredicted, ys):

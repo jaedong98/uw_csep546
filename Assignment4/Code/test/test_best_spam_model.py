@@ -19,11 +19,11 @@ config = {
 class TestBestSpamModel(unittest.TestCase):
 
     def test_fit_predict(self):
-        xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=0)
+        xTrain, xTest, yTrain, yTests = get_featurized_xs_ys()
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             use_bagging=config['use_bagging'],
                             feature_restriction=config['feature_restriction'])
-        config['iterations'] = 8
+        config['iterations'] = 50000
         bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
         yTestsPredicted = bsm.predict(xTest)
 
