@@ -42,7 +42,7 @@ class RandomForestModel(object):
 
             xs.append(x)
 
-        # self.trees = [build_tree(x, y, min_to_split) for x in xs]
+        self.trees = [build_tree(x, y, min_to_split) for x in xs]
         self.trees = Parallel(n_jobs=12)(delayed(build_tree)(x, y, min_to_split)
                                          for x in xs)
 

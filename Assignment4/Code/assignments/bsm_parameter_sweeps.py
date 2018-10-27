@@ -61,7 +61,7 @@ def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 50, 100, 200, 400],
     return accuracies, test_accuracies
 
 
-def parameter_sweeps_by_feature_restriction(feature_restrictions=[0, 20, 50, 100, 200],
+def parameter_sweeps_by_feature_restriction(feature_restrictions=[0, 2, 5, 10, 20],
                                             config=config,
                                             with_noise=True):
 
@@ -110,12 +110,12 @@ if __name__ == '__main__':
         'min_to_stop': 2,  # decision tree and random forest
         'feature_restriction': 100,  # random forest
         'use_bagging': True,  # random forest.
-        'num_trees': 40,  # random forest
+        'num_trees': 10,  # random forest
         'feature_restriction': 20,  # random forest
         'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
     }
-    parameter_sweeps_by_min_to_stop(config=config,
-                                    with_noise=False)
+    # parameter_sweeps_by_min_to_stop(config=config, with_noise=True)
+
     parameter_sweeps_by_feature_restriction(config=config,
-                                            with_noise=False)
+                                            with_noise=True)

@@ -37,6 +37,9 @@ config = {
     'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
 }
 ```
+Firstly, I predicted model by sweeping min_to_stop(minToSplit). Below graph indiciates as increasing the **overfitting** **underfitting**
+
+![prob2_param_sweep_by_min_to_split_1_50_100_200_400](prob2_param_sweep_by_min_to_split_1_50_100_200_400.png)
 
 * Feature Selection Improvement by 
   1. number of frequency
