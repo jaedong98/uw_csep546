@@ -1,5 +1,9 @@
 import unittest
 import model.DecisionTreeModel as dtm
+from Assignment4.Code import kDataPath
+from utils.Assignment4Support import TrainTestSplit, LoadRawData, Featurize
+from utils.EvaluationsStub import Evaluation
+from utils.data_loader import get_featurized_xs_ys
 
 
 class TestDecisionTreeModel(unittest.TestCase):
@@ -105,6 +109,23 @@ class TestDecisionTreeModel(unittest.TestCase):
         predictions = model.predict(xTrains)
         self.assertTrue(predictions == expected_predictions)
 
+    def test_predict_baseline(self):
+
+        # Loading data
+        (xRaw, yRaw) = LoadRawData(kDataPath)
+        (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw)
+        yTrain = yTrainRaw
+        yTest = yTestRaw
+
+        model = dtm.DecisionTreeModel()
+        # xTrain, xTest = Featurize(xTrainRaw, xTestRaw)
+        xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(with_noise=False)
+
+        model.fit(xTrain, yTrain, min_to_stop=2)
+        yTestPrediced = model.predict(xTest)
+
+        ev = Evaluation(yTest, yTestPrediced)
+        print(ev)
 
 if __name__ == '__main__':
     unittest.main()

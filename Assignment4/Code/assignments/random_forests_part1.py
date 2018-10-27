@@ -80,11 +80,12 @@ if __name__ == '__main__':
                                           use_bagging=True,
                                           feature_restriction=20,
                                           min_to_split=2,
-                                          seed=10)
+                                          seed=10,
+                                          with_noise=False)
 
     if config == 2:
         create_accuracy_comparison_tables(numTrees=20,
-                                          use_bagging=False,
+                                          use_bagging=True,
                                           feature_restriction=20,
                                           min_to_split=2,
                                           seed=10000,

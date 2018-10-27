@@ -26,6 +26,7 @@ class RandomForestModel(object):
     def fit(self, x, y, min_to_split=2):
 
         xs = []
+
         random.seed(self.seed)
         for _ in range(self.numTrees):
             # seed = random.randint(0, self.numTrees)
@@ -36,7 +37,7 @@ class RandomForestModel(object):
                                                           self.feature_restriction,
                                                           seed=None)
 
-                x = restrict_features(x, selected_indices)
+                # x = restrict_features(x, selected_indices)
             else:
                 selected_indices = [x for x in range(len(x[0]))]
 
@@ -48,18 +49,18 @@ class RandomForestModel(object):
             xs.append(x)
 
         #self.trees = [build_tree(x, y, min_to_split) for x in xs]
-        self.trees = Parallel(n_jobs=12)(delayed(build_tree)(x, y, min_to_split)
-                                         for x in xs)
+        self.trees = Parallel(n_jobs=12)(delayed(build_tree)(x, y, min_to_split, si)
+                                         for x, si in zip(xs, self.selected_indices))
 
     def predict(self, xTest, threshold=None):
 
         self.predictions = []
         print("Predicting results with {} tree(s).".format(len(self.trees)))
-        for selected_indices, tree in zip(self.selected_indices, self.trees):
-
+        # for selected_indices, tree in zip(self.selected_indices, self.trees):
+        for tree in self.trees:
             i_predictions = []
             for example in xTest:
-                example = [example[i] for i in selected_indices]
+                # example = [example[i] for i in selected_indices]
                 if threshold is None:
                     i_predictions.append(predict(tree, example))
                 else:
@@ -206,7 +207,7 @@ def get_entropy_S(yTrains):
     return -p0 * math.log2(p0) - p1 * math.log2(p1)
 
 
-def get_information_gains(xTrains, yTrains):
+def get_information_gains(xTrains, yTrains, selected_indices=[]):
     """
     Calculates information gains for all features.
     :param xTrains: examples from training data,
@@ -216,12 +217,16 @@ def get_information_gains(xTrains, yTrains):
             i.e., outlook, temperature, humidity, wind.
     """
     gains = []
-    for xTrain in zip(*xTrains):
-        gains.append(get_information_gain(xTrain, yTrains))
+    for i, xTrain in enumerate(zip(*xTrains)):
+        if i in selected_indices:
+            gains.append(get_information_gain(xTrain, yTrains))
+        else:
+            gains.append(-1)
+
     return gains
 
 
-def get_split(xTrains, yTrains):
+def get_split(xTrains, yTrains, selected_indices=[]):
     """
     Split dataset and create a node based on the feature [i] who has highest information gain.
 
@@ -234,11 +239,14 @@ def get_split(xTrains, yTrains):
                                   'gain': info. gain,
                                   'groups': [((examples), (ys)), ((examples), (ys))]}
     """
-    i_gails = get_information_gains(xTrains, yTrains)
+    i_gails = get_information_gains(xTrains, yTrains, selected_indices)
     # if sum(i_gails) == 0.0: print("No more gains found.")
     feature_index = i_gails.index(max(i_gails))
     threshold = get_feature_split_threshold(feature_index, xTrains)
     groups = split_by_feature(feature_index, xTrains, yTrains)
+
+    if feature_index not in selected_indices:
+        raise AssertionError("{} not in selected features.".format(feature_index))
 
     return {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
             'num_label_1': groups[0][1].count(1),
@@ -293,7 +301,7 @@ def split_by_feature(feature_index, xTrains, yTrains, threshold=None):
     return (l_xTrains, l_yTrains), (r_xTrains, r_yTrains)
 
 
-def split(node, min_to_stop=100):
+def split(node, min_to_stop=100, selected_indices=[]):
     ((l_xTrains, l_yTrains), (r_xTrains, r_yTrains)) = node['groups']
     del (node['groups'])
 
@@ -313,19 +321,19 @@ def split(node, min_to_stop=100):
     if len(l_yTrains) < min_to_stop:
         node['left'] = Counter(l_yTrains).most_common(1)[0][0]
     else:
-        node['left'] = get_split(l_xTrains, l_yTrains)
-        split(node['left'], min_to_stop)
+        node['left'] = get_split(l_xTrains, l_yTrains, selected_indices)
+        split(node['left'], min_to_stop, selected_indices)
 
     if len(r_yTrains) < min_to_stop:
         node['right'] = Counter(r_yTrains).most_common(1)[0][0]
     else:
-        node['right'] = get_split(r_xTrains, r_yTrains)
-        split(node['right'], min_to_stop)
+        node['right'] = get_split(r_xTrains, r_yTrains, selected_indices)
+        split(node['right'], min_to_stop, selected_indices)
 
 
-def build_tree(xTrains, yTrains, min_to_stop=100):
-    root = get_split(xTrains, yTrains)
-    split(root, min_to_stop)
+def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[]):
+    root = get_split(xTrains, yTrains, selected_indices)
+    split(root, min_to_stop, selected_indices)
     return root
 
 

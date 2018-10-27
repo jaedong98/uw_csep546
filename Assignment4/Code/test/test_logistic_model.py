@@ -71,10 +71,12 @@ class TestLogisticModel(unittest.TestCase):
         yTest = yTestRaw
 
         model = lrm.LogisticRegressionModel()
-        xTrain, xTest = Featurize(xTrainRaw, xTestRaw)
+        #xTrain, xTest = Featurize(xTrainRaw, xTestRaw)
+        xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(with_noise=False)
         # Extend xTrains and xTest with 1 at [0]
         xTrain = [[1] + x for x in xTrain]
         xTest = [[1] + x for x in xTest]
+        model.weights = [0.] * (len(xTrain[0]))
 
         model.fit(xTrain, yTrain, iterations=10000)
         yTestPrediced = model.predict(xTest)

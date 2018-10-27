@@ -15,7 +15,7 @@ class TestRandomForestModel(unittest.TestCase):
                                     use_bagging=True,
                                     feature_restriction=fr,
                                     seed=100)
-            rfm.fit(xTrain, yTrain, min_to_split=20)
+            rfm.fit(xTrain, yTrain, min_to_split=100)
             yTestPredicted = rfm.predict(xTest)
             print(Evaluation(yTest, yTestPredicted))
 

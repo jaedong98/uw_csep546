@@ -20,7 +20,7 @@ def get_bagging_indices(sample_size, seed=0):
     return bagging_indices
 
 
-def get_bagged_samples(samples, seed=0):
+def get_bagged_samples_pre(samples, seed=0):
     """
     Bootstraptes samples.
 
@@ -34,3 +34,16 @@ def get_bagged_samples(samples, seed=0):
         new_samples.append(samples[i])
 
     return new_samples
+
+
+def get_bagged_samples(samples, seed=0):
+    """
+    Bootstraptes samples.
+
+    :param samples: a list of samples, either xTrains or xTests
+    :param seed:
+    :return:
+    """
+    ss = len(samples)
+    return [samples[random.randint(0, ss - 1)] for _ in range(ss)]
+
