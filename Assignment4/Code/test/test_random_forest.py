@@ -10,7 +10,7 @@ class TestRandomForestModel(unittest.TestCase):
     def test_fit_predicts(self):
 
         xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295)
-        for fr in [0, 10, 50, 100, 200, 300]:
+        for fr in [10, 50, 100, 200, 300]:
             rfm = RandomForestModel(numTrees=20,
                                     use_bagging=True,
                                     feature_restriction=fr,

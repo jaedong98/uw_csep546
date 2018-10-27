@@ -19,9 +19,13 @@ def calculate_accuracies(numTrees=10,
     xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(with_noise)
     rfm.fit(xTrain, yTrain, min_to_split=min_to_split)
     yTestPredicted = rfm.predict(xTest)
-    accuracies = [Evaluation(yTest, yTestPredicted).accuracy]
+    ev = Evaluation(yTest, yTestPredicted)
+    print("Overall prediction:")
+    print(ev)
+    accuracies = [ev.accuracy]
     for prediction in rfm.predictions:
-        accuracies.append(Evaluation(yTest, prediction).accuracy)
+        ev = Evaluation(yTest, prediction)
+        accuracies.append(ev.accuracy)
 
     return accuracies
 
@@ -69,7 +73,7 @@ def create_accuracy_comparison_tables(numTrees=10,
 
 if __name__ == '__main__':
 
-    config = -1
+    config = 2
 
     if config == -1:  # basic configuration
         create_accuracy_comparison_tables(numTrees=10,

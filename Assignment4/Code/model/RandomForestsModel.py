@@ -30,19 +30,24 @@ class RandomForestModel(object):
         for _ in range(self.numTrees):
             # seed = random.randint(0, self.numTrees)
             # feature restriction: different random set for each tree
+
             if self.feature_restriction > 0:
                 selected_indices = select_random_indices(len(x[0]),
-                                                         self.feature_restriction,
-                                                         seed=None)
+                                                          self.feature_restriction,
+                                                          seed=None)
 
                 x = restrict_features(x, selected_indices)
+            else:
+                selected_indices = [x for x in range(len(x[0]))]
+
+            self.selected_indices.append(selected_indices)
 
             if self.use_bagging:
                 x = get_bagged_samples(x, seed=None)
 
             xs.append(x)
 
-        self.trees = [build_tree(x, y, min_to_split) for x in xs]
+        #self.trees = [build_tree(x, y, min_to_split) for x in xs]
         self.trees = Parallel(n_jobs=12)(delayed(build_tree)(x, y, min_to_split)
                                          for x in xs)
 
@@ -50,10 +55,11 @@ class RandomForestModel(object):
 
         self.predictions = []
         print("Predicting results with {} tree(s).".format(len(self.trees)))
-        for tree in self.trees:
+        for selected_indices, tree in zip(self.selected_indices, self.trees):
 
             i_predictions = []
             for example in xTest:
+                example = [example[i] for i in selected_indices]
                 if threshold is None:
                     i_predictions.append(predict(tree, example))
                 else:
