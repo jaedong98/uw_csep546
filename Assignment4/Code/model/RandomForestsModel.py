@@ -4,7 +4,7 @@ import math
 import random
 import numpy as np
 
-from utils.bootstrap_sampling import get_bagged_samples
+from utils.bootstrap_sampling import get_bagged_samples, bootstraping_training_data
 from utils.feature_restriction import select_random_indices, restrict_features
 
 
@@ -28,6 +28,7 @@ class RandomForestModel(object):
 
         np.random.seed(self.seed)
         xs = []
+        ys = []
         for _ in range(self.numTrees):
             # seed = random.randint(0, self.numTrees)
             # feature restriction: different random set for each tree
@@ -42,14 +43,17 @@ class RandomForestModel(object):
                 selected_indices = [x for x in range(len(x[0]))]
 
             if self.bagging_w_replacement:
-                xs.append(get_bagged_samples(list(x), seed=None))
+                n_x, n_y = bootstraping_training_data(list(x), list(y), seed=None)
+                xs.append(n_x)
+                ys.append(n_y)
             else:
                 xs.append(list(x))
+                ys.append(list(y))
             self.selected_indices.append(selected_indices)
 
         #self.trees = [build_tree(x, y, min_to_split) for x in xs]
         self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si)
-                                        for si, x in zip(self.selected_indices, xs))
+                                        for si, x, y in zip(self.selected_indices, xs, ys))
 
     def predict(self, xTest, threshold=None):
 
@@ -123,13 +127,14 @@ def get_entropy_for_feature(feature_dict):
     return entropies
 
 
-def get_feature_dict(xTrains, yTrains, selected_indices=[]):
+def get_feature_dict(xTrains, yTrains):
     """
     :param xTrains: a list of feature i values, [x for x in zip(*xTrains)][i]
     :param yTrains: a list of target attributes
     :return
         a list of entropy values, (+, -) for the feature, xTrains.
     """
+
     if not len(xTrains) == len(yTrains):
         raise ValueError("Unmatched list lengths {} vs {}".format(len(xTrains), len(yTrains)))
 
@@ -150,8 +155,6 @@ def get_feature_dict(xTrains, yTrains, selected_indices=[]):
         feature_threshold = (max(xTrains) - min(xTrains)) / 2
 
     for i, (x, y) in enumerate(zip(xTrains, yTrains)):
-        if selected_indices and i not in selected_indices:
-            continue
         if feature_threshold:
             feature_dict[int(feature_threshold <= x)][y] += 1
         else:
@@ -160,7 +163,7 @@ def get_feature_dict(xTrains, yTrains, selected_indices=[]):
     return feature_dict
 
 
-def get_information_gain(xTrains, yTrains, selected_indices=[]):
+def get_information_gain(xTrains, yTrains):
     """
     Loss(S, 𝑥_𝑖)
      lossSum = 0
@@ -176,7 +179,7 @@ def get_information_gain(xTrains, yTrains, selected_indices=[]):
     :param yTrains: a list of target attributes
     :return: information gain for the feature
     """
-    feature_dict = get_feature_dict(xTrains, yTrains, selected_indices)
+    feature_dict = get_feature_dict(xTrains, yTrains)
     entropies = get_entropy_for_feature(feature_dict)
     entropy_S = get_entropy_S(yTrains)
     loss_sum = 0
@@ -225,7 +228,7 @@ def get_information_gains(xTrains, yTrains, selected_indices=[]):
     gains = []
     for i, xTrain in enumerate(zip(*xTrains)):
         if i in selected_indices:
-            gains.append(get_information_gain(xTrain, yTrains, selected_indices))
+            gains.append(get_information_gain(xTrain, yTrains))
         else:
             gains.append(-1)
 
@@ -245,16 +248,18 @@ def get_split(xTrains, yTrains, selected_indices=[]):
                                   'gain': info. gain,
                                   'groups': [((examples), (ys)), ((examples), (ys))]}
     """
-    i_gails = get_information_gains(xTrains, yTrains, selected_indices)
+    i_gains = get_information_gains(xTrains, yTrains, selected_indices)
     # if sum(i_gails) == 0.0: print("No more gains found.")
-    feature_index = i_gails.index(max(i_gails))
+    if i_gains.count(max(i_gains)) > 1:
+        print("Found {} maximum information gains".format(i_gains.count(max(i_gains))))
+    feature_index = i_gains.index(max(i_gains))
     threshold = get_feature_split_threshold(feature_index, xTrains)
     groups = split_by_feature(feature_index, xTrains, yTrains)
 
     if feature_index not in selected_indices:
         raise AssertionError("{} not in selected features.".format(feature_index))
 
-    return {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
+    return {'index': feature_index, 'gain': max(i_gains), 'groups': groups,
             'num_label_1': groups[0][1].count(1),
             'num_label_0': groups[0][1].count(0),
             'threshold': threshold}

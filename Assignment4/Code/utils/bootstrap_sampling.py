@@ -51,7 +51,23 @@ def get_bagged_samples(samples, seed=0):
         np.random.seed(seed)
     bagging_indices = np.random.choice(ss, ss)
     #bagging_indices = [random.randint(0, ss - 1) for _ in range(ss)]
-    mc = collections.Counter(bagging_indices).most_common(1)
-    print("Most duplicated index: {}".format(mc))
+    mc = collections.Counter(bagging_indices).most_common(3)
+    print("Most duplicated indices: {}".format(mc))
     return [samples[i] for i in bagging_indices]
+
+
+def bootstraping_training_data(xTrains, yTrains, seed=0):
+    """
+    Bootstraptes samples.
+
+    :param samples: a list of samples, either xTrains or xTests
+    :param seed:
+    :return:
+    """
+    ss = len(yTrains)
+    if seed is not None:
+        np.random.seed(seed)
+    bagging_indices = np.random.choice(ss, ss)
+
+    return [xTrains[i] for i in bagging_indices], [yTrains[i] for i in bagging_indices]
 

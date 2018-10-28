@@ -130,13 +130,13 @@ class TestRandomForestModel(unittest.TestCase):
         * feature_restriction = 0 (with all features)
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     |  (TP) 2  | (FN) 200 |
-        |    0     |  (FP) 9  |(TN) 1183 |
-        Accuracy: 0.8500717360114778
-        Precision: 0.18181818181818182
-        Recall: 0.009900990099009901
-        FPR: 0.007550335570469799
-        FNR: 0.9900990099009901
+        |    1     |  (TP) 0  | (FN) 202 |
+        |    0     |  (FP) 0  |(TN) 1192 |
+        Accuracy: 0.8550932568149211
+        Precision: 0.0
+        Recall: 0.0
+        FPR: 0.0
+        FNR: 1.0
 
         * feature_restriction = 20
         |          |    1     |    0     |
@@ -155,7 +155,7 @@ class TestRandomForestModel(unittest.TestCase):
 
         rfm = RandomForestModel(numTrees=10,
                                 bagging_w_replacement=True,
-                                feature_restriction=10,
+                                feature_restriction=0,
                                 seed=100)
         rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
