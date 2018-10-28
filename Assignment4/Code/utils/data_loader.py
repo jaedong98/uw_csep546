@@ -14,6 +14,7 @@ def get_split_data():
     """
     :return:
         xTrainRawOriginal, yTrainRawOriginal, xTestRawOriginal, yTestRawOriginal
+        (xTrain, yTrain, xTest, yTest)
     """
     xRaw, yRaw = get_raw_data()
     return sup.TrainTestSplit(xRaw, yRaw)
@@ -31,6 +32,7 @@ def get_xy_train_raw(with_noise=True):
 
 def get_xy_test_raw(with_noise=True):
     """
+    Split data into trainning and tests and add noise to xTest and yTest.
     :return: xTestRaw with noise, yTestRaw
     """
     (_, _, xTestRawOriginal, yTestRawOriginal) = get_split_data()

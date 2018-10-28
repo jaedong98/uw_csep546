@@ -13,7 +13,7 @@ def calculate_accuracies(numTrees=10,
                          seed=0,
                          with_noise=True):
     rfm = RandomForestModel(numTrees=numTrees,
-                            use_bagging=use_bagging,
+                            bagging_w_replacement=use_bagging,
                             feature_restriction=feature_restriction,
                             seed=seed)
     xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(with_noise)

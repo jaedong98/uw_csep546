@@ -17,7 +17,7 @@ class BestSpamModel(object):
         self.lg = lg.LogisticRegressionModel(threshold=threshold)
         self.dt = dt.DecisionTreeModel()
         self.rf = rf.RandomForestModel(numTrees=num_trees,
-                                       use_bagging=use_bagging,
+                                       bagging_w_replacement=use_bagging,
                                        feature_restriction=feature_restriction,
                                        seed=seed)
         self.lg_pred = []

@@ -11,12 +11,12 @@ class RandomForestModel(object):
 
     def __init__(self,
                  numTrees=10,
-                 use_bagging=False,
+                 bagging_w_replacement=False,
                  feature_restriction=0,
                  seed=0):
 
         self.numTrees = numTrees
-        self.use_bagging = use_bagging
+        self.bagging_w_replacement = bagging_w_replacement
         self.feature_restriction = feature_restriction
         self.trees = []
         self.selected_indices = []  # selected feature indices
@@ -42,7 +42,7 @@ class RandomForestModel(object):
             self.selected_indices.append(selected_indices)
 
         #self.trees = [build_tree(x, y, min_to_split) for x in xs]
-        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si, self.use_bagging)
+        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si, self.bagging_w_replacement)
                                          for si in self.selected_indices)
 
     def predict(self, xTest, threshold=None):
