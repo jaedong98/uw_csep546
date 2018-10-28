@@ -71,9 +71,14 @@ class RandomForestModel(object):
 
         prediction_votes = []
         for combines in zip(*self.predictions):
-            voted = Counter(combines).most_common(1)[0][0]
+            count_1s = combines.count(1)
+            if (count_1s / len(combines)) >= 0.5:
+                prediction_votes.append(1)
+            else:
+                prediction_votes.append(0)
+            #voted = Counter(combines).most_common(1)[0][0]
             # print("0s {} vs 1s {}".format(combines.count(0), combines.count(1)))
-            prediction_votes.append(voted)
+            #prediction_votes.append(voted)
 
         return prediction_votes
 
@@ -310,14 +315,6 @@ def split(node, min_to_stop=100, selected_indices=[]):
         node['left'] = node['right'] = Counter(ys).most_common(1)[0][0]
         return
 
-    if sum(l_yTrains) == 0 and sum(r_yTrains) == 0:  # all 0
-        node['left'] = node['right'] = 0
-        return
-
-    if all(l_yTrains) and all(r_yTrains):  # all 1
-        node['left'] = node['right'] = 1
-        return
-
     if len(l_yTrains) < min_to_stop:
         node['left'] = Counter(l_yTrains).most_common(1)[0][0]
     else:
@@ -329,6 +326,15 @@ def split(node, min_to_stop=100, selected_indices=[]):
     else:
         node['right'] = get_split(r_xTrains, r_yTrains, selected_indices)
         split(node['right'], min_to_stop, selected_indices)
+
+    if sum(l_yTrains) == 0 and sum(r_yTrains) == 0:  # all 0
+        node['left'] = node['right'] = 0
+        return
+
+    if all(l_yTrains) and all(r_yTrains):  # all 1
+        node['left'] = node['right'] = 1
+        return
+
 
 
 def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[]):

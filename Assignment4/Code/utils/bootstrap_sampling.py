@@ -1,3 +1,4 @@
+import collections
 import random
 
 
@@ -45,5 +46,8 @@ def get_bagged_samples(samples, seed=0):
     :return:
     """
     ss = len(samples)
-    return [samples[random.randint(0, ss - 1)] for _ in range(ss)]
+    bagging_indices = [random.randint(0, ss - 1) for _ in range(ss)]
+    mc = collections.Counter(bagging_indices).most_common(1)
+    print("Most duplicated index: {}".format(mc))
+    return [samples[i] for i in bagging_indices]
 

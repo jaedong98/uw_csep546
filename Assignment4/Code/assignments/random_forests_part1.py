@@ -81,7 +81,7 @@ if __name__ == '__main__':
                                           feature_restriction=20,
                                           min_to_split=2,
                                           seed=10,
-                                          with_noise=False)
+                                          with_noise=True)
 
     if config == 2:
         create_accuracy_comparison_tables(numTrees=20,
