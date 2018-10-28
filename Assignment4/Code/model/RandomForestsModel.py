@@ -42,9 +42,9 @@ class RandomForestModel(object):
                 selected_indices = [x for x in range(len(x[0]))]
 
             if self.bagging_w_replacement:
-                xs.append(list(x))
-            else:
                 xs.append(get_bagged_samples(list(x), seed=None))
+            else:
+                xs.append(list(x))
             self.selected_indices.append(selected_indices)
 
         #self.trees = [build_tree(x, y, min_to_split) for x in xs]

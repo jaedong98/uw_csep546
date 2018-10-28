@@ -5,10 +5,10 @@ from Assignment4.Code import report_path
 from assignments.random_forests_part1 import calculate_accuracies
 from utils.Assignment4Support import draw_random_forest_accuracy_variances
 
-configs = [{'min_to_split': 2, 'use_bagging': True, 'feature_restriction': 20},
-           {'min_to_split': 50, 'use_bagging': True, 'feature_restriction': 20},
-           {'min_to_split': 2, 'use_bagging': False, 'feature_restriction': 20},
-           {'min_to_split': 2, 'use_bagging': True, 'feature_restriction': 0}]
+configs = [{'min_to_split': 2, 'bagging_w_replacement': True, 'feature_restriction': 20},
+           {'min_to_split': 50, 'bagging_w_replacement': True, 'feature_restriction': 20},
+           {'min_to_split': 2, 'bagging_w_replacement': False, 'feature_restriction': 20},
+           {'min_to_split': 2, 'bagging_w_replacement': True, 'feature_restriction': 0}]
 
 
 def generate_comparision_accuracies(numTrees_options=[1, 20, 40, 60, 80],

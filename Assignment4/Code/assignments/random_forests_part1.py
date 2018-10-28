@@ -62,7 +62,7 @@ def create_accuracy_comparison_tables(numTrees=10,
     with open(md, 'w') as f:
         f.write(table)
         f.write('\n')
-        f.write('\nUse Bagging: {}'.format(bagging_w_replacement))
+        f.write('\nUse Bagging(bootstrap): {}'.format(bagging_w_replacement))
         f.write('\nFeature Restriction: {}'.format(feature_restriction))
         f.write('\nMinToSplit: {}'.format(min_to_split))
         f.write('\nSeed for random: {}'.format(seed))
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     if config == 2:
         create_accuracy_comparison_tables(numTrees=20,
-                                          bagging_w_replacement=True,
+                                          bagging_w_replacement=False,
                                           feature_restriction=20,
                                           min_to_split=2,
                                           seed=10000,

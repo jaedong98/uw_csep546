@@ -63,13 +63,13 @@ class TestRandomForestModel(unittest.TestCase):
         * feature_restriction = 20
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     | (TP) 87  | (FN) 115 |
+        |    1     | (TP) 62  | (FN) 140 |
         |    0     |  (FP) 0  |(TN) 1192 |
-        Accuracy: 0.9175035868005739
+        Accuracy: 0.8995695839311334
         Precision: 1.0
-        Recall: 0.4306930693069307
+        Recall: 0.3069306930693069
         FPR: 0.0
-        FNR: 0.5693069306930693
+        FNR: 0.693069306930693
         :return:
         """
         xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
@@ -77,7 +77,7 @@ class TestRandomForestModel(unittest.TestCase):
 
         rfm = RandomForestModel(numTrees=10,
                                 bagging_w_replacement=False,
-                                feature_restriction=20,
+                                feature_restriction=0,
                                 seed=100)
         rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
@@ -116,7 +116,7 @@ class TestRandomForestModel(unittest.TestCase):
 
         rfm = RandomForestModel(numTrees=10,
                                 bagging_w_replacement=True,
-                                feature_restriction=0,
+                                feature_restriction=20,
                                 seed=100)
         rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
