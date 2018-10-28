@@ -7,13 +7,13 @@ from utils.data_loader import get_featurized_xs_ys
 
 
 def calculate_accuracies(numTrees=10,
-                         use_bagging=True,
+                         bagging_w_replacement=True,
                          feature_restriction=0,
                          min_to_split=2,
                          seed=0,
                          with_noise=True):
     rfm = RandomForestModel(numTrees=numTrees,
-                            bagging_w_replacement=use_bagging,
+                            bagging_w_replacement=bagging_w_replacement,
                             feature_restriction=feature_restriction,
                             seed=seed)
     xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(with_noise)
@@ -31,7 +31,7 @@ def calculate_accuracies(numTrees=10,
 
 
 def create_accuracy_comparison_tables(numTrees=10,
-                                      use_bagging=True,
+                                      bagging_w_replacement=True,
                                       feature_restriction=0,
                                       min_to_split=2,
                                       seed=10,
@@ -39,7 +39,7 @@ def create_accuracy_comparison_tables(numTrees=10,
                                       with_noise=True):
 
     accuracies = calculate_accuracies(numTrees,
-                                      use_bagging,
+                                      bagging_w_replacement,
                                       feature_restriction,
                                       min_to_split,
                                       seed,
@@ -56,13 +56,13 @@ def create_accuracy_comparison_tables(numTrees=10,
     print(table)
 
     fname = 'prob1_part1_tree_accurarices_{}_b{},r{}.md'\
-        .format(numTrees, use_bagging, feature_restriction)
+        .format(numTrees, bagging_w_replacement, feature_restriction)
     md = os.path.join(report_path, fname)
 
     with open(md, 'w') as f:
         f.write(table)
         f.write('\n')
-        f.write('\nUse Bagging: {}'.format(use_bagging))
+        f.write('\nUse Bagging: {}'.format(bagging_w_replacement))
         f.write('\nFeature Restriction: {}'.format(feature_restriction))
         f.write('\nMinToSplit: {}'.format(min_to_split))
         f.write('\nSeed for random: {}'.format(seed))
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     if config == -1:  # basic configuration
         create_accuracy_comparison_tables(numTrees=10,
-                                          use_bagging=True,
+                                          bagging_w_replacement=True,
                                           feature_restriction=20,
                                           min_to_split=2,
                                           seed=10,
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     if config == 2:
         create_accuracy_comparison_tables(numTrees=20,
-                                          use_bagging=True,
+                                          bagging_w_replacement=True,
                                           feature_restriction=20,
                                           min_to_split=2,
                                           seed=10000,
