@@ -250,8 +250,8 @@ def get_split(xTrains, yTrains, selected_indices=[]):
     """
     i_gains = get_information_gains(xTrains, yTrains, selected_indices)
     # if sum(i_gails) == 0.0: print("No more gains found.")
-    if i_gains.count(max(i_gains)) > 1:
-        print("Found {} maximum information gains".format(i_gains.count(max(i_gains))))
+    #if i_gains.count(max(i_gains)) > 1:
+    #    print("Found {} maximum information gains".format(i_gains.count(max(i_gains))))
     feature_index = i_gains.index(max(i_gains))
     threshold = get_feature_split_threshold(feature_index, xTrains)
     groups = split_by_feature(feature_index, xTrains, yTrains)

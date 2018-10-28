@@ -52,24 +52,24 @@ class TestRandomForestModel(unittest.TestCase):
         * feature_restriction = 0 (with all features)
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     | (TP) 180 | (FN) 22  |
-        |    0     | (FP) 19  |(TN) 1173 |
-        Accuracy: 0.9705882352941176
-        Precision: 0.9045226130653267
-        Recall: 0.8910891089108911
-        FPR: 0.015939597315436243
-        FNR: 0.10891089108910891
+        |    1     | (TP) 175 | (FN) 27  |
+        |    0     | (FP) 31  |(TN) 1161 |
+        Accuracy: 0.9583931133428981
+        Precision: 0.8495145631067961
+        Recall: 0.8663366336633663
+        FPR: 0.026006711409395974
+        FNR: 0.13366336633663367
 
         * feature_restriction = 20
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     | (TP) 62  | (FN) 140 |
+        |    1     | (TP) 81  | (FN) 121 |
         |    0     |  (FP) 0  |(TN) 1192 |
-        Accuracy: 0.8995695839311334
+        Accuracy: 0.9131994261119082
         Precision: 1.0
-        Recall: 0.3069306930693069
+        Recall: 0.400990099009901
         FPR: 0.0
-        FNR: 0.693069306930693
+        FNR: 0.599009900990099
         :return:
         """
         xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
@@ -91,24 +91,24 @@ class TestRandomForestModel(unittest.TestCase):
         * feature_restriction = 0 (with all features)
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     | (TP) 180 | (FN) 22  |
-        |    0     | (FP) 19  |(TN) 1173 |
-        Accuracy: 0.9705882352941176
-        Precision: 0.9045226130653267
-        Recall: 0.8910891089108911
-        FPR: 0.015939597315436243
-        FNR: 0.10891089108910891
+        |    1     | (TP) 181 | (FN) 21  |
+        |    0     | (FP) 14  |(TN) 1178 |
+        Accuracy: 0.9748923959827833
+        Precision: 0.9282051282051282
+        Recall: 0.8960396039603961
+        FPR: 0.01174496644295302
+        FNR: 0.10396039603960396
 
         * feature_restriction = 20
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     | (TP) 35  | (FN) 167 |
+        |    1     | (TP) 107 | (FN) 95  |
         |    0     |  (FP) 0  |(TN) 1192 |
-        Accuracy: 0.8802008608321378
+        Accuracy: 0.9318507890961263
         Precision: 1.0
-        Recall: 0.17326732673267325
+        Recall: 0.5297029702970297
         FPR: 0.0
-        FNR: 0.8267326732673267
+        FNR: 0.47029702970297027
         :return:
         """
         xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
@@ -116,7 +116,7 @@ class TestRandomForestModel(unittest.TestCase):
 
         rfm = RandomForestModel(numTrees=10,
                                 bagging_w_replacement=True,
-                                feature_restriction=20,
+                                feature_restriction=0,
                                 seed=100)
         rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
@@ -127,27 +127,16 @@ class TestRandomForestModel(unittest.TestCase):
 
     def test_accuracy_baseline_wo_noise_w_bootstrap_with_10_features(self):
         """
-        * feature_restriction = 0 (with all features)
+        * feature_restriction = 0 (with all 10 features)
         |          |    1     |    0     |
         |----------|----------|----------|
-        |    1     |  (TP) 0  | (FN) 202 |
-        |    0     |  (FP) 0  |(TN) 1192 |
-        Accuracy: 0.8550932568149211
-        Precision: 0.0
-        Recall: 0.0
-        FPR: 0.0
-        FNR: 1.0
-
-        * feature_restriction = 20
-        |          |    1     |    0     |
-        |----------|----------|----------|
-        |    1     |  (TP) 0  | (FN) 202 |
-        |    0     |  (FP) 0  |(TN) 1192 |
-        Accuracy: 0.8550932568149211
-        Precision: 0.0
-        Recall: 0.0
-        FPR: 0.0
-        FNR: 1.0
+        |    1     | (TP) 118 | (FN) 84  |
+        |    0     | (FP) 15  |(TN) 1177 |
+        Accuracy: 0.9289813486370158
+        Precision: 0.8872180451127819
+        Recall: 0.5841584158415841
+        FPR: 0.012583892617449664
+        FNR: 0.4158415841584158
         :return:
         """
         xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=5,
