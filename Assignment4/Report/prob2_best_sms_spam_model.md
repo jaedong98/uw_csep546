@@ -39,6 +39,8 @@ config = {
 ```
 Firstly, I predicted model by sweeping min_to_stop(minToSplit). Below graph indiciates as increasing the **overfitting** **underfitting**
 
+The number of mutual information words can decrease accruacy (overfitting - )
+
 ![prob2_param_sweep_by_min_to_split_1_50_100_200_400](prob2_param_sweep_by_min_to_split_1_50_100_200_400.png)
 
 * Feature Selection Improvement by 
