@@ -10,7 +10,7 @@ config = {
     'iterations': 10000,  # logistic regression
     'min_to_stop': 100,  # decision tree and random forest
     'feature_restriction': 20,  # random forest
-    'use_bagging': True,  # random forest.
+    'bagging_w_replacement': True,  # random forest.
     'num_trees': 40,  # random forest
     'feature_restriction': 20,  # random forest
     'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
@@ -30,7 +30,7 @@ def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 5, 10, 50, 100],
                                                              with_noise=with_noise)
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
-                            use_bagging=config['use_bagging'],
+                            bagging_w_replacement=config['bagging_w_replacement'],
                             feature_restriction=config['feature_restriction'])
         bsm.fit(xTrain, yTrain, config['iterations'], min_to_stop)
         # on hold-out data
@@ -73,7 +73,7 @@ def parameter_sweeps_by_feature_restriction(feature_restrictions=[10, 50, 100, 1
                                                              with_noise=with_noise)
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
-                            use_bagging=config['use_bagging'],
+                            bagging_w_replacement=config['bagging_w_replacement'],
                             feature_restriction=feature_restriction)
         bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
         # on hold-out data
@@ -105,8 +105,8 @@ def parameter_sweeps_by_feature_restriction(feature_restrictions=[10, 50, 100, 1
 
 
 def parameter_sweeps_by_mi(mi_words=[20, 50, 100, 200, 250],
-                                    config=config,
-                                    with_noise=True):
+                           config=config,
+                           with_noise=True):
 
     accuracies = []
     test_accuracies = []
@@ -115,7 +115,7 @@ def parameter_sweeps_by_mi(mi_words=[20, 50, 100, 200, 250],
                                                              with_noise=with_noise)
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
-                            use_bagging=config['use_bagging'],
+                            bagging_w_replacement=config['bagging_w_replacement'],
                             feature_restriction=config['feature_restriction'])
         bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
         # on hold-out data
@@ -150,9 +150,9 @@ if __name__ == '__main__':
     config = {
         'iterations': 10000,  # logistic regression
         'min_to_stop': 2,  # decision tree and random forest
-        'feature_restriction': 100,  # random forest
-        'use_bagging': True,  # random forest.
-        'num_trees': 10,  # random forest
+        'feature_restriction': 20,  # random forest
+        'bagging_w_replacement': True,  # random forest.
+        'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
         'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.

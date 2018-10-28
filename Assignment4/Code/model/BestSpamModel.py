@@ -11,13 +11,13 @@ class BestSpamModel(object):
     def __init__(self,
                  threshold=0.5,          # logistic regression
                  num_trees=40,            # random forest
-                 use_bagging=False,      # random forest
+                 bagging_w_replacement=False,      # random forest
                  feature_restriction=0,  # random forest
                  seed=10000):            # random forest
         self.lg = lg.LogisticRegressionModel(threshold=threshold)
         self.dt = dt.DecisionTreeModel()
         self.rf = rf.RandomForestModel(numTrees=num_trees,
-                                       bagging_w_replacement=use_bagging,
+                                       bagging_w_replacement=bagging_w_replacement,
                                        feature_restriction=feature_restriction,
                                        seed=seed)
         self.lg_pred = []
