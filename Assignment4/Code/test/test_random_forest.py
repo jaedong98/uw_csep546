@@ -37,12 +37,15 @@ class TestRandomForestModel(unittest.TestCase):
                                                             with_noise=False)
 
         rfm = RandomForestModel(numTrees=10,
-                                use_bagging=False,
+                                use_bagging=True,
                                 feature_restriction=20,
                                 seed=100)
-        rfm.fit(xTrain, yTrain, min_to_split=100)
+        rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
         print(Evaluation(yTest, yTestPredicted))
+        for i, p in enumerate(rfm.predictions):
+            ev = Evaluation(yTest, p)
+            print("Tree {}: {}".format(i, ev.accuracy))
 
     def test_accuracy_baseline_w_noise(self):
 
@@ -50,12 +53,15 @@ class TestRandomForestModel(unittest.TestCase):
                                                             with_noise=True)
 
         rfm = RandomForestModel(numTrees=10,
-                                use_bagging=False,
+                                use_bagging=True,
                                 feature_restriction=20,
-                                seed=100)
+                                seed=1000)
         rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
         print(Evaluation(yTest, yTestPredicted))
+        for i, p in enumerate(rfm.predictions):
+            ev = Evaluation(yTest, p)
+            print("Tree {}: {}".format(i, ev.accuracy))
 
 
 if __name__ == '__main__':

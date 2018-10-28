@@ -120,7 +120,7 @@ class TestDecisionTreeModel(unittest.TestCase):
         model = dtm.DecisionTreeModel()
         # xTrain, xTest = Featurize(xTrainRaw, xTestRaw)
         xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
-                                                            with_noise=False)
+                                                            with_noise=True)
 
         model.fit(xTrain, yTrain, min_to_stop=2)
         yTestPrediced = model.predict(xTest)

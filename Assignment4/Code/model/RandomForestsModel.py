@@ -25,8 +25,6 @@ class RandomForestModel(object):
 
     def fit(self, x, y, min_to_split=2):
 
-        xs = []
-
         random.seed(self.seed)
         for _ in range(self.numTrees):
             # seed = random.randint(0, self.numTrees)
@@ -43,14 +41,9 @@ class RandomForestModel(object):
 
             self.selected_indices.append(selected_indices)
 
-            if self.use_bagging:
-                x = get_bagged_samples(x, seed=None)
-
-            xs.append(x)
-
         #self.trees = [build_tree(x, y, min_to_split) for x in xs]
-        self.trees = Parallel(n_jobs=12)(delayed(build_tree)(x, y, min_to_split, si)
-                                         for x, si in zip(xs, self.selected_indices))
+        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si, self.use_bagging)
+                                         for si in self.selected_indices)
 
     def predict(self, xTest, threshold=None):
 
@@ -124,7 +117,7 @@ def get_entropy_for_feature(feature_dict):
     return entropies
 
 
-def get_feature_dict(xTrains, yTrains):
+def get_feature_dict(xTrains, yTrains, selected_indices=[]):
     """
     :param xTrains: a list of feature i values, [x for x in zip(*xTrains)][i]
     :param yTrains: a list of target attributes
@@ -150,7 +143,9 @@ def get_feature_dict(xTrains, yTrains):
     if not set(xTrains) == set([0, 1]):
         feature_threshold = (max(xTrains) - min(xTrains)) / 2
 
-    for x, y in zip(xTrains, yTrains):
+    for i, (x, y) in enumerate(zip(xTrains, yTrains)):
+        if selected_indices and i not in selected_indices:
+            continue
         if feature_threshold:
             feature_dict[int(feature_threshold <= x)][y] += 1
         else:
@@ -159,7 +154,7 @@ def get_feature_dict(xTrains, yTrains):
     return feature_dict
 
 
-def get_information_gain(xTrains, yTrains):
+def get_information_gain(xTrains, yTrains, selected_indices=[]):
     """
     Loss(S, 𝑥_𝑖)
      lossSum = 0
@@ -175,7 +170,7 @@ def get_information_gain(xTrains, yTrains):
     :param yTrains: a list of target attributes
     :return: information gain for the feature
     """
-    feature_dict = get_feature_dict(xTrains, yTrains)
+    feature_dict = get_feature_dict(xTrains, yTrains, selected_indices)
     entropies = get_entropy_for_feature(feature_dict)
     entropy_S = get_entropy_S(yTrains)
     loss_sum = 0
@@ -224,7 +219,7 @@ def get_information_gains(xTrains, yTrains, selected_indices=[]):
     gains = []
     for i, xTrain in enumerate(zip(*xTrains)):
         if i in selected_indices:
-            gains.append(get_information_gain(xTrain, yTrains))
+            gains.append(get_information_gain(xTrain, yTrains, selected_indices))
         else:
             gains.append(-1)
 
@@ -336,8 +331,10 @@ def split(node, min_to_stop=100, selected_indices=[]):
         return
 
 
+def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[], use_bagging=True):
 
-def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[]):
+    if use_bagging:
+        xTrains = get_bagged_samples(list(xTrains), seed=None)
     root = get_split(xTrains, yTrains, selected_indices)
     split(root, min_to_stop, selected_indices)
     return root
