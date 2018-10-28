@@ -55,7 +55,7 @@ def create_accuracy_comparison_tables(numTrees=10,
 
     print(table)
 
-    fname = 'prob1_part1_tree_accurarices_{}_b{},r{}.md'\
+    fname = 'prob1_part1_tree_accurarices_{}_b{},r{}_final.md'\
         .format(numTrees, bagging_w_replacement, feature_restriction)
     md = os.path.join(report_path, fname)
 
