@@ -27,24 +27,29 @@ class RandomForestModel(object):
     def fit(self, x, y, min_to_split=2):
 
         np.random.seed(self.seed)
+        xs = []
         for _ in range(self.numTrees):
             # seed = random.randint(0, self.numTrees)
             # feature restriction: different random set for each tree
 
             if self.feature_restriction > 0:
                 selected_indices = select_random_indices(len(x[0]),
-                                                          self.feature_restriction,
-                                                          seed=None)
+                                                         self.feature_restriction,
+                                                         seed=None)
 
                 # x = restrict_features(x, selected_indices)
             else:
                 selected_indices = [x for x in range(len(x[0]))]
 
+            if self.bagging_w_replacement:
+                xs.append(list(x))
+            else:
+                xs.append(get_bagged_samples(list(x), seed=None))
             self.selected_indices.append(selected_indices)
 
         #self.trees = [build_tree(x, y, min_to_split) for x in xs]
-        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si, self.bagging_w_replacement)
-                                         for si in self.selected_indices)
+        self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si)
+                                        for si, x in zip(self.selected_indices, xs))
 
     def predict(self, xTest, threshold=None):
 
@@ -332,10 +337,8 @@ def split(node, min_to_stop=100, selected_indices=[]):
         return
 
 
-def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[], use_bagging=True):
+def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[]):
 
-    if use_bagging:
-        xTrains = get_bagged_samples(list(xTrains), seed=None)
     root = get_split(xTrains, yTrains, selected_indices)
     split(root, min_to_stop, selected_indices)
     return root

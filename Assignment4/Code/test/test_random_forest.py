@@ -91,6 +91,45 @@ class TestRandomForestModel(unittest.TestCase):
         * feature_restriction = 0 (with all features)
         |          |    1     |    0     |
         |----------|----------|----------|
+        |    1     | (TP) 180 | (FN) 22  |
+        |    0     | (FP) 19  |(TN) 1173 |
+        Accuracy: 0.9705882352941176
+        Precision: 0.9045226130653267
+        Recall: 0.8910891089108911
+        FPR: 0.015939597315436243
+        FNR: 0.10891089108910891
+
+        * feature_restriction = 20
+        |          |    1     |    0     |
+        |----------|----------|----------|
+        |    1     | (TP) 35  | (FN) 167 |
+        |    0     |  (FP) 0  |(TN) 1192 |
+        Accuracy: 0.8802008608321378
+        Precision: 1.0
+        Recall: 0.17326732673267325
+        FPR: 0.0
+        FNR: 0.8267326732673267
+        :return:
+        """
+        xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
+                                                            with_noise=False)
+
+        rfm = RandomForestModel(numTrees=10,
+                                bagging_w_replacement=True,
+                                feature_restriction=0,
+                                seed=100)
+        rfm.fit(xTrain, yTrain, min_to_split=2)
+        yTestPredicted = rfm.predict(xTest)
+        print(Evaluation(yTest, yTestPredicted))
+        for i, p in enumerate(rfm.predictions):
+            ev = Evaluation(yTest, p)
+            print("Tree {}: {}".format(i, ev.accuracy))
+
+    def test_accuracy_baseline_wo_noise_w_bootstrap_with_10_features(self):
+        """
+        * feature_restriction = 0 (with all features)
+        |          |    1     |    0     |
+        |----------|----------|----------|
         |    1     |  (TP) 2  | (FN) 200 |
         |    0     |  (FP) 9  |(TN) 1183 |
         Accuracy: 0.8500717360114778
@@ -111,12 +150,12 @@ class TestRandomForestModel(unittest.TestCase):
         FNR: 1.0
         :return:
         """
-        xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
+        xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=5,
                                                             with_noise=False)
 
         rfm = RandomForestModel(numTrees=10,
                                 bagging_w_replacement=True,
-                                feature_restriction=20,
+                                feature_restriction=10,
                                 seed=100)
         rfm.fit(xTrain, yTrain, min_to_split=2)
         yTestPredicted = rfm.predict(xTest)
