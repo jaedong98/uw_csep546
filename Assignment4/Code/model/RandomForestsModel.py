@@ -2,6 +2,7 @@ from collections import Counter
 from joblib import Parallel, delayed
 import math
 import random
+import numpy as np
 
 from utils.bootstrap_sampling import get_bagged_samples
 from utils.feature_restriction import select_random_indices, restrict_features
@@ -25,7 +26,7 @@ class RandomForestModel(object):
 
     def fit(self, x, y, min_to_split=2):
 
-        random.seed(self.seed)
+        np.random.seed(self.seed)
         for _ in range(self.numTrees):
             # seed = random.randint(0, self.numTrees)
             # feature restriction: different random set for each tree

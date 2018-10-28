@@ -1,5 +1,6 @@
 import collections
 import random
+import numpy as np
 
 
 def get_bagging_indices(sample_size, seed=0):
@@ -46,7 +47,10 @@ def get_bagged_samples(samples, seed=0):
     :return:
     """
     ss = len(samples)
-    bagging_indices = [random.randint(0, ss - 1) for _ in range(ss)]
+    if seed is not None:
+        np.random.seed(seed)
+    bagging_indices = np.random.choice(ss, ss)
+    #bagging_indices = [random.randint(0, ss - 1) for _ in range(ss)]
     mc = collections.Counter(bagging_indices).most_common(1)
     print("Most duplicated index: {}".format(mc))
     return [samples[i] for i in bagging_indices]
