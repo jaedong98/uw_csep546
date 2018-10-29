@@ -18,7 +18,7 @@
   |     0.12872091167055352      | Want 2 get laid tonight? Want real Dogging locations sent direct 2 ur Mob? Join the UK's largest Dogging Network by txting MOAN to 69888Nyt. ec2a. 31p.msg@150p|
   |     0.17838556548741172      | 08714712388 between 10am-7pm Cost 10p|
   |     0.21261911053950863      | all the lastest from Stereophonics, Marley, Dizzee Racal, Libertines and The Strokes! Win Nookii games with Flirt!! Click TheMob WAP Bookmark or text WAP to 82468|
+  |      0.2135887256635743      | from www.Applausestore.com MonthlySubscription@50p/msg max6/month T&CsC web age16 2stop txt stop|
+  |      0.2241311649581547      | network operator. The service is free. For T & C's visit 80488.biz|
+  |      0.2678242903790243      | We tried to contact you re our offer of New Video Phone 750 anytime any network mins HALF PRICE Rental camcorder call 08000930705 or reply for delivery Wed|
   |      0.3542158636544473      | You have an important customer service announcement from PREMIER.|
-  |     0.39539997830091583      | Please CALL 08712402779 immediately as there is an urgent message waiting for you|
-  |      0.3982784822439866      | XXXMobileMovieClub: To use your credit, click the WAP link in the next txt message or click here>> http://wap. xxxmobilemovieclub.com?n=QJKGIGHJJGCBL|
-  |     0.39859716381919824      | U were outbid by simonwatson5120 on the Shinco DVD Plyr. 2 bid again, visit sms. ac/smsrewards 2 end bid notifications, reply END OUT|

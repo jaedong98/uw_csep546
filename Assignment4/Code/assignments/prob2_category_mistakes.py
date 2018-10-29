@@ -71,7 +71,7 @@ if __name__ == '__main__':
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 100,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
     }
 
@@ -85,12 +85,25 @@ if __name__ == '__main__':
     header = '| Probabilities | Test Raw |'
     # ------------------------------------------------------------------------ #
     title = '* False Positive - the true answer was 0, but gives very high probabilities'
-    fname = os.path.join(report_path, 'prob2_category_mistake_false_positives.md')
-
+    fname = 'prob2_category_mistake_false_positives_w_mi_{}.md'.format(config['feature_selection_by_mi'])
+    fname = os.path.join(report_path, fname)
     generate_mistakes_table(sorted_fp, title, header, xTestRaw, fname)
 
     title = '* False Negative - the true answer was 1, but gives very low probabilities'
-    fname = os.path.join(report_path, 'prob2_category_mistake_false_negative.md')
+    fname = 'prob2_category_mistake_false_negative_w_mi_{}.md'.format(config['feature_selection_by_mi'])
+    fname = os.path.join(report_path, fname)
+    generate_mistakes_table(sorted_fn, title, header, xTestRaw, fname)
 
+    # ------------------------------------------------------------------------ #
+    config['feature_selection_by_mi'] = 100
+    sorted_fn, sorted_fp, xTest = find_categrize_mistakes(config, with_noise=False)
+    title = '* False Positive - the true answer was 0, but gives very high probabilities'
+    fname = 'prob2_category_mistake_false_positives_w_mi_{}.md'.format(config['feature_selection_by_mi'])
+    fname = os.path.join(report_path, fname)
+    generate_mistakes_table(sorted_fp, title, header, xTestRaw, fname)
+
+    title = '* False Negative - the true answer was 1, but gives very low probabilities'
+    fname = 'prob2_category_mistake_false_negative_w_mi_{}.md'.format(config['feature_selection_by_mi'])
+    fname = os.path.join(report_path, fname)
     generate_mistakes_table(sorted_fn, title, header, xTestRaw, fname)
 
