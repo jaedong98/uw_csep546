@@ -69,7 +69,7 @@ config = {
         'include_handcrafted_features': True
     }
 ```
-Below is the ROC curve comparisons between baseline and updated configurations. 
+Below is the ROC curve comparisons between baseline and updated configurations. The improved configuration shows more AUC (Area Under The Curve). 
 ![compare_roc_curves_by_configs_0.0_1.0_0.01](compare_roc_curves_by_configs_0.0_1.0_0.01.png)
 
 
