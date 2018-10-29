@@ -19,6 +19,12 @@ class DecisionTreeModel(object):
             else:
                 predictions.append(predict_w_threshold(self.tree, example, threshold))
 
+        return predictions
+
+    def predict_probabilities(self, xTest):
+        predictions = []
+        for example in xTest:
+            predictions.append(predict_probability(self.tree, example))
 
         return predictions
 
@@ -370,3 +376,42 @@ def predict(node, example):
             return predict(node['right'], example)
         else:
             return node['right']
+
+
+def predict_probability(node, example):
+    """
+    Predict the value for an example given a tree(/node):
+         {'index': feature_index, 'gain': max(i_gails), 'groups': groups,
+                'num_label_1': groups[0][1].count(1),
+                'num_label_0': groups[0][1].count(0),
+          'threshold': 0.5 or midpoint of features}
+    :param node:
+    :param row:
+    :return:
+    """
+    if example[node['index']] >= node['threshold']:
+        if isinstance(node['left'], dict):
+            return predict_probability(node['left'], example)
+        else:
+            if (node['num_label_1'] + node['num_label_0']) == 0:
+                return node['right']
+            if node['num_label_1'] == 0:
+                return 0
+            if node['num_label_0'] == 0:
+                return 1
+            if node['left'] == 1:
+                return node['num_label_1'] / (node['num_label_1'] + node['num_label_0'])
+            return node['num_label_0'] / (node['num_label_1'] + node['num_label_0'])
+    else:
+        if isinstance(node['right'], dict):
+            return predict_probability(node['right'], example)
+        else:
+            if (node['num_label_1'] + node['num_label_0']) == 0:
+                return node['right']
+            if node['num_label_1'] == 0:
+                return 0
+            if node['num_label_0'] == 0:
+                return 1
+            if node['right'] == 1:
+                return node['num_label_1'] / (node['num_label_1'] + node['num_label_0'])
+            return node['num_label_0'] / (node['num_label_1'] + node['num_label_0'])

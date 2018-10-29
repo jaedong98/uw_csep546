@@ -83,7 +83,8 @@ def compare_roc_curves_by_configs(configs,
                           'False Positive Rate', 'False Negative Rate', '',
                           img_fname,
                           legends=legends,
-                          invert_yaxis=True)
+                          invert_yaxis=True,
+                        data_pt='-+')
 
 
 if __name__ == '__main__':
