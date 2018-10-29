@@ -155,7 +155,7 @@ Configuration:
  * bagging_w_replacement: True
  * num_trees: 40
  * feature_restriction: 100
- * feature_selection_by_mi: 100
+ * feature_selection_by_mi: 250
  * feature_selection_by_frequency: 0
  * include_handcrafted_features: True
 
