@@ -20,8 +20,6 @@ def find_categrize_mistakes(config, with_noise=True, top=20):
                         feature_restriction=config['feature_restriction'])
     bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
 
-    xTest = [[1] + x for x in xTest]
-    # predict using validation dataset
     yTestPredicted_prob = bsm.predict_probabilities(xTest)
     yTestPredicted = bsm.predict(xTest)
 
@@ -46,7 +44,7 @@ def find_categrize_mistakes(config, with_noise=True, top=20):
     print('False Positives: {}'.format(sorted_fp))
     print(es.ConfusionMatrix(yTest, yTestPredicted))
     print('*' * 80)
-    return sorted_fn[:top], sorted_fp[:top], xTest
+    return sorted_fn[:top], sorted_fp[:top]
 
 
 def generate_mistakes_table(mistakes, title, header, xTestRaw, fname, w=30):
@@ -72,20 +70,26 @@ if __name__ == '__main__':
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 0,  # 0 means False, N > 0 means select top N words based on mi.
-        'feature_selection_by_frequency': 20  # 0 means False, N > 0 means select top N words based on frequency.
+        'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
     }
 
     ############################################################################
-    # by frequency
-    _, sorted_fp = find_categrize_mistakes(config)
+    # by mutual information
+    sorted_fn, sorted_fp = find_categrize_mistakes(config)
     xTestRaw, yTestRaw = get_xy_test_raw(with_noise=True)
     yTest = yTestRaw
 
     w = 30
     header = '| Probabilities | Test Raw |'
+    # ------------------------------------------------------------------------ #
     title = '* False Positive - the true answer was 0, but gives very high probabilities'
-    fname = os.path.join(report_path, 'category_mistake_false_positives.md')
+    fname = os.path.join(report_path, 'prob2_category_mistake_false_positives.md')
 
     generate_mistakes_table(sorted_fp, title, header, xTestRaw, fname)
+
+    title = '* False Negative - the true answer was 1, but gives very low probabilities'
+    fname = os.path.join(report_path, 'prob2_category_mistake_false_negative.md')
+
+    generate_mistakes_table(sorted_fn, title, header, xTestRaw, fname)
 
