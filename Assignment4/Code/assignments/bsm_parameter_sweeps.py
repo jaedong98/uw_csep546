@@ -14,8 +14,9 @@ config = {
     'num_trees': 40,  # random forest
     'feature_restriction': 20,  # random forest
     'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
-    'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
-}
+    'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
+    'include_handcrafted_features': False
+    }
 
 
 def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 5, 10, 50, 100],
@@ -27,7 +28,8 @@ def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 5, 10, 50, 100],
     for min_to_stop in min_to_stops:
         mi_words = config['feature_selection_by_mi']
         xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_words,
-                                                             with_noise=with_noise)
+                                                             with_noise=with_noise,
+                                                             includeHandCraftedFeatures=config['include_handcrafted_features'])
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             bagging_w_replacement=config['bagging_w_replacement'],
@@ -47,8 +49,9 @@ def parameter_sweeps_by_min_to_stop(min_to_stops=[1, 5, 10, 50, 100],
     xlabel = 'MinToSplit'
     ylabel = 'Accuracies'
     title = 'Best SMS Spam Model (with noise)'
-    fname = 'prob2_param_sweep_by_min_to_split_{}.png' \
-        .format('_'.join([str(n) for n in min_to_stops]))
+    fname = 'prob2_param_sweep_by_min_to_split_{}_w_handcrafted_{}.png' \
+        .format('_'.join([str(n) for n in min_to_stops]),
+                config['include_handcrafted_features'])
     img_fname = os.path.join(report_path, fname)
     legends = ['Test Data', 'Training Data']
 
@@ -70,7 +73,8 @@ def parameter_sweeps_by_feature_restriction(feature_restrictions=[10, 50, 100, 1
     for feature_restriction in feature_restrictions:
         mi_words = config['feature_selection_by_mi']
         xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_words,
-                                                             with_noise=with_noise)
+                                                             with_noise=with_noise,
+                                                             includeHandCraftedFeatures=config['include_handcrafted_features'])
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             bagging_w_replacement=config['bagging_w_replacement'],
@@ -90,8 +94,9 @@ def parameter_sweeps_by_feature_restriction(feature_restrictions=[10, 50, 100, 1
     xlabel = 'Feature Restrictions'
     ylabel = 'Accuracies'
     title = 'Best SMS Spam Model (with noise)'
-    fname = 'prob2_param_sweep_by_feature_restriction_{}.png' \
-        .format('_'.join([str(n) for n in feature_restrictions]))
+    fname = 'prob2_param_sweep_by_feature_restriction_{}_w_handcrafted_{}.png' \
+        .format('_'.join([str(n) for n in feature_restrictions]),
+                config['include_handcrafted_features'])
     img_fname = os.path.join(report_path, fname)
     legends = ['Test Data', 'Training Data']
 
@@ -112,7 +117,8 @@ def parameter_sweeps_by_mi(mi_words=[20, 50, 100, 200, 250],
     test_accuracies = []
     for mi_word in mi_words:
         xTrain, xTest, yTrain, yTests = get_featurized_xs_ys(numMutualInformationWords=mi_word,
-                                                             with_noise=with_noise)
+                                                             with_noise=with_noise,
+                                                             includeHandCraftedFeatures=config['include_handcrafted_features'])
         print("Loaded all data.")
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             bagging_w_replacement=config['bagging_w_replacement'],
@@ -132,8 +138,9 @@ def parameter_sweeps_by_mi(mi_words=[20, 50, 100, 200, 250],
     xlabel = 'N features selected by MI'
     ylabel = 'Accuracies'
     title = 'Best SMS Spam Model (with noise)'
-    fname = 'prob2_param_sweep_by_mi_{}.png' \
-        .format('_'.join([str(n) for n in mi_words]))
+    fname = 'prob2_param_sweep_by_mi_{}_w_handcrafted_{}.png' \
+        .format('_'.join([str(n) for n in mi_words]),
+                config['include_handcrafted_features'])
     img_fname = os.path.join(report_path, fname)
     legends = ['Test Data', 'Training Data']
 
@@ -155,7 +162,8 @@ if __name__ == '__main__':
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
         'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
-        'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
+        'feature_selection_by_frequency': 10,  # 0 means False, N > 0 means select top N words based on frequency.
+        'include_handcrafted_features': True
     }
     parameter_sweeps_by_mi(config=config, with_noise=True)
     parameter_sweeps_by_min_to_stop(config=config, with_noise=True)

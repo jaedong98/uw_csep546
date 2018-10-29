@@ -4,6 +4,7 @@ import numpy as np
 import time
 import model.LogisticRegressionModel as lgm
 import utils.EvaluationsStub
+from assignments.prob2_category_mistakes_report_utils import has_url, many_uppers, has_dots, has_lower_i
 from utils.feature_selection_frequency import extract_features_by_frequency
 from utils.feature_selection_mi import extract_features_by_mi
 
@@ -60,11 +61,31 @@ def TrainTestSplit(x, y, percentTest=.25):
     return (xTrain, yTrain, xTest, yTest)
 
 
-def featurize_raw_data(raw_data, words_by_mi):
+def featurize_raw_data(raw_data, words_by_mi, includeHandCraftedFeatures=True):
     words = ['call', 'to', 'your']
     train = []
     for x in raw_data:
         features = []
+
+        if includeHandCraftedFeatures:
+            # from false positives
+            if has_url(x):
+                features.append(1)
+            else:
+                features.append(0)
+            if many_uppers(x):
+                features.append(1)
+            else:
+                features.append(0)
+            # from false negatives
+            if has_dots(x):
+                features.append(0)
+            else:
+                features.append(1)
+            if has_lower_i(x):
+                features.append(0)
+            else:
+                features.append(1)
 
         # Have a feature for longer texts
         if len(x) > 40:
@@ -112,8 +133,8 @@ def FeaturizeExt(xTrainRaw,
         fs = extract_features_by_frequency(xTrainRaw, numFrequentWords)
         words_by_mi = [f[0] for f in fs]
 
-    xTrain = featurize_raw_data(xTrainRaw, words_by_mi)
-    xTest = featurize_raw_data(xTestRaw, words_by_mi)
+    xTrain = featurize_raw_data(xTrainRaw, words_by_mi, includeHandCraftedFeatures)
+    xTest = featurize_raw_data(xTestRaw, words_by_mi, includeHandCraftedFeatures)
 
     return xTrain, xTest
 
