@@ -30,12 +30,12 @@ My SMS spam model bags three base leaners, *Logistic Regression, Decision Tree, 
 config = {
     'num_iteration': 10000,                # logistic regression
     'min_to_stop': 100,                    # decision tree and random forest
-    'feature_restriction': 20,             # random forest
     'bagging_w_replacement': True,         # random forest (bootstrapping)
     'num_trees': 20,                       # random forest
     'feature_restriction': 20,             # random forest
     'feature_selection_by_mi': 20,         # 0 means False, N > 0 means select top N words based on mi.
-    'feature_selection_by_frequency': 10   # 0 means False, N > 0 means select top N words based on frequency.
+    'feature_selection_by_frequency': 10,   # 0 means False, N > 0 means select top N words based on frequency.
+    'include_handcrafted_features': False
 }
 ```
 With the parameters above, the model was thought, and the accuracies were collected with three parameter sweeps. Below is the accuracies over various min_to_stop(/split). It shows the comparison between what model predict based on training versus how it performs on the hold-out data(test). We can see the two lines are close over around minToStop(minToSplit) 40. It indicates the model is *overfitting* data with too much search to fit training data. 
@@ -52,6 +52,13 @@ The common category mistakes were collected to determine the features that cause
   * If a message contains url starting with www or http, or upper case words, consider it as a spam.
   * If a message contains many consecutive dots or lower 'i' in the place of 'I', consider it as not a spam.
 
+Adding removing 
+| features | Accuracies |
+|-|-|
+| Contains URL | |
+| Upper case words | |
+| Consecutive dots(...) | |
+| Letter 'i' in the place of 'I' | |
 
 
 * Feature Selection Improvement by 

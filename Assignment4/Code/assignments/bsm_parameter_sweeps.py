@@ -157,7 +157,6 @@ if __name__ == '__main__':
     config = {
         'iterations': 10000,  # logistic regression
         'min_to_stop': 2,  # decision tree and random forest
-        'feature_restriction': 20,  # random forest
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
