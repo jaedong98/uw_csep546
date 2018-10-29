@@ -65,7 +65,12 @@ Adding removing
   1. number of frequency
   2. mutual information
   3. accuracy
-   ![feature_selection_accuracy](img/feature_selection_accuracy.png)
+
+
+| Without Handcrafted Features | With Handcrafted Features|
+|-|-|
+| ![](prob2_param_sweep_by_mi_20_50_100_200_250_w_handcrafted_False.png)| ![](prob2_param_sweep_by_mi_20_50_100_200_250_w_handcrafted_True.png)|
+| ![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_False.png)|![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_True.png) |
 
 * Catagory Mistakes
   * Here are top 20 words found as a category mistakes.
