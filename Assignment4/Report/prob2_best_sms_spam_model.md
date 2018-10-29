@@ -48,6 +48,31 @@ With the same configuration, the parameter sweep by mutual information showed *u
 
 ##### Category Mistakes
 
+The common category mistakes were collected to determine the features that cause the accuracy loss. The last part of this report contains the detailed lists for false negative and positive cases. Given the information, I developed a script that give me the heuristic features that would reduce the bad false positives and negativies.
+  * If a message contains url starting with www or http, or upper case words, consider it as a spam.
+  * If a message contains many consecutive dots or lower 'i' in the place of 'I', consider it as not a spam.
+
+
+
+* Feature Selection Improvement by 
+  1. number of frequency
+  2. mutual information
+  3. accuracy
+   ![feature_selection_accuracy](img/feature_selection_accuracy.png)
+
+* Catagory Mistakes
+  * Here are top 20 words found as a category mistakes.
+    1. FPR
+    2. FNR
+
+
+* Improvement
+  * Determine words to add using category mistakes. This will be included in feature selection.
+
+  * Compare with ROC curves. The default configuration vs Best Configuration (with improvement items)
+    *  Here is the best configuration setting. I decided to use them ...
+    *  Accuracy Estimate based on the *cross validation* is ...
+  
 ***
 ##### Appendix. 
 
@@ -95,4 +120,3 @@ With the same configuration, the parameter sweep by mutual information showed *u
   |      0.5044991277544608      | Book which lesson? then you msg me... I will call up after work or sth... I'm going to get specs. My membership is PX3748|
 
   ***
-  
