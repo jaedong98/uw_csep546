@@ -60,13 +60,14 @@ class BestSpamModel(object):
 
     def predict_probabilities(self, xTests):
         xTests_w_0 = [[1] + x for x in xTests]
-        self.lg_pred = self.lg.predict(xTests_w_0)
-        self.dt_pred = self.dt.predict(xTests)
-        self.rf_pred = self.rf.predict(xTests)
+        lg_pred = self.lg.predict_probabilities(xTests_w_0)
+        return lg_pred
+        dt_pred = self.dt.predict(xTests)
+        rf_pred = self.rf.predict(xTests)
         predictions = []
-        for l, d, r in zip(self.lg_pred, self.dt_pred, self.rf_pred):
+        for l, d, r in zip(lg_pred, dt_pred, rf_pred):
             preds = [l, d, r]
-            spam_percentage = preds.count(1) / len(preds)
+            spam_percentage = sum(preds) / len(preds)
             predictions.append(spam_percentage)
 
         return predictions

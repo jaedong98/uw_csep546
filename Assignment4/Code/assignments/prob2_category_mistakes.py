@@ -1,9 +1,10 @@
 import os
 
 import utils.EvaluationsStub as es
-from Assignment4.Code import report_path
+from Assignment4.Code import report_path, kDataPath
 
 from model.BestSpamModel import BestSpamModel
+from utils.Assignment4Support import LoadRawData
 from utils.data_loader import get_featurized_xs_ys, get_xy_test_raw
 
 
@@ -44,7 +45,7 @@ def find_categrize_mistakes(config, with_noise=True, top=20):
     print('False Positives: {}'.format(sorted_fp))
     print(es.ConfusionMatrix(yTest, yTestPredicted))
     print('*' * 80)
-    return sorted_fn[:top], sorted_fp[:top]
+    return sorted_fn[:top], sorted_fp[:top], xTest
 
 
 def generate_mistakes_table(mistakes, title, header, xTestRaw, fname, w=30):
@@ -70,14 +71,14 @@ if __name__ == '__main__':
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_mi': 100,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
     }
 
     ############################################################################
     # by mutual information
-    sorted_fn, sorted_fp = find_categrize_mistakes(config)
-    xTestRaw, yTestRaw = get_xy_test_raw(with_noise=True)
+    sorted_fn, sorted_fp, xTest = find_categrize_mistakes(config, with_noise=False)
+    xTestRaw, yTestRaw = LoadRawData(kDataPath)
     yTest = yTestRaw
 
     w = 30
