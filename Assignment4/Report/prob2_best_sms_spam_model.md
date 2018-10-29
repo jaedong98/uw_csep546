@@ -30,8 +30,8 @@ config = {
     'num_iteration': 10000,  # logistic regression
     'min_to_stop': 100,  # decision tree and random forest
     'feature_restriction': 20,  # random forest
-    'use_bagging': True,  # random forest.
-    'num_trees': 40,  # random forest
+    'bagging_w_replacement': True,  # random forest.
+    'num_trees': 20,  # random forest
     'feature_restriction': 20,  # random forest
     'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
     'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
@@ -41,7 +41,7 @@ Firstly, I predicted model by sweeping min_to_stop(minToSplit). Below graph indi
 
 The number of mutual information words can decrease accruacy (overfitting - )
 
-![prob2_param_sweep_by_min_to_split_1_50_100_200_400](prob2_param_sweep_by_min_to_split_1_50_100_200_400.png)
+![prob2_param_sweep_by_min_to_split_1_5_10_50_100](prob2_param_sweep_by_min_to_split_1_5_10_50_100.png)
 
 * Feature Selection Improvement by 
   1. number of frequency
