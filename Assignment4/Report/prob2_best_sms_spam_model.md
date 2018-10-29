@@ -21,7 +21,7 @@ config = {
     'include_handcrafted_features': False
 }
 ```
-With the parameters above, the model was thought, and the accuracies were collected with three parameter sweeps. Below is the accuracies over various min_to_stop(/split). It shows the comparison between what model predict based on training versus how it performs on the hold-out data(test). We can see the two lines are close over around minToStop(minToSplit) 40. It indicates the model is *overfitting* data with too much search to fit training data. 
+The model was thought, and the accuracies were collected with three parameter sweeps. Below is the accuracies over various min_to_stop(/split). It shows the comparison between what model predict based on training versus how it performs on the hold-out data(test). We can see the two lines are close over around minToStop(minToSplit) 40. It indicates the model is *overfitting* data with too much search to fit training data. 
 
 ![prob2_param_sweep_by_min_to_split_1_5_10_50_100](prob2_param_sweep_by_min_to_split_1_5_10_50_100_in_report.png)
 
@@ -36,7 +36,7 @@ The common category mistakes were collected to determine the features that cause
   * If a message contains URL starting with www or HTTP, or upper case words, consider it as a spam.
   * If a message contains many consecutive dots or lower 'i' in the place of 'I', consider it as not a spam.
 
-I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. 
+I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. The accuracy got increases with two heuristic features wither or not the input data contains the noise provided in assignment.  
 
 | Leave-out-Features | Accuracy(w/o Noise)    |
 |--------------------|--------------------|
@@ -83,9 +83,9 @@ This report demonstrated the processes and technics used to improve the accuracy
 ***
 
 
-#### Appendix. 
+#### Appendix A. 
 
-######List of False Negative by top 20 mutual information.
+#####List of False Negative by top 20 mutual information.
 
 * False Negative - the true answer was 1, but gives very low probabilities
 
@@ -112,7 +112,7 @@ This report demonstrated the processes and technics used to improve the accuracy
   |     0.08339251430910777      | 100 dating service cal;l 09064012103 box334sk38ch|
   |     0.08339251430910777      | U were outbid by simonwatson5120 on the Shinco DVD Plyr. 2 bid again, visit sms. ac/smsrewards 2 end bid notifications, reply END OUT|
 
-######List of False Positive by top 20 mutual information.
+#####List of False Positive by top 20 mutual information.
 
 * False Positive - the true answer was 0, but gives very high probabilities
 
@@ -129,3 +129,7 @@ This report demonstrated the processes and technics used to improve the accuracy
   |      0.5044991277544608      | Book which lesson? then you msg me... I will call up after work or sth... I'm going to get specs. My membership is PX3748|
 
   ***
+#### Appendix B.
+
+##### Accuracies on each folding data
+
