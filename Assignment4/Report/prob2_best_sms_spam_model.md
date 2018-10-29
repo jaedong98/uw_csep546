@@ -37,9 +37,13 @@ config = {
     'feature_selection_by_frequency': 10   # 0 means False, N > 0 means select top N words based on frequency.
 }
 ```
-With the parameters, the model was thought, and the accuracies were collected with three parameter sweeps. But below is the accuracies over various min_to_stop(/split). Below feature is the comparison between what model predict based on training versus how it performs on the hold-out data(test). In the below graph, we can see the two lines are close over around minToStop(minToSplit) 40. It indicates the model is *overfitting* data when tried to fit too hard based on the parameter.
+With the parameters above, the model was thought, and the accuracies were collected with three parameter sweeps. Below is the accuracies over various min_to_stop(/split). It shows the comparison between what model predict based on training versus how it performs on the hold-out data(test). We can see the two lines are close over around minToStop(minToSplit) 40. It indicates the model is *overfitting* data with too much search to fit training data. 
 
 ![prob2_param_sweep_by_min_to_split_1_5_10_50_100](prob2_param_sweep_by_min_to_split_1_5_10_50_100.png)
+
+With the same configuration, the parameter sweep by mutual information showed *underfitting* behavior. The model predicts the accuracy increases overall. But it turned out the accuracy decreased in between 50 and 200. 
+
+![prob2_param_sweep_by_mi_20_50_100_200_250](prob2_param_sweep_by_mi_20_50_100_200_250.png)
 
 * Feature Selection Improvement by 
   1. number of frequency
