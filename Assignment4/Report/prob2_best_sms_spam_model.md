@@ -31,12 +31,12 @@ With the same configuration, the parameter sweep by mutual information showed *u
 
 #### Category Mistakes for Feature Engineering Improvement
 
-The common category mistakes were collected to determine the features that cause the accuracy loss. The last part of this report contains the detailed lists for false negative and positive cases. Given the list, I developed a script that gives me the candidate heuristic features that would reduce the bad false positives and negative. And here are the rules found:
+The common category mistakes were collected to determine the features that cause the accuracy loss. The [Appendix A](#appendix-a) of this report contains the detailed lists for false negative and positive cases. Given the list, I developed a script that gives me the candidate heuristic features that would reduce the bad false positives and negative. And here are the rules found:
 
   * If a message contains URL starting with www or HTTP, or upper case words, consider it as a spam.
   * If a message contains many consecutive dots or lower 'i' in the place of 'I', consider it as not a spam.
 
-I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. The accuracy got increases with two heuristic features wither or not the input data contains the noise provided in assignment.  
+I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. The accuracy got increases with two heuristic features whether or not the input data contains the noise provided in an assignment.  
 
 | Leave-out-Features | Accuracy(w/o Noise)    |
 |--------------------|--------------------|
@@ -77,13 +77,14 @@ Below is the ROC curve comparisons between baseline and updated configurations.
 
 Using the *improved* configuration above, I estimated the accuracy using cross-validation(k=5). This process took hours to generate the results. There are potential to improve the overall performance with more trials and parameter sweeps. But here is the final results generated throughout the process above.
 
+The confusion matrix and accuracies on each folded dataset are added in [Appendix B](#appendix-b).
 
 #### Conclusion
 This report demonstrated the processes and technics used to improve the accuracy of SMS spam model. The noise made hard to improve the performance and especially when selecting features to add/remove. The parameter sweeping helped to identify parameters to calibrate and its directions. Category mistakes improved the feature selection by the list of worst examples. Leave-out accuracy technic could be used to tune the feature selection. Finally, the ROC comparison shows the two configurations (baseline and improved) predicts the different classification depending on the thresholds targeted. The accuracy estimated with cross-validation and comparison it with on hold-out data showed the potential range of prediction accuracies. 
 ***
 
 
-#### Appendix A. 
+#### <a name="appendix-">Appendix A</a>
 
 #####List of False Negative by top 20 mutual information.
 
@@ -129,7 +130,7 @@ This report demonstrated the processes and technics used to improve the accuracy
   |      0.5044991277544608      | Book which lesson? then you msg me... I will call up after work or sth... I'm going to get specs. My membership is PX3748|
 
   ***
-#### Appendix B.
+#### <a name="appendix-b">Appendix B</a>
 
 ##### Accuracies on each folding data
 
