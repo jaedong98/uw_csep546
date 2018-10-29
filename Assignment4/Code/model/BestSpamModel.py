@@ -57,3 +57,13 @@ class BestSpamModel(object):
                 predictions.append(int(spam_percentage <= threshold))
 
         return predictions
+
+    def predict_probabilities(self, xTests):
+        self.predict(xTests)
+        predictions = []
+        for l, d, r in zip(self.lg_pred, self.dt_pred, self.rf_pred):
+            preds = [l, d, r]
+            spam_percentage = preds.count(1) / len(preds)
+            predictions.append(spam_percentage)
+
+        return predictions

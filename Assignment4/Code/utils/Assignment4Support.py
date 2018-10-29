@@ -4,6 +4,7 @@ import numpy as np
 import time
 import model.LogisticRegressionModel as lgm
 import utils.EvaluationsStub
+from utils.feature_selection_frequency import extract_features_by_frequency
 from utils.feature_selection_mi import extract_features_by_mi
 
 
@@ -105,6 +106,10 @@ def FeaturizeExt(xTrainRaw,
     words_by_mi = []
     if numMutualInformationWords > 0:
         fs = extract_features_by_mi(xTrainRaw, yTrainRaw, numMutualInformationWords)
+        words_by_mi = [f[0] for f in fs]
+
+    if numFrequentWords > 0:
+        fs = extract_features_by_frequency(xTrainRaw, numFrequentWords)
         words_by_mi = [f[0] for f in fs]
 
     xTrain = featurize_raw_data(xTrainRaw, words_by_mi)

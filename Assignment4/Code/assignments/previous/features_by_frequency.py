@@ -1,6 +1,5 @@
 import collections
 import os
-
 import utils.Assignment4Support as sup
 
 
