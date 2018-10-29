@@ -41,10 +41,11 @@ class BestSpamModel(object):
         self.rf.fit(xTrains, yTrains, min_to_stop)
 
     def predict(self, xTests, threshold=None):
-        xTests_w_0 = [[1] + x for x in xTests]
-        self.lg_pred = self.lg.predict(xTests_w_0)
-        self.dt_pred = self.dt.predict(xTests)
-        self.rf_pred = self.rf.predict(xTests)
+        if not all([self.lg_pred, self.dt_pred, self.rf_pred]):
+            xTests_w_0 = [[1] + x for x in xTests]
+            self.lg_pred = self.lg.predict(xTests_w_0)
+            self.dt_pred = self.dt.predict(xTests)
+            self.rf_pred = self.rf.predict(xTests)
 
         predictions = []
         for l, d, r in zip(self.lg_pred, self.dt_pred, self.rf_pred):
@@ -53,8 +54,14 @@ class BestSpamModel(object):
             if threshold is None:
                 predictions.append(mc)
             else:
-                spam_percentage = preds.count(mc) / len(preds)
-                predictions.append(int(spam_percentage <= threshold))
+                if sum(preds) == 0:
+                    predictions.append(0)
+                else:
+                    spam_percentage = preds.count(mc) / len(preds)
+                    if spam_percentage >= threshold:
+                        predictions.append(1)
+                    else:
+                        predictions.append(0)
 
         return predictions
 
