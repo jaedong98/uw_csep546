@@ -23,7 +23,7 @@ def leave_out_accuracies(config, with_noise=True):
         feature_selection_methods = list(feature_selection_methods_options)
         function_out = feature_selection_methods.pop(i)
         legends.append("w/o {}".format(function_out.__name__.upper()))
-        print("Exclude {}".format(function_out.__name__))
+        print("----- Exclude {}".format(function_out.__name__))
 
         fs_config = {'numFrequentWords': config['feature_selection_by_frequency'],
                      'numMutualInformationWords': config['feature_selection_by_mi'],
@@ -64,11 +64,11 @@ def leave_out_accuracies(config, with_noise=True):
 if __name__ == '__main__':
     config = {
         'iterations': 10000,  # logistic regression
-        'min_to_stop': 2,  # decision tree and random forest
+        'min_to_stop': 100,  # decision tree and random forest
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
-        'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 100,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_restriction': 0,  # random forest
+        'feature_selection_by_mi': 0,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
     }
-    leave_out_accuracies(config)
+    leave_out_accuracies(config, with_noise=True)

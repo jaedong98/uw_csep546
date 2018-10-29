@@ -146,7 +146,7 @@ if __name__ == '__main__':
         'min_to_stop': 2,  # decision tree and random forest
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 40,  # random forest
-        'feature_restriction': 100,  # random forest
+        'feature_restriction': 200,  # random forest
         'feature_selection_by_mi': 250,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
         'include_handcrafted_features': True

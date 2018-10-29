@@ -4,30 +4,13 @@
 
 ### Build the Best SMS Spam Model
 
-* Use the same version of the data used by the RandomForest assignment (with the calls to AddNoise.MakeProblemHarder).
-
-* Use the three algorithms you’ve implemented.
-
-* Use the featuring engineering you’ve implemented.
-
-#### A report of no more than 1000 words with no more than 5 figures/tables which demonstrates that you have produced an effective model for the harder SMS problem (with added noise) and properly evaluated your model.
-
-##### Demonstrate several parameter sweeps in your figures and highlight at least one area that indicates underfitting and one that indicates overfitting.
-
-##### Make sure to use the appropriate techniques from the previous lectures (error bounds, various measures of model quality, categorized mistakes).
-
-##### Examine your mistakes and improve your feature engineering in at least 3 ways. Describe the features your best model uses.
-
-##### Include an ROC curve comparing the first model you tried with your final best model. Clearly label what they are.
-
-##### Describe your best model and parameter settings. Include the estimate of the accuracy your best model achieves using cross validation on the training data and the estimate you get on the hold-out test set.
-
-#### Baseline configuration
-My SMS spam model bags three base leaners, *Logistic Regression, Decision Tree, and Random Forests* developed through previous assignments. When it comes to voting the prediction, I equally weighted the results from the models. For the model bagged with three base learners. Below is the baseline configuration for the model using the parameters so that I can demonstrate the process of how to improve the model.
+#### Baseline configuration and Parameter Sweeps
+The SMS spam model described here packages three base leaners, *Logistic Regression, Decision Tree, and Random Forests* developed through previous assignments. When it comes to voting the prediction, I equally weighted the results from the models. The baseline configuration was carefully chosen based on the previous assignments.
 
 ```python
 # Example of parameters with default value
 config = {
+    'name': 'Baseline',
     'num_iteration': 10000,                # logistic regression
     'min_to_stop': 100,                    # decision tree and random forest
     'bagging_w_replacement': True,         # random forest (bootstrapping)
@@ -46,25 +29,22 @@ With the same configuration, the parameter sweep by mutual information showed *u
 
 ![prob2_param_sweep_by_mi_20_50_100_200_250](prob2_param_sweep_by_mi_20_50_100_200_250_in_report.png)
 
-##### Category Mistakes
+#### Category Mistakes for Feature Engineering Improvement
 
-The common category mistakes were collected to determine the features that cause the accuracy loss. The last part of this report contains the detailed lists for false negative and positive cases. Given the information, I developed a script that give me the heuristic features that would reduce the bad false positives and negativies.
-  * If a message contains url starting with www or http, or upper case words, consider it as a spam.
+The common category mistakes were collected to determine the features that cause the accuracy loss. The last part of this report contains the detailed lists for false negative and positive cases. Given the list, I developed a script that gives me the candidate heuristic features that would reduce the bad false positives and negative. And here are the rules found:
+
+  * If a message contains URL starting with www or HTTP, or upper case words, consider it as a spam.
   * If a message contains many consecutive dots or lower 'i' in the place of 'I', consider it as not a spam.
 
-Adding removing 
-| features | Accuracies |
-|-|-|
-| Contains URL | |
-| Upper case words | |
-| Consecutive dots(...) | |
-| Letter 'i' in the place of 'I' | |
+I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. 
 
+| Leave-out-Features | Accuracy(w/o Noise)    |
+|--------------------|--------------------|
+|  w/o MANY_UPPERS   | 0.9325681492109039 |
+|    w/o HAS_URL     | 0.9325681492109039 |
+| w/ All of Features | 0.9512195121951219 |
 
-* Feature Selection Improvement by 
-  1. number of frequency
-  2. mutual information
-  3. accuracy
+At this point, I improved the model by adding top features by the number of frequency and mutual information. The table below contains the comparison between without and with handcrafted features based on the words. Addition to the heuristic rules based on FP, FN cases, and leave-one-out accuracy table.
 
 
 | Without Handcrafted Features | With Handcrafted Features|
@@ -73,11 +53,12 @@ Adding removing
 | ![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_False.png)|![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_True.png) |
 
 #### Model comparison ROC curves
-Based on the simulation and comparisons, I updated the baseline configuration like below. I decided to use 40 trees for random forest, 100 feature restiction within 250 features selected by mutuali information and four handcrafted ones.
+Based on the simulation and comparisons, I updated the baseline configuration like below. I decided to use 40 trees for the random forest, 100 feature restriction within 250 features selected by mutual information and four handcrafted ones.
 
 ```python
 
 config = {
+        'name': 'Improved',
         'iterations': 10000,  # logistic regression
         'min_to_stop': 2,  # decision tree and random forest
         'bagging_w_replacement': True,  # random forest.
@@ -90,14 +71,18 @@ config = {
 ```
 Below is the ROC curve comparisons between baseline and updated configurations. 
 ![compare_roc_curves_by_configs_0.0_1.0_0.01](compare_roc_curves_by_configs_0.0_1.0_0.01.png)
-* Improvement
-  * Determine words to add using category mistakes. This will be included in feature selection.
 
-  * Compare with ROC curves. The default configuration vs Best Configuration (with improvement items)
-    *  Here is the best configuration setting. I decided to use them ...
-    *  Accuracy Estimate based on the *cross validation* is ...
-  
+
+#### Accuracy Estimate by Cross Validation
+
+Using the *improved* configuration above, I estimated the accuracy using cross-validation(k=5). This process took hours to generate the results. There are potential to improve the overall performance with more trials and parameter sweeps. But here is the final results generated throughout the process above.
+
+
+#### Conclusion
+This report demonstrated the processes and technics used to improve the accuracy of SMS spam model. The noise made hard to improve the performance and especially when selecting features to add/remove. The parameter sweeping helped to identify parameters to calibrate and its directions. Category mistakes improved the feature selection by the list of worst examples. Leave-out accuracy technic could be used to tune the feature selection. Finally, the ROC comparison shows the two configurations (baseline and improved) predicts the different classification depending on the thresholds targeted. The accuracy estimated with cross-validation and comparison it with on hold-out data showed the potential range of prediction accuracies. 
 ***
+
+
 #### Appendix. 
 
 ######List of False Negative by top 20 mutual information.
