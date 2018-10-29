@@ -79,7 +79,9 @@ def calculate_accuracy_by_cv(config,
 
     i = 0
     total_correct = 0
-    status = ''
+    status = '\nConfiguration:'
+    for k, v in config.items():
+        status += '\n * {}: {}'.format(k, v)
     for f_xTrain, f_xVal, f_yTrain, f_yVal in zip(fold_xTrains, fold_xVals,
                                                   fold_yTrains, fold_yVals):
 
@@ -90,8 +92,7 @@ def calculate_accuracy_by_cv(config,
                             feature_restriction=config['feature_restriction'])
         bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
 
-        f_yVal_predict = bsm.predict(xTest)
-
+        f_yVal_predict = bsm.predict(f_xVal)
         # compare and count corrections
         for p, v in zip(f_yVal_predict, f_yVal):
             if p == v:
@@ -112,9 +113,11 @@ def calculate_accuracy_by_cv(config,
 
     if fname:
         with open(fname, 'w') as f:
+            f.write("\nOverall Accuracy: {}".format(accuracy))
             f.write(status)
 
     if file_obj:
+        file_obj.write("Overall Accuracy: {}\n".format(accuracy))
         file_obj.write(status)
 
     return accuracy
@@ -128,10 +131,9 @@ if __name__ == '__main__':
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
-        'feature_selection_by_frequency': 10,  # 0 means False, N > 0 means select top N words based on frequency.
+        'feature_selection_by_mi': 100,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
         'include_handcrafted_features': True
     }
     fname = os.path.join(report_path, 'prob2_cross_validation_accuracy.md')
-    with open(fname, 'wb') as file_obj:
-        calculate_accuracy_by_cv(config, fname=fname, file_obj=file_obj, with_noise=True, k=5)
+    calculate_accuracy_by_cv(config, fname=fname, with_noise=True, k=5)
