@@ -22,24 +22,22 @@
 
 ##### Describe your best model and parameter settings. Include the estimate of the accuracy your best model achieves using cross validation on the training data and the estimate you get on the hold-out test set.
 
-For the model bagged with three base learners, Logistic Regression, Decision Tree, and Random Forests, I chose parameters below:
+My SMS spam model bags three base leaners, *Logistic Regression, Decision Tree, and Random Forests* developed through previous assignments. When it comes to voting the prediction, I equally weighted the results from the models. For the model bagged with three base learners. Below is the baseline configuration for the model using the parameters so that I can demonstrate the process of how to improve the model.
 
 ```python
 # Example of parameters with default value
 config = {
-    'num_iteration': 10000,  # logistic regression
-    'min_to_stop': 100,  # decision tree and random forest
-    'feature_restriction': 20,  # random forest
-    'bagging_w_replacement': True,  # random forest.
-    'num_trees': 20,  # random forest
-    'feature_restriction': 20,  # random forest
-    'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
-    'feature_selection_by_frequency': 10  # 0 means False, N > 0 means select top N words based on frequency.
+    'num_iteration': 10000,                # logistic regression
+    'min_to_stop': 100,                    # decision tree and random forest
+    'feature_restriction': 20,             # random forest
+    'bagging_w_replacement': True,         # random forest (bootstrapping)
+    'num_trees': 20,                       # random forest
+    'feature_restriction': 20,             # random forest
+    'feature_selection_by_mi': 20,         # 0 means False, N > 0 means select top N words based on mi.
+    'feature_selection_by_frequency': 10   # 0 means False, N > 0 means select top N words based on frequency.
 }
 ```
-Firstly, I predicted model by sweeping min_to_stop(minToSplit). Below graph indiciates as increasing the **overfitting** **underfitting**
-
-The number of mutual information words can decrease accruacy (overfitting - )
+With the parameters, the model was thought, and the accuracies were collected with three parameter sweeps. But below is the accuracies over various min_to_stop(/split). Below feature is the comparison between what model predict based on training versus how it performs on the hold-out data(test). In the below graph, we can see the two lines are close over around minToStop(minToSplit) 40. It indicates the model is *overfitting* data when tried to fit too hard based on the parameter.
 
 ![prob2_param_sweep_by_min_to_split_1_5_10_50_100](prob2_param_sweep_by_min_to_split_1_5_10_50_100.png)
 
