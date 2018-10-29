@@ -53,7 +53,7 @@ At this point, I improved the model by adding top features by the number of freq
 | ![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_False.png)|![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_True.png) |
 
 #### Model comparison ROC curves
-Based on the simulation and comparisons, I updated the baseline configuration like below. I decided to use 40 trees for the random forest, 100 feature restriction within 250 features selected by mutual information and four handcrafted ones.
+Based on the simulation and comparisons, I updated the baseline configuration like below. I decided to use 40 trees for the random forest, 100 feature restriction within 250 features selected by mutual information and four handcrafted ones. It excludes the features chosen by frequency as there are many overlaps found one by mutual information.
 
 ```python
 
