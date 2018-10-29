@@ -88,7 +88,7 @@ Using the *improved* configuration above, I estimated the accuracy using cross-v
 The confusion matrix and accuracies on each folded dataset are added in [Appendix B](#appendix-b).
 
 #### Conclusion
-This report demonstrated the processes and technics used to improve the accuracy of SMS spam model. The noise made hard to improve the performance and especially when selecting features to add/remove. The parameter sweeping helped to identify parameters to calibrate and its directions. Category mistakes improved the feature selection by the list of worst examples. Leave-out accuracy technic could be used to tune the feature selection. Finally, the ROC comparison shows the two configurations (baseline and improved) predicts the different classification depending on the thresholds targeted. The accuracy estimated with cross-validation and comparison it with on hold-out data showed the potential range of prediction accuracies. 
+This report demonstrated the processes and technics used to improve the accuracy of SMS spam model. The noise made hard to improve the performance and especially when selecting features to add/remove. The parameter sweeping helped to identify parameters to calibrate and its directions. Category mistakes drived the feature selection by the list of worst examples. Leave-out accuracy approach could be used to tune the feature selection if more time and computing resources were available. Finally, the ROC comparison shows the two configurations (baseline and improved) and demonstrated the improved model performs better. The accuracy estimated via cross-validation and comparison it with on hold-out data showed the potential range of prediction accuracies. 
 ***
 
 
