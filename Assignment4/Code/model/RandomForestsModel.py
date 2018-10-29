@@ -85,6 +85,25 @@ class RandomForestModel(object):
 
         return prediction_votes
 
+    def predict_probabilities(self, xTest):
+
+        predictions_prob = []
+        print("Predicting results with {} tree(s).".format(len(self.trees)))
+        # for selected_indices, tree in zip(self.selected_indices, self.trees):
+        for tree in self.trees:
+            i_predictions = []
+            for example in xTest:
+                i_predictions.append(predict(tree, example))
+
+            predictions_prob.append(i_predictions)
+
+        prediction_votes = []
+        for combines in zip(*predictions_prob):
+
+            prediction_votes.append(combines.count(1) / len(combines))
+
+        return prediction_votes
+
     def visualize(self, file_obj=None):
         for tree in self.trees:
             print_tree(tree)

@@ -25,7 +25,7 @@ The model was thought, and the accuracies were collected with three parameter sw
 
 ![prob2_param_sweep_by_min_to_split_1_5_10_50_100](prob2_param_sweep_by_min_to_split_1_5_10_50_100_in_report.png)
 
-With the same configuration, the parameter sweep by mutual information showed *underfitting* behavior. The model predicts the accuracy increases overall. But it turned out the accuracy decreased in between 50 and 200. 
+With the same configuration, the parameter sweep by mutual information showed *underfitting* behavior. The model predicts the accuracy increases overall. But it turned out the accuracy decreased in between 100 and 200. 
 
 ![prob2_param_sweep_by_mi_20_50_100_200_250](prob2_param_sweep_by_mi_20_50_100_200_250_in_report.png)
 
@@ -36,7 +36,7 @@ The common category mistakes were collected to determine the features that cause
   * If a message contains URL starting with www or HTTP, or upper case words, consider it as a spam.
   * If a message contains many consecutive dots or lower 'i' in the place of 'I', consider it as not a spam.
 
-I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. The accuracy got increases with two heuristic features whether or not the input data contains the noise provided in an assignment.  
+I also investigate the accuracies to understand the impact of the heuristic features found in mistakes. The accuracy got increased with additional heuristic features whether or not the input data contains the noise provided in an assignment.  
 
 | Leave-out-Features | Accuracy(w/o Noise)    |
 |--------------------|--------------------|

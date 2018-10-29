@@ -84,20 +84,20 @@ def compare_roc_curves_by_configs(configs,
                           img_fname,
                           legends=legends,
                           invert_yaxis=True,
-                        data_pt='-+')
+                        data_pt='-')
 
 
 if __name__ == '__main__':
     config_baseline = {
         'name': 'Baseline',
         'iterations': 10000,  # logistic regression
-        'min_to_stop': 2,  # decision tree and random forest
+        'min_to_stop': 100,  # decision tree and random forest
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
         'feature_restriction': 20,  # random forest
         'feature_selection_by_mi': 20,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
-        'include_handcrafted_features': True
+        'include_handcrafted_features': False
     }
     config_improved = {
         'name': 'Improved',
@@ -115,4 +115,4 @@ if __name__ == '__main__':
     N = 100
     thresholds = [x / N for x in range(N + 1)]
     configs = [config_baseline, config_improved]
-    compare_roc_curves_by_configs(configs, thresholds)
+    compare_roc_curves_by_configs(configs, thresholds, with_noise=True)

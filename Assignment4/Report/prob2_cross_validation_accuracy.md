@@ -1,18 +1,18 @@
 
-Overall Accuracy: 0.8913875598086124
+Overall Accuracy: 0.8854066985645933
 Accuracy Estimate Comparison: 
 |            Cases             |           Accuracy           |            Upper             |            Lower             |
 |------------------------------|------------------------------|------------------------------|------------------------------|
-|        Training Data         |      0.8913875598086124      |      0.9008203679327798      |      0.881954751684445       |
-|        Hold-out Data         |      0.896700143472023       |      0.9059267374420649      |      0.8874735495019811      |
+|        Training Data         |      0.8854066985645933      |      0.8950631808460365      |      0.8757502162831501      |
+|        Hold-out Data         |      0.8916786226685797      |      0.9011003210000925      |      0.8822569243370668      |
 Configuration:
  * name: Improved
  * iterations: 10000
  * min_to_stop: 2
  * bagging_w_replacement: True
  * num_trees: 40
- * feature_restriction: 50
- * feature_selection_by_mi: 250
+ * feature_restriction: 100
+ * feature_selection_by_mi: 100
  * feature_selection_by_frequency: 0
  * include_handcrafted_features: True
 
@@ -21,13 +21,13 @@ DecisionTreeModel for 0th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 86  | (FN) 77  |
-|    0     |  (FP) 4  | (TN) 669 |
-Accuracy: 0.90311004784689
-Precision: 0.9555555555555556
-Recall: 0.5276073619631901
-FPR: 0.005943536404160475
-FNR: 0.4723926380368098
+|    1     | (TP) 91  | (FN) 72  |
+|    0     | (FP) 18  | (TN) 655 |
+Accuracy: 0.8923444976076556
+Precision: 0.8348623853211009
+Recall: 0.558282208588957
+FPR: 0.02674591381872214
+FNR: 0.44171779141104295
 
 
 DecisionTreeModel for 1th folding
@@ -35,13 +35,13 @@ DecisionTreeModel for 1th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 75  | (FN) 79  |
-|    0     | (FP) 16  | (TN) 666 |
-Accuracy: 0.8863636363636364
-Precision: 0.8241758241758241
-Recall: 0.487012987012987
-FPR: 0.02346041055718475
-FNR: 0.512987012987013
+|    1     | (TP) 76  | (FN) 78  |
+|    0     | (FP) 26  | (TN) 656 |
+Accuracy: 0.8755980861244019
+Precision: 0.7450980392156863
+Recall: 0.4935064935064935
+FPR: 0.03812316715542522
+FNR: 0.5064935064935064
 
 
 DecisionTreeModel for 2th folding
@@ -49,13 +49,13 @@ DecisionTreeModel for 2th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 73  | (FN) 77  |
-|    0     | (FP) 12  | (TN) 674 |
-Accuracy: 0.8935406698564593
-Precision: 0.8588235294117647
-Recall: 0.4866666666666667
-FPR: 0.01749271137026239
-FNR: 0.5133333333333333
+|    1     | (TP) 81  | (FN) 69  |
+|    0     | (FP) 25  | (TN) 661 |
+Accuracy: 0.8875598086124402
+Precision: 0.7641509433962265
+Recall: 0.54
+FPR: 0.03644314868804665
+FNR: 0.46
 
 
 DecisionTreeModel for 3th folding
@@ -63,13 +63,13 @@ DecisionTreeModel for 3th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 81  | (FN) 105 |
-|    0     |  (FP) 7  | (TN) 643 |
-Accuracy: 0.8660287081339713
-Precision: 0.9204545454545454
-Recall: 0.43548387096774194
-FPR: 0.010769230769230769
-FNR: 0.5645161290322581
+|    1     | (TP) 97  | (FN) 89  |
+|    0     | (FP) 21  | (TN) 629 |
+Accuracy: 0.868421052631579
+Precision: 0.8220338983050848
+Recall: 0.521505376344086
+FPR: 0.03230769230769231
+FNR: 0.478494623655914
 
 
 DecisionTreeModel for 4th folding
@@ -77,10 +77,10 @@ DecisionTreeModel for 4th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 87  | (FN) 67  |
-|    0     | (FP) 10  | (TN) 672 |
-Accuracy: 0.9078947368421053
-Precision: 0.8969072164948454
-Recall: 0.564935064935065
-FPR: 0.01466275659824047
-FNR: 0.43506493506493504
+|    1     | (TP) 96  | (FN) 58  |
+|    0     | (FP) 23  | (TN) 659 |
+Accuracy: 0.90311004784689
+Precision: 0.8067226890756303
+Recall: 0.6233766233766234
+FPR: 0.03372434017595308
+FNR: 0.37662337662337664
