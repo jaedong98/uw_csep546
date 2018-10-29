@@ -1,6 +1,7 @@
 import collections
 import matplotlib.pyplot as plt
 import numpy as np
+import re
 import time
 import model.LogisticRegressionModel as lgm
 import utils.EvaluationsStub
@@ -67,7 +68,7 @@ def featurize_raw_data(raw_data, words_by_mi, includeHandCraftedFeatures=True):
     for x in raw_data:
         features = []
 
-        if includeHandCraftedFeatures:
+        if includeHandCraftedFeatures == True:
             # from false positives
             if has_url(x):
                 features.append(1)
@@ -86,6 +87,13 @@ def featurize_raw_data(raw_data, words_by_mi, includeHandCraftedFeatures=True):
                 features.append(0)
             else:
                 features.append(1)
+
+        if isinstance(includeHandCraftedFeatures, list):
+            for f in includeHandCraftedFeatures:
+                if f(x):
+                    features.append(1)
+                else:
+                    features.append(0)
 
         # Have a feature for longer texts
         if len(x) > 40:
