@@ -4,6 +4,8 @@ import os
 import utils.EvaluationsStub as ev
 from Assignment4.Code import report_path, kDataPath
 from model.BestSpamModel import BestSpamModel
+from utils.Assignment4Support import table_for_accuracy_estimate_comparison
+from utils.EvaluationsStub import Evaluation, EvaluateAll
 from utils.data_loader import get_featurized_xs_ys
 
 
@@ -90,7 +92,7 @@ def calculate_accuracy_by_cv(config,
         bsm = BestSpamModel(num_trees=config['num_trees'],
                             bagging_w_replacement=config['bagging_w_replacement'],
                             feature_restriction=config['feature_restriction'])
-        bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
+        bsm.fit(f_xTrain, f_yTrain, config['iterations'], config['min_to_stop'])
 
         f_yVal_predict = bsm.predict(f_xVal)
         # compare and count corrections
@@ -100,7 +102,7 @@ def calculate_accuracy_by_cv(config,
         status += '\n'
         status += "\nDecisionTreeModel for {}th folding".format(i)
         status += '\n'
-        status += ev.EvaluateAll(f_yVal, f_yVal_predict)
+        status += EvaluateAll(f_yVal, f_yVal_predict)
         status += '\n'
         print("Total correction so far: {}".format(total_correct))
 
@@ -111,9 +113,23 @@ def calculate_accuracy_by_cv(config,
     print("Summary:")
     print(status)
 
+    # accuracy on hold out data
+    bsm = BestSpamModel(num_trees=config['num_trees'],
+                        bagging_w_replacement=config['bagging_w_replacement'],
+                        feature_restriction=config['feature_restriction'])
+    bsm.fit(xTrain, yTrain, config['iterations'], config['min_to_stop'])
+    yTestPredicted = bsm.predict(xTest)
+    ev = Evaluation(yTest, yTestPredicted)
+    comp_table = table_for_accuracy_estimate_comparison([accuracy, ev.accuracy],
+                                                        ["Training Data", "Hold-out Data"],
+                                                        N=len(xTrain))
+    print(comp_table)
+
     if fname:
         with open(fname, 'w') as f:
             f.write("\nOverall Accuracy: {}".format(accuracy))
+            f.write("\nAccuracy Estimate Comparison: ")
+            f.write("\n{}".format(comp_table))
             f.write(status)
 
     if file_obj:
@@ -125,12 +141,13 @@ def calculate_accuracy_by_cv(config,
 
 if __name__ == '__main__':
     config = {
+        'name': 'Improved',
         'iterations': 10000,  # logistic regression
         'min_to_stop': 2,  # decision tree and random forest
         'bagging_w_replacement': True,  # random forest.
-        'num_trees': 20,  # random forest
-        'feature_restriction': 20,  # random forest
-        'feature_selection_by_mi': 100,  # 0 means False, N > 0 means select top N words based on mi.
+        'num_trees': 40,  # random forest
+        'feature_restriction': 100,  # random forest
+        'feature_selection_by_mi': 250,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
         'include_handcrafted_features': True
     }

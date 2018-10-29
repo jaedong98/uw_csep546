@@ -22,7 +22,7 @@
 
 ##### Describe your best model and parameter settings. Include the estimate of the accuracy your best model achieves using cross validation on the training data and the estimate you get on the hold-out test set.
 
-##### Baseline configuration
+#### Baseline configuration
 My SMS spam model bags three base leaners, *Logistic Regression, Decision Tree, and Random Forests* developed through previous assignments. When it comes to voting the prediction, I equally weighted the results from the models. For the model bagged with three base learners. Below is the baseline configuration for the model using the parameters so that I can demonstrate the process of how to improve the model.
 
 ```python
@@ -72,12 +72,24 @@ Adding removing
 | ![](prob2_param_sweep_by_mi_20_50_100_200_250_w_handcrafted_False.png)| ![](prob2_param_sweep_by_mi_20_50_100_200_250_w_handcrafted_True.png)|
 | ![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_False.png)|![](prob2_param_sweep_by_min_to_split_1_5_10_50_100_w_handcrafted_True.png) |
 
-* Catagory Mistakes
-  * Here are top 20 words found as a category mistakes.
-    1. FPR
-    2. FNR
+#### Model comparison ROC curves
+Based on the simulation and comparisons, I updated the baseline configuration like below. I decided to use 40 trees for random forest, 100 feature restiction within 250 features selected by mutuali information and four handcrafted ones.
 
+```python
 
+config = {
+        'iterations': 10000,  # logistic regression
+        'min_to_stop': 2,  # decision tree and random forest
+        'bagging_w_replacement': True,  # random forest.
+        'num_trees': 40,  # random forest
+        'feature_restriction': 100,  # random forest
+        'feature_selection_by_mi': 250,  # 0 means False, N > 0 means select top N words based on mi.
+        'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
+        'include_handcrafted_features': True
+    }
+```
+Below is the ROC curve comparisons between baseline and updated configurations. 
+![compare_roc_curves_by_configs_0.0_1.0_0.01](compare_roc_curves_by_configs_0.0_1.0_0.01.png)
 * Improvement
   * Determine words to add using category mistakes. This will be included in feature selection.
 
@@ -86,7 +98,7 @@ Adding removing
     *  Accuracy Estimate based on the *cross validation* is ...
   
 ***
-##### Appendix. 
+#### Appendix. 
 
 ######List of False Negative by top 20 mutual information.
 

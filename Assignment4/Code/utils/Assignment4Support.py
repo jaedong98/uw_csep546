@@ -625,6 +625,32 @@ def table_for_gradient_accuracy_estimate(accuracies, legends, N, zn=1.96, w=30):
     return table
 
 
+def table_for_accuracy_estimate_comparison(accuracies, legends, N, zn=1.96, w=30):
+    """
+    Args:
+        accuracies: a list of accuracy lists from different gradient decents.
+        legends: a list of strings to be named. ['Top 10 frequent words', ...]
+        N: len(xTrains)
+    """
+    table = '|{}|{}|{}|{}|'.format('Cases'.center(w),
+                                   'Accuracy'.center(w),
+                                   'Upper'.center(w),
+                                   'Lower'.center(w))
+    table += '\n|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|' + '-' * w
+    table += '|'
+
+    for legend, accuracy in zip(legends, accuracies):
+        upper, lower = calculate_bounds(accuracy, zn, N)
+        table += '\n|{}|{}|{}|{}|'.format('{}'.format(legend).center(w),
+                                          '{}'.format(accuracy).center(w),
+                                          '{}'.format(upper).center(w),
+                                          '{}'.format(lower).center(w))
+    return table
+
+
 def table_for_cross_validation_accuracy_estimate(accuracies, legends, len_xTrain, N, zn=1.96, w=30):
     """
     Args:
