@@ -1,10 +1,10 @@
 
-Overall Accuracy: 0.8854066985645933
+Overall Accuracy: 0.8952153110047847
 Accuracy Estimate Comparison: 
 |            Cases             |           Accuracy           |            Upper             |            Lower             |
 |------------------------------|------------------------------|------------------------------|------------------------------|
-|        Training Data         |      0.8854066985645933      |      0.8950631808460365      |      0.8757502162831501      |
-|        Hold-out Data         |      0.8916786226685797      |      0.9011003210000925      |      0.8822569243370668      |
+|        Training Data         |      0.8952153110047847      |      0.9045002829432074      |      0.885930339066362       |
+|        Hold-out Data         |      0.9031563845050216      |      0.912122099020048       |      0.8941906699899951      |
 Configuration:
  * name: Improved
  * iterations: 10000
@@ -12,7 +12,7 @@ Configuration:
  * bagging_w_replacement: True
  * num_trees: 40
  * feature_restriction: 100
- * feature_selection_by_mi: 100
+ * feature_selection_by_mi: 250
  * feature_selection_by_frequency: 0
  * include_handcrafted_features: True
 
@@ -21,13 +21,13 @@ DecisionTreeModel for 0th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 91  | (FN) 72  |
-|    0     | (FP) 18  | (TN) 655 |
-Accuracy: 0.8923444976076556
-Precision: 0.8348623853211009
-Recall: 0.558282208588957
-FPR: 0.02674591381872214
-FNR: 0.44171779141104295
+|    1     | (TP) 92  | (FN) 71  |
+|    0     |  (FP) 6  | (TN) 667 |
+Accuracy: 0.9078947368421053
+Precision: 0.9387755102040817
+Recall: 0.5644171779141104
+FPR: 0.008915304606240713
+FNR: 0.43558282208588955
 
 
 DecisionTreeModel for 1th folding
@@ -35,13 +35,13 @@ DecisionTreeModel for 1th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 76  | (FN) 78  |
-|    0     | (FP) 26  | (TN) 656 |
-Accuracy: 0.8755980861244019
-Precision: 0.7450980392156863
-Recall: 0.4935064935064935
-FPR: 0.03812316715542522
-FNR: 0.5064935064935064
+|    1     | (TP) 78  | (FN) 76  |
+|    0     | (FP) 14  | (TN) 668 |
+Accuracy: 0.8923444976076556
+Precision: 0.8478260869565217
+Recall: 0.5064935064935064
+FPR: 0.020527859237536656
+FNR: 0.4935064935064935
 
 
 DecisionTreeModel for 2th folding
@@ -49,13 +49,13 @@ DecisionTreeModel for 2th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 81  | (FN) 69  |
-|    0     | (FP) 25  | (TN) 661 |
-Accuracy: 0.8875598086124402
-Precision: 0.7641509433962265
-Recall: 0.54
-FPR: 0.03644314868804665
-FNR: 0.46
+|    1     | (TP) 77  | (FN) 73  |
+|    0     | (FP) 11  | (TN) 675 |
+Accuracy: 0.8995215311004785
+Precision: 0.875
+Recall: 0.5133333333333333
+FPR: 0.016034985422740525
+FNR: 0.4866666666666667
 
 
 DecisionTreeModel for 3th folding
@@ -63,13 +63,13 @@ DecisionTreeModel for 3th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 97  | (FN) 89  |
-|    0     | (FP) 21  | (TN) 629 |
-Accuracy: 0.868421052631579
-Precision: 0.8220338983050848
-Recall: 0.521505376344086
-FPR: 0.03230769230769231
-FNR: 0.478494623655914
+|    1     | (TP) 88  | (FN) 98  |
+|    0     |  (FP) 7  | (TN) 643 |
+Accuracy: 0.8744019138755981
+Precision: 0.9263157894736842
+Recall: 0.4731182795698925
+FPR: 0.010769230769230769
+FNR: 0.5268817204301075
 
 
 DecisionTreeModel for 4th folding
@@ -77,10 +77,10 @@ DecisionTreeModel for 4th folding
 
 |          |    1     |    0     |
 |----------|----------|----------|
-|    1     | (TP) 96  | (FN) 58  |
-|    0     | (FP) 23  | (TN) 659 |
-Accuracy: 0.90311004784689
-Precision: 0.8067226890756303
-Recall: 0.6233766233766234
-FPR: 0.03372434017595308
-FNR: 0.37662337662337664
+|    1     | (TP) 86  | (FN) 68  |
+|    0     | (FP) 14  | (TN) 668 |
+Accuracy: 0.9019138755980861
+Precision: 0.86
+Recall: 0.5584415584415584
+FPR: 0.020527859237536656
+FNR: 0.44155844155844154
