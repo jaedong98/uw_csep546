@@ -5,7 +5,6 @@ import re
 import time
 import model.LogisticRegressionModel as lgm
 import utils.EvaluationsStub
-from assignments.prob2_category_mistakes_report_utils import has_url, many_uppers, has_dots, has_lower_i
 from utils.feature_selection_frequency import extract_features_by_frequency
 from utils.feature_selection_mi import extract_features_by_mi
 
