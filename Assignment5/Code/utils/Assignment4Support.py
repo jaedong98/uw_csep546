@@ -8,6 +8,8 @@ import utils.EvaluationsStub
 from utils.feature_selection_frequency import extract_features_by_frequency
 from utils.feature_selection_mi import extract_features_by_mi
 
+from Assignment4.Code.assignments.prob2_category_mistakes_report_utils import many_uppers, has_url, has_lower_i, has_dots
+
 
 def LoadRawData(path):
     f = open(path, 'r')

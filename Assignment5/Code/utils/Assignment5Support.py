@@ -101,7 +101,29 @@ def Convolution3x3(image, filter):
 
     return answer
 
-def Featurize(xTrainRaw, xTestRaw, includeGradients=True, includeRawPixels=False, includeIntensities=False):
+
+def Featurize(xTrainRaw,
+              xTestRaw,
+              includeGradients=True,
+              includeRawPixels=False,
+              includeIntensities=False,
+              ):
+    """
+    from PIL import Image
+
+    # if path is in right format…
+    image = Image.open(<path>)
+    pixels = image.load()
+
+    intensity = pixels[1, 1] / 255.0
+
+    :param xTrainRaw:
+    :param xTestRaw:
+    :param includeGradients:
+    :param includeRawPixels:
+    :param includeIntensities:
+    :return:
+    """
     # featurize the training data, may want to do multiple passes to count things.
     xTrain = []
     for sample in xTrainRaw:
@@ -117,7 +139,7 @@ def Featurize(xTrainRaw, xTestRaw, includeGradients=True, includeRawPixels=False
 
         if includeGradients:
             # average Y gradient strength
-            yEdges = Convolution3x3(image, [[1, 0, -1],[2,0,-2],[1,0,-1]])
+            yEdges = Convolution3x3(image, [[1, 0, -1], [2, 0, -2], [1, 0, -1]])
             sumGradient = sum([sum([abs(value) for value in row]) for row in yEdges])
             count = sum([len(row) for row in yEdges])
 

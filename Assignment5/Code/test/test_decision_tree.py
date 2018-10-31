@@ -1,5 +1,6 @@
 import unittest
 import model.DecisionTreeModel as dtm
+import model.GeoffDecisionTreeModel as gdtm
 from Assignment4.Code import kDataPath
 from utils.Assignment4Support import TrainTestSplit, LoadRawData, Featurize
 from utils.EvaluationsStub import Evaluation
@@ -123,6 +124,25 @@ class TestDecisionTreeModel(unittest.TestCase):
                                                             with_noise=False)
 
         model.fit(xTrain, yTrain, min_to_stop=2)
+        yTestPrediced = model.predict(xTest)
+
+        ev = Evaluation(yTest, yTestPrediced)
+        print(ev)
+
+    def test_predict_baseline_geoff(self):
+
+        # Loading data
+        (xRaw, yRaw) = LoadRawData(kDataPath)
+        (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw)
+        yTrain = yTrainRaw
+        yTest = yTestRaw
+
+        model = gdtm.DecisionTreeModel()
+        # xTrain, xTest = Featurize(xTrainRaw, xTestRaw)
+        xTrain, xTest, yTrain, yTest = get_featurized_xs_ys(numMutualInformationWords=295,
+                                                            with_noise=False)
+
+        model.fit(xTrain, yTrain, minToSplit=2)
         yTestPrediced = model.predict(xTest)
 
         ev = Evaluation(yTest, yTestPrediced)

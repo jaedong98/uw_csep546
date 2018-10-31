@@ -1,9 +1,6 @@
 ## Some of this references my answers to previous assignments.
 ##  Replace my references with references to your answers to those assignments.
 
-## IMPORTANT NOTE !!
-## Remember to install the Pillow library (which is required to execute 'import PIL')
-
 import utils.Assignment5Support as sup
 
 ## NOTE update this with your equivalent code..
@@ -41,6 +38,15 @@ yTestPredicted = model.predict(xTest)
 ev = Evaluation(yTest, yTestPredicted)
 upper, lower = calculate_bounds(ev.accuracy, zn=1.96, N=len(yTest))
 print("Decision Tree Accuracy:", ev.accuracy, upper, lower)
+
+import model.GeoffDecisionTreeModel as gdt
+model = gdt.DecisionTreeModel()
+model.fit(xTrain, yTrain, minToSplit=50)
+yTestPredicted = model.predict(xTest)
+ev = Evaluation(yTest, yTestPredicted)
+upper, lower = calculate_bounds(ev.accuracy, zn=1.96, N=len(yTest))
+print("Geof's Decision Tree Accuracy:", ev.accuracy, upper, lower)
+
 
 ##### for visualizing in 2d
 #for i in range(500):

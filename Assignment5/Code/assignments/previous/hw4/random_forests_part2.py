@@ -2,7 +2,7 @@ import os
 import random
 import time
 from Assignment4.Code import report_path
-from assignments.random_forests_part1 import calculate_accuracies
+from assignments.previous.hw4.random_forests_part1 import calculate_accuracies
 from utils.Assignment4Support import draw_random_forest_accuracy_variances
 
 configs = [{'min_to_split': 2, 'bagging_w_replacement': True, 'feature_restriction': 20},

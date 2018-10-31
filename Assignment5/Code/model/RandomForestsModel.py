@@ -3,6 +3,7 @@ from joblib import Parallel, delayed
 import math
 import random
 import numpy as np
+from model.GeoffDecisionTreeModel import DecisionTreeModel
 
 from utils.bootstrap_sampling import get_bagged_samples, bootstraping_training_data
 from utils.feature_restriction import select_random_indices, restrict_features
@@ -51,11 +52,31 @@ class RandomForestModel(object):
                 ys.append(list(y))
             self.selected_indices.append(selected_indices)
 
-        #self.trees = [build_tree(x, y, min_to_split) for x in xs]
         self.trees = Parallel(n_jobs=6)(delayed(build_tree)(x, y, min_to_split, si)
                                         for si, x, y in zip(self.selected_indices, xs, ys))
 
     def predict(self, xTest, threshold=None):
+
+        self.predictions = []
+        print("Predicting results with {} tree(s).".format(len(self.trees)))
+        # for selected_indices, tree in zip(self.selected_indices, self.trees):
+        for tree in self.trees:
+            self.predictions.append(tree.predict(xTest))
+
+        prediction_votes = []
+        for combines in zip(*self.predictions):
+            count_1s = combines.count(1)
+            #if (count_1s / len(combines)) >= 0.5:
+            #    prediction_votes.append(1)
+            #else:
+            #    prediction_votes.append(0)
+            voted = Counter(combines).most_common(1)[0][0]
+            # print("0s {} vs 1s {}".format(combines.count(0), combines.count(1)))
+            prediction_votes.append(voted)
+
+        return prediction_votes
+
+    def predict_jae(self, xTest, threshold=None):
 
         self.predictions = []
         print("Predicting results with {} tree(s).".format(len(self.trees)))
@@ -361,7 +382,14 @@ def split(node, min_to_stop=100, selected_indices=[]):
         return
 
 
-def build_tree(xTrains, yTrains, min_to_stop=100, selected_indices=[]):
+def build_tree(xTrains, yTrains, minToSplit, selected_indices):
+
+    dt = DecisionTreeModel()
+    dt.fit(xTrains, yTrains, selected_indices, minToSplit)
+    return dt
+
+
+def build_tree_jae(xTrains, yTrains, min_to_stop=100, selected_indices=[]):
 
     root = get_split(xTrains, yTrains, selected_indices)
     split(root, min_to_stop, selected_indices)
