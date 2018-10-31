@@ -113,18 +113,18 @@ This report demonstrated the processes and technics used to improve the accuracy
   |     0.021152368341531374     | Reminder: You have not downloaded the content you have already paid for. Goto http://doit. mymoby. tv/ to collect your content.|
   |     0.035205607542868396     | Your credits have been topped up for http://www.bubbletext.com Your renewal Pin is tgxxrz|
   |     0.04932013248498171      | Hi I'm sue. I am 20 years old and work as a lapdancer. I love sex. Text me live - I'm i my bedroom now. text SUE to 89555. By TextOperator G2 1DA 150ppmsg 18+|
-  |     0.05105911204739083      | SMS. ac Blind Date 4U!: Rodds1 is 21/m from Aberdeen, United Kingdom. Check Him out http://img. sms. ac/W/icmb3cktz8r7!-4 no Blind Dates send HIDE|
   |     0.05268142971603876      | FreeMsg Why haven't you replied to my text? I'm Randy, sexy, female and live local. Luv to hear from u. Netcollex Ltd 08700621170150p per msg reply Stop to end|
-  |     0.06650378152611856      | Someone U know has asked our dating service 2 contact you! Cant Guess who? CALL 09058091854 NOW all will be revealed. PO BOX385 M6 6WU|
-  |     0.07862064560985564      | <Forwarded from 448712404000>Please CALL 08712404000 immediately as there is an urgent message waiting for you.|
-  |     0.07862064560985564      | Please CALL 08712402779 immediately as there is an urgent message waiting for you|
-  |     0.07974437718670567      | FreeMsg Hey there darling it's been 3 week's now and no word back! I'd like some fun you up for it still? Tb ok! XxX std chgs to send, £1.50 to rcv|
-  |     0.07974437718670567      | Hey I am really horny want to chat or see me naked text hot to 69698 text charged at 150pm to unsubscribe text stop 69698|
-  |     0.07974437718670567      | Talk sexy!! Make new friends or fall in love in the worlds most discreet text dating service. Just text VIP to 83110 and see who you could meet.|
-  |     0.07974437718670567      | I don't know u and u don't know me. Send CHAT to 86688 now and let's find each other! Only 150p/Msg rcvd. HG/Suite342/2Lands/Row/W1J6HL LDN. 18 years or over.|
-  |     0.08339251430910777      | Are you unique enough? Find out from 30th August. www.areyouunique.co.uk|
-  |     0.08339251430910777      | 100 dating service cal;l 09064012103 box334sk38ch|
-  |     0.08339251430910777      | U were outbid by simonwatson5120 on the Shinco DVD Plyr. 2 bid again, visit sms. ac/smsrewards 2 end bid notifications, reply END OUT|
+  |      0.1319347188456733      | 08714712388 between 10am-7pm Cost 10p|
+  |     0.17116579442112745      | Do you want 750 anytime any network mins 150 text and a NEW VIDEO phone for only five pounds per week call 08002888812 or reply for delivery tomorrow|
+  |     0.17116579442112745      | We tried to contact you re our offer of New Video Phone 750 anytime any network mins HALF PRICE Rental camcorder call 08000930705 or reply for delivery Wed|
+  |     0.23414497738360152      | Reply with your name and address and YOU WILL RECEIVE BY POST a weeks completely free accommodation at various global locations www.phb1.com ph:08700435505150p|
+  |     0.31695737830466175      | Text & meet someone sexy today. U can find a date or even flirt its up to U. Join 4 just 10p. REPLY with NAME & AGE eg Sam 25. 18 -msg recd@thirtyeight pence|
+  |     0.33660481991153907      | HMV BONUS SPECIAL 500 pounds of genuine HMV vouchers to be won. Just answer 4 easy questions. Play Now! Send HMV to 86688 More info:www.100percent-real.com|
+  |     0.33677339776167653      | SMS. ac Blind Date 4U!: Rodds1 is 21/m from Aberdeen, United Kingdom. Check Him out http://img. sms. ac/W/icmb3cktz8r7!-4 no Blind Dates send HIDE|
+  |     0.34361392497512044      | -PLS STOP bootydelious (32/F) is inviting you to be her friend. Reply YES-434 or NO-434 See her: www.SMS.ac/u/bootydelious STOP? Send STOP FRND to 62468|
+  |     0.34361392497512044      | U are subscribed to the best Mobile Content Service in the UK for £3 per 10 days until you send STOP to 82324. Helpline 08706091795|
+  |     0.34361392497512044      | Dear Subscriber ur draw 4 £100 gift voucher will b entered on receipt of a correct ans. When was Elvis Presleys Birthday? TXT answer to 80062|
+  |      0.3477537815261185      | Someone U know has asked our dating service 2 contact you! Cant Guess who? CALL 09058091854 NOW all will be revealed. PO BOX385 M6 6WU|
 
 #####List of False Positive by top 20 mutual information.
 
@@ -134,13 +134,11 @@ This report demonstrated the processes and technics used to improve the accuracy
   |-|-|
   |      0.9099370421160753      | Can you call me plz. Your number shows out of coveragd area. I have urgnt call in vasai &amp; have to reach before 4'o clock so call me plz|
   |      0.9075682316254134      | Yun ah.the ubi one say if ü wan call by tomorrow.call 67441233 look for irene.ere only got bus8,22,65,61,66,382. Ubi cres,ubi tech park.6ph for 1st 5wkg days.èn|
-  |      0.8704018588177599      | Hmmm.. Thk sure got time to hop ard... Ya, can go 4 free abt... Muz call u to discuss liao...|
   |      0.8469374085690141      | Ups which is 3days also, and the shipping company that takes 2wks. The other way is usps which takes a week but when it gets to lag you may have to bribe nipost to get your stuff.|
   |      0.8427587223279254      | 1.20 that call cost. Which i guess isnt bad. Miss ya, need ya, want ya, love ya|
   |      0.8427587223279254      | Was actually sleeping and still might when u call back. So a text is gr8. You rock sis. Will send u a text wen i wake.|
-  |      0.789003286326731       | is your hamster dead? Hey so tmr i meet you at 1pm orchard mrt?|
-  |      0.729033750524799       | Nothing. I meant that once the money enters your account here, the bank will remove its flat rate. Someone transfered  &lt;#&gt;  to my account and  &lt;#&gt; dollars got removed. So the banks differ and charges also differ.be sure you trust the 9ja person you are sending account details to cos...|
-  |      0.5044991277544608      | Book which lesson? then you msg me... I will call up after work or sth... I'm going to get specs. My membership is PX3748|
+  |      0.759290747706649       | Hmmm.. Thk sure got time to hop ard... Ya, can go 4 free abt... Muz call u to discuss liao...|
+  |      0.755797196795044       | I love u 2 babe! R u sure everything is alrite. Is he being an idiot? Txt bak girlie|
 
   ***
 #### <a name="appendix-b">Appendix B</a>
