@@ -103,12 +103,15 @@ class TreeNode(object):
             self.children.append(childNode)
             childNode.GrowTree(minToSplit, featureSet)
 
-    def predict(self, x):
+    def predict(self, x, threshold=None):
+        if threshold:
+            self.threshold = threshold
+
         if self.splitIndex != None:
             if x[self.splitIndex] < self.threshold:
-                return self.children[0].predict(x)
+                return self.children[0].predict(x, threshold)
             else:
-                return self.children[1].predict(x)
+                return self.children[1].predict(x, threshold)
         return self.labelDistribution.most_common(1)[0][0]
 
     def visualize(self, depth=1):

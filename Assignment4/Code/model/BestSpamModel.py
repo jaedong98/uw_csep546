@@ -1,6 +1,6 @@
 import collections
 
-import model.DecisionTreeModel as dt
+import model.GeoffDecisionTreeModel as gdt
 import model.LogisticRegressionModel as lg
 import model.RandomForestsModel as rf
 
@@ -15,7 +15,7 @@ class BestSpamModel(object):
                  feature_restriction=0,  # random forest
                  seed=10000):            # random forest
         self.lg = lg.LogisticRegressionModel(threshold=threshold)
-        self.dt = dt.DecisionTreeModel()
+        self.dt = gdt.DecisionTreeModel()
         self.rf = rf.RandomForestModel(numTrees=num_trees,
                                        bagging_w_replacement=bagging_w_replacement,
                                        feature_restriction=feature_restriction,
@@ -34,7 +34,7 @@ class BestSpamModel(object):
 
         print("Fitting Decision Tree Model with min to stop {}"
               .format(min_to_stop))
-        self.dt.fit(xTrains, yTrains, min_to_stop)
+        self.dt.fit(xTrains, yTrains, minToSplit=min_to_stop)
 
         print("Fitting Random Forests with {} trees and min to stop {}"
               .format(self.rf.numTrees, min_to_stop))
@@ -70,7 +70,7 @@ class BestSpamModel(object):
         #lg_pred = self.lg.predict(xTests_w_0)
         lg_pred = self.lg.predict_probabilities(xTests_w_0)
         #dt_pred = self.dt.predict(xTests)
-        dt_pred = self.dt.predict_probabilities(xTests)
+        dt_pred = self.dt.predict(xTests)
         rf_pred = self.rf.predict(xTests)
         #rf_pred = self.rf.predict_probabilities(xTests)
         predictions = []

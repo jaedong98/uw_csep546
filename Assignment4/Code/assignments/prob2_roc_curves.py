@@ -3,7 +3,7 @@ import os
 
 import utils.Assignment4Support as sup
 import utils.EvaluationsStub as es
-import model.DecisionTreeModel as dtm
+import model.GeoffDecisionTreeModel as gdtm
 from Assignment4.Code import report_path
 from model.BestSpamModel import BestSpamModel
 from utils.EvaluationsStub import Evaluation
@@ -34,8 +34,8 @@ def get_evaluation(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
     (xTrain, xTest) = featurize(xTrainRaw, xTestRaw)
 
-    model = dtm.DecisionTreeModel()
-    model.fit(xTrain, yTrain, min_to_step)
+    model = gdtm.DecisionTreeModel()
+    model.fit(xTrain, yTrain, minToSplit=min_to_step)
 
     yTestPredicted = model.predict(xTest, threshold)
     return es.Evaluation(yTest, yTestPredicted)
@@ -47,7 +47,6 @@ def compare_roc_curves_by_configs(configs,
                                   with_noise=True):
     graphs = []
     legends = []
-    original_fpr_fnr = []
     for i, config in enumerate(configs):
         legends.append('Config {}'.format(config['name']))
         fs_config = {'numFrequentWords': config['feature_selection_by_frequency'],
@@ -84,7 +83,7 @@ def compare_roc_curves_by_configs(configs,
                           img_fname,
                           legends=legends,
                           invert_yaxis=True,
-                        data_pt='-')
+                          data_pt='-')
 
 
 if __name__ == '__main__':
