@@ -41,11 +41,11 @@ class BestSpamModel(object):
         self.rf.fit(xTrains, yTrains, min_to_stop)
 
     def predict(self, xTests, threshold=None):
-        if not all([self.lg_pred, self.dt_pred, self.rf_pred]):
-            xTests_w_0 = [[1] + x for x in xTests]
-            self.lg_pred = self.lg.predict(xTests_w_0)
-            self.dt_pred = self.dt.predict(xTests)
-            self.rf_pred = self.rf.predict(xTests)
+        #if not all([self.lg_pred, self.dt_pred, self.rf_pred]):
+        xTests_w_0 = [[1] + x for x in xTests]
+        self.lg_pred = self.lg.predict(xTests_w_0)
+        self.dt_pred = self.dt.predict(xTests)
+        self.rf_pred = self.rf.predict(xTests)
 
         predictions = []
         for l, d, r in zip(self.lg_pred, self.dt_pred, self.rf_pred):
