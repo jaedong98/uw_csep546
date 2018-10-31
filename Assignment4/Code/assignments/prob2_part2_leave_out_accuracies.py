@@ -64,11 +64,11 @@ def leave_out_accuracies(config, with_noise=True):
 if __name__ == '__main__':
     config = {
         'iterations': 10000,  # logistic regression
-        'min_to_stop': 100,  # decision tree and random forest
+        'min_to_stop': 50,  # decision tree and random forest
         'bagging_w_replacement': True,  # random forest.
         'num_trees': 20,  # random forest
-        'feature_restriction': 0,  # random forest
+        'feature_restriction': 20,  # random forest
         'feature_selection_by_mi': 0,  # 0 means False, N > 0 means select top N words based on mi.
         'feature_selection_by_frequency': 0  # 0 means False, N > 0 means select top N words based on frequency.
     }
-    leave_out_accuracies(config, with_noise=True)
+    leave_out_accuracies(config, with_noise=False)
