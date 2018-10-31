@@ -1,8 +1,7 @@
 import itertools
 import os
 
-import utils.EvaluationsStub as ev
-from Assignment4.Code import report_path, kDataPath
+from Assignment4.Code import report_path
 from model.BestSpamModel import BestSpamModel
 from utils.Assignment4Support import table_for_accuracy_estimate_comparison
 from utils.EvaluationsStub import Evaluation, EvaluateAll
@@ -151,5 +150,10 @@ if __name__ == '__main__':
         'feature_selection_by_frequency': 0,  # 0 means False, N > 0 means select top N words based on frequency.
         'include_handcrafted_features': True
     }
+
+    fname = os.path.join(report_path, 'prob2_cross_validation_accuracy_wo_noise.md')
+    calculate_accuracy_by_cv(config, fname=fname, with_noise=False, k=5)
+
     fname = os.path.join(report_path, 'prob2_cross_validation_accuracy.md')
     calculate_accuracy_by_cv(config, fname=fname, with_noise=True, k=5)
+
