@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     config = {'min_to_split': 2,
               'bagging_w_replacement': True,
-              'num_trees': 20,
+              'num_trees': 60,
               'feature_restriction': 20}
     configs = []
     config0 = {'name': 'grid_y_gradients',
