@@ -1,11 +1,14 @@
 import os
 import random
 
+from utils.cv_features import get_y_gradient_features, get_x_gradient_features, get_y_gradient_histogram_features, \
+    get_x_gradient_histogram_features
+
 
 def LoadRawData(kDataPath, includeLeftEye = True, includeRightEye = True, shuffle=True):
     xRaw = []
     yRaw = []
-    
+
     if includeLeftEye:
         closedEyeDir = os.path.join(kDataPath, "closedLeftEyes")
         for fileName in os.listdir(closedEyeDir):
@@ -107,6 +110,10 @@ def Featurize(xTrainRaw,
               includeGradients=True,
               includeRawPixels=False,
               includeIntensities=False,
+              grid_y_gradients=False,
+              grid_x_gradients=False,
+              hist_y_gradients=False,
+              hist_x_gradients=False
               ):
     """
     from PIL import Image
@@ -162,8 +169,21 @@ def Featurize(xTrainRaw,
                 for y in range(0, ySize, 2):
                     features.append(pixels[x,y]/255.0)
 
+        if grid_y_gradients:
+            features.extend(get_y_gradient_features(image, grid_dim=(3, 3)))
+
+        if grid_x_gradients:
+            features.extend(get_x_gradient_features(image, grid_dim=(3, 3)))
+
+        if hist_y_gradients:
+            features.extend(get_y_gradient_histogram_features(image))
+
+        if hist_x_gradients:
+            features.extend(get_x_gradient_histogram_features(image))
+
         xTrain.append(features)
 
+    print("Featurized Training Set.")
     # now featurize test using any features discovered on the training set. Don't use the test set to influence which features to use.
     xTest = []
     for sample in xTestRaw:
@@ -201,8 +221,21 @@ def Featurize(xTrainRaw,
                 for y in range(0, ySize, 2):
                     features.append(pixels[x,y]/255.0)
 
+        if grid_y_gradients:
+            features.extend(get_y_gradient_features(image, grid_dim=(3, 3)))
+
+        if grid_x_gradients:
+            features.extend(get_x_gradient_features(image, grid_dim=(3, 3)))
+
+        if hist_y_gradients:
+            features.extend(get_y_gradient_histogram_features(image))
+
+        if hist_x_gradients:
+            features.extend(get_x_gradient_histogram_features(image))
+
         xTest.append(features)
 
+    print("Featurized Test Set.")
     return (xTrain, xTest)
 
 

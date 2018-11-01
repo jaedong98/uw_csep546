@@ -79,19 +79,20 @@ def _cm_calculator(y, yPredicted):
     return tp, fp, fn, tn
 
 
-def ConfusionMatrix(y, yPredicted):
+def ConfusionMatrix(y, yPredicted, indent=''):
 
     tp, fp, fn, tn = _cm_calculator(y, yPredicted)
     w = 10
 
-    header = '|{}|{}|{}|'.format(''.center(w), '1'.center(w), '0'.center(w))
-    splitter = '|' + '-' * 10
+    header = '{}|{}|{}|{}|'.format(indent, ''.center(w), '1'.center(w), '0'.center(w))
+
+    splitter = '{}|'.format(indent) + '-' * 10
     splitter += '|' + '-' * 10
     splitter += '|' + '-' * 10
     splitter += '|'
-    yhat1 = '|{}|{}|{}|'.format('1'.center(w), '(TP) {}'.format(
+    yhat1 = '{}|{}|{}|{}|'.format(indent, '1'.center(w), '(TP) {}'.format(
         tp).center(w), '(FN) {}'.format(fn).center(w))
-    yhat0 = '|{}|{}|{}|'.format('0'.center(w), '(FP) {}'.format(
+    yhat0 = '{}|{}|{}|{}|'.format(indent, '0'.center(w), '(FP) {}'.format(
         fp).center(w), '(TN) {}'.format(tn).center(w))
     return '\n'.join([header, splitter, yhat1, yhat0])
 
@@ -105,23 +106,23 @@ def ExecuteAll(y, yPredicted):
     print("FNR:", FalseNegativeRate(y, yPredicted))
 
 
-def EvaluateAll(y, yPredicted):
+def EvaluateAll(y, yPredicted, indent=''):
 
-    results = "* Statistics: "
+    results = "{}* Statistics: ".format(indent)
     results += "\n"
-    results += "\n{}".format(ConfusionMatrix(y, yPredicted))
-    results += "\nAccuracy: {}".format(Accuracy(y, yPredicted))
-    results += "\nPrecision: {}".format(Precision(y, yPredicted))
-    results += "\nRecall: {}".format(Recall(y, yPredicted))
-    results += "\nFPR: {}".format(FalsePositiveRate(y, yPredicted))
-    results += "\nFNR: {}".format(FalseNegativeRate(y, yPredicted))
+    results += "\n{}".format(ConfusionMatrix(y, yPredicted, indent))
+    results += "\n{}Accuracy: {}".format(indent, Accuracy(y, yPredicted))
+    results += "\n{}Precision: {}".format(indent, Precision(y, yPredicted))
+    results += "\n{}Recall: {}".format(indent, Recall(y, yPredicted))
+    results += "\n{}FPR: {}".format(indent, FalsePositiveRate(y, yPredicted))
+    results += "\n{}FNR: {}".format(indent, FalseNegativeRate(y, yPredicted))
 
     return results
 
 
 class Evaluation(object):
 
-    def __init__(self, y, yPredicted):
+    def __init__(self, y, yPredicted, indent=''):
         self.y = y
         self.yPredicted = yPredicted
         self.accuracy = Accuracy(y, yPredicted)
@@ -129,6 +130,7 @@ class Evaluation(object):
         self.recall = Recall(y, yPredicted)
         self.fpr = FalsePositiveRate(y, yPredicted)
         self.fnr = FalseNegativeRate(y, yPredicted)
+        self.indent = indent
 
     def __repr__(self):
-        return EvaluateAll(self.y, self.yPredicted)
+        return EvaluateAll(self.y, self.yPredicted, self.indent)
