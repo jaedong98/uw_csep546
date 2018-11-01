@@ -1,69 +1,69 @@
 * Accuracies and Parameters Selected
   * 3x3 grid + y gradients
-    * Best Accuracy: 0.7235973597359736
+    * Best Accuracy: 0.8193069306930693 (Param Sweep with numTrees ([20, 40, 60, 80]))
     * min_to_split: 20
     * bagging_w_replacement: True
-    * num_trees: 1
+    * num_trees: 60
     * feature_restriction: 100
       * Statistics: 
 
       |          |    1     |    0     |
       |----------|----------|----------|
-      |    1     | (TP) 434 | (FN) 164 |
-      |    0     | (FP) 171 | (TN) 443 |
-      Accuracy: 0.7235973597359736
-      Precision: 0.7173553719008264
-      Recall: 0.725752508361204
-      FPR: 0.2785016286644951
-      FNR: 0.27424749163879597
+      |    1     | (TP) 482 | (FN) 116 |
+      |    0     | (FP) 103 | (TN) 511 |
+      Accuracy: 0.8193069306930693
+      Precision: 0.8239316239316239
+      Recall: 0.8060200668896321
+      FPR: 0.16775244299674266
+      FNR: 0.1939799331103679
   * 3x3 grid + x gradients
-    * Best Accuracy: 0.7277227722772277
+    * Best Accuracy: 0.8448844884488449 (Param Sweep with numTrees ([20, 40, 60, 80]))
     * min_to_split: 20
     * bagging_w_replacement: True
-    * num_trees: 1
+    * num_trees: 40
     * feature_restriction: 100
       * Statistics: 
 
       |          |    1     |    0     |
       |----------|----------|----------|
-      |    1     | (TP) 410 | (FN) 188 |
-      |    0     | (FP) 142 | (TN) 472 |
-      Accuracy: 0.7277227722772277
-      Precision: 0.7427536231884058
-      Recall: 0.68561872909699
-      FPR: 0.23127035830618892
-      FNR: 0.31438127090301005
+      |    1     | (TP) 498 | (FN) 100 |
+      |    0     | (FP) 88  | (TN) 526 |
+      Accuracy: 0.8448844884488449
+      Precision: 0.8498293515358362
+      Recall: 0.8327759197324415
+      FPR: 0.14332247557003258
+      FNR: 0.16722408026755853
   * Histogram of a image y-gradients
-    * Best Accuracy: 0.759075907590759
+    * Best Accuracy: 0.8061056105610561 (Param Sweep with numTrees ([20, 40, 60, 80]))
     * min_to_split: 20
     * bagging_w_replacement: True
-    * num_trees: 1
+    * num_trees: 60
     * feature_restriction: 100
       * Statistics: 
 
       |          |    1     |    0     |
       |----------|----------|----------|
-      |    1     | (TP) 450 | (FN) 148 |
-      |    0     | (FP) 144 | (TN) 470 |
-      Accuracy: 0.759075907590759
-      Precision: 0.7575757575757576
-      Recall: 0.7525083612040134
-      FPR: 0.23452768729641693
-      FNR: 0.24749163879598662
+      |    1     | (TP) 447 | (FN) 151 |
+      |    0     | (FP) 84  | (TN) 530 |
+      Accuracy: 0.8061056105610561
+      Precision: 0.8418079096045198
+      Recall: 0.7474916387959866
+      FPR: 0.13680781758957655
+      FNR: 0.2525083612040134
   * Histogram of a image y-gradients
-    * Best Accuracy: 0.7533003300330033
+    * Best Accuracy: 0.7904290429042904 (Param Sweep with numTrees ([20, 40, 60, 80]))
     * min_to_split: 20
     * bagging_w_replacement: True
-    * num_trees: 1
+    * num_trees: 80
     * feature_restriction: 100
       * Statistics: 
 
       |          |    1     |    0     |
       |----------|----------|----------|
-      |    1     | (TP) 415 | (FN) 183 |
-      |    0     | (FP) 116 | (TN) 498 |
-      Accuracy: 0.7533003300330033
-      Precision: 0.7815442561205274
-      Recall: 0.6939799331103679
-      FPR: 0.18892508143322476
-      FNR: 0.3060200668896321
+      |    1     | (TP) 427 | (FN) 171 |
+      |    0     | (FP) 83  | (TN) 531 |
+      Accuracy: 0.7904290429042904
+      Precision: 0.8372549019607843
+      Recall: 0.7140468227424749
+      FPR: 0.13517915309446255
+      FNR: 0.28595317725752506
