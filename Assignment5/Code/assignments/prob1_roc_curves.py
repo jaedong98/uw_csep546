@@ -39,7 +39,7 @@ def compare_roc_curves_by_selected_features(xTrainRaw, yTrainRaw, xTestRaw, yTes
     start = thresholds[0]
     end = thresholds[-1]
     step = thresholds[1] - thresholds[0]
-    fname = 'prob1{}_{}_{}_{}_40trees.png'.format(inspect.stack()[0][3], start, end, step)
+    fname = 'prob1{}_{}_{}_{}_60trees_fs25.png'.format(inspect.stack()[0][3], start, end, step)
     img_fname = os.path.join(report_path, fname)
     draw_accuracies(graphs,
                     'False Positive Rate', 'False Negative Rate', '',
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     config = {'min_to_split': 2,
               'bagging_w_replacement': True,
-              'num_trees': 40,
+              'num_trees': 60,
               'feature_restriction': 20}
     configs = []
     config0 = {'name': 'grid_y_gradients',
