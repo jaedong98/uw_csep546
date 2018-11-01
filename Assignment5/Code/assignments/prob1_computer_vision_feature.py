@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     # param sweep - min_to_split
     min_to_split_configs = []
-    for min_to_split in [2, 20, 50, 100]:
+    for min_to_split in [2, 20, 50]:
         config = {'min_to_split': min_to_split,
                   'bagging_w_replacement': True,
                   'num_trees': 20,
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
     # param sweep - num_trees
     num_trees_configs = []
-    for num_trees in [1, 20, 40, 60]:
+    for num_trees in [20, 40, 60]:
         config = {'min_to_split': 20,
                   'bagging_w_replacement': True,
                   'num_trees': num_trees,
@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     # param sweep - feature_restriction
     feature_restriction_configs = []
-    for feature_restriction in [5, 10, 20, 100]:
+    for feature_restriction in [5, 10, 20]:
         config = {'min_to_split': 20,
                   'bagging_w_replacement': True,
                   'num_trees': 60,

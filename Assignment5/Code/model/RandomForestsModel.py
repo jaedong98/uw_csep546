@@ -112,11 +112,7 @@ class RandomForestModel(object):
         print("Predicting results with {} tree(s).".format(len(self.trees)))
         # for selected_indices, tree in zip(self.selected_indices, self.trees):
         for tree in self.trees:
-            i_predictions = []
-            for example in xTest:
-                i_predictions.append(predict(tree, example))
-
-            predictions_prob.append(i_predictions)
+            predictions_prob.append(tree.predict(xTest))
 
         prediction_votes = []
         for combines in zip(*predictions_prob):
