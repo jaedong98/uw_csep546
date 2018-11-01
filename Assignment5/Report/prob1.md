@@ -15,3 +15,11 @@
 ##### 0.5 Point -- Implement a histogram of gradients across the whole image (not on the grid) with 5 uniformly spaced bins for the absolute value of the x gradients (0 - 0.2, 0.2 - 0.4, etc). For each bin create a feature whose value is the percent of x-gradients that fall in the bin. What test-set accuracy did you achieve? What parameter values were best?
 
 ##### 1 Point -- Produce an ROC curve with one curve for: the y-gradients on the 3x3 grid; the x-gradients on the 3x3 grid; the y-gradient histogram; the x-gradient histogram. Use the tuning values you found in the previous parts of this assignment.
+
+```python
+config = {'min_to_split': 2,
+          'bagging_w_replacement': True,
+          'num_trees': 60,
+          'feature_restriction': 20}
+```
+![prob1compare_roc_curves_by_selected_features_0.0_1.0_0.01](prob1compare_roc_curves_by_selected_features_0.0_1.0_0.01.png)
