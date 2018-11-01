@@ -42,9 +42,9 @@ def divide_image(image, grid_dim=(3, 3)):
                              range(x_i * width, (x_i + 1) * width),
                              range(y_i * height, (y_i + 1) * height), xSize)
             total_pixels += len(pix)
-            grids.append(np.array(pix).reshape(8, 8))
+            grids.append(np.array(pix).reshape(width, height))
 
-    if not all(list(grids[-1][-1]) == flattened[-8:]):
+    if not all(list(grids[-1][-1]) == flattened[-width:]):
         raise ValueError("Unexpected groups {} vs {}"
                          .format(grids[-1][-1], flattened[-8:]))
     if not total_pixels == numPixels:
@@ -126,6 +126,9 @@ def get_y_gradient_features(image, grid_dim=(3, 3)):
     return get_x_gradient_features(image, grid_dim)
 
 
+
+def get_x_gradient_histogram(image, bins=[]):
+    pass
 
 
 
