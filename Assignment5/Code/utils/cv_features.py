@@ -1,3 +1,4 @@
+import collections
 import numpy as np
 
 
@@ -101,7 +102,7 @@ def get_x_gradient_features(image, grid_dim=(3, 3)):
     """
 
     :param image: an instance of PIL.Image.Image object.
-    :param grid_dim:
+    :param grid_dim: a tuple of (x, y)
     :return: a list of gradient min, max, average features of each grid.
     """
     grids = divide_image(image, grid_dim)
@@ -119,16 +120,54 @@ def get_y_gradient_features(image, grid_dim=(3, 3)):
     """
 
     :param image: an instance of PIL.Image.Image object.
-    :param grid_dim:
+    :param grid_dim: a tuple of (x, y)
     :return: a list of gradient min, max, average features of each grid.
     """
     image = image.rotate(90)
     return get_x_gradient_features(image, grid_dim)
 
 
+def get_x_gradient_histogram_features(image):
+    """
+    Extract x-gradient histogram features from image
+    with five uniformly spaced bins.
+    :param image: an instance of PIL.Image.Image object.
 
-def get_x_gradient_histogram(image, bins=[]):
-    pass
+    :return: a list of five feature values
+    """
+    grid = divide_image(image, grid_dim=(1, 1))[0]
+    gradients = [abs(x) for x in get_x_gradients(grid)]
+
+    bins = collections.OrderedDict()
+    bins[lambda x: 0 <= x < 0.2] = 0
+    bins[lambda x: 0.2 <= x < 0.4] = 0
+    bins[lambda x: 0.4 <= x < 0.6] = 0
+    bins[lambda x: 0.6 <= x < 0.8] = 0
+    bins[lambda x: 0.8 <= x <= 1] = 0
+
+    for g in gradients:
+        for k, v in bins.items():
+            if k(g):
+                bins[k] += 1
+                break
+    cnt = len(gradients)
+    features = [v / cnt for v in bins.values()]
+    return features
+
+
+def get_y_gradient_histogram_features(image):
+    """
+    Extract y-gradient histogram features from image
+    with five uniformly spaced bins.
+    :param image: an instance of PIL.Image.Image object.
+
+    :return: a list of five feature values
+    """
+    image = image.rotate(90)
+    return get_x_gradient_histogram_features(image)
+
+
+
 
 
 

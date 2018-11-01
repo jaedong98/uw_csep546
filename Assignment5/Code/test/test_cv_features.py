@@ -4,7 +4,8 @@ import unittest
 import PIL
 from Assignment5.Code import kDataPath
 from PIL import Image
-from utils.cv_features import divide_image, get_x_gradients, get_x_gradient_features, get_y_gradient_features
+from utils.cv_features import divide_image, get_x_gradients, get_x_gradient_features, get_y_gradient_features, \
+    get_x_gradient_histogram_features, get_y_gradient_histogram_features
 
 
 class TestCVFeatures(unittest.TestCase):
@@ -43,12 +44,29 @@ class TestCVFeatures(unittest.TestCase):
         grids = divide_image(image, grid_dim=(1, 1))
         self.assertTrue(len(grids) == 1)
 
-        from matplotlib import pyplot as plt
-        for i in range(1, 2):
-            plt.subplot(1, 1, i)
-            plt.gray()
-            plt.imshow(grids[0])
-        plt.show()
+        # from matplotlib import pyplot as plt
+        # for i in range(1, 2):
+        #     plt.subplot(1, 1, i)
+        #     plt.gray()
+        #     plt.imshow(grids[0])
+        # plt.show()
+
+    def test_get_x_gradient_histogram_features(self):
+        fname = os.path.join(kDataPath, r'closedRightEyes/closed_eye_0001.jpg_face_1_R.jpg')
+        image = Image.open(fname, 'r')
+        features = get_x_gradient_histogram_features(image)
+        self.assertTrue(len(features) == 5)
+
+        fname = os.path.join(kDataPath, r'openLeftEyes/Aaron_Guiel_0001_L.jpg')
+        image = Image.open(fname, 'r')
+        features = get_x_gradient_histogram_features(image)
+        self.assertTrue(len(features) == 5)
+
+    def test_get_y_gradient_histogram_features(self):
+        fname = os.path.join(kDataPath, r'openLeftEyes/Aaron_Guiel_0001_L.jpg')
+        image = Image.open(fname, 'r')
+        features = get_y_gradient_histogram_features(image)
+        self.assertTrue(len(features) == 5)
 
 
 if __name__ == '__main__':
