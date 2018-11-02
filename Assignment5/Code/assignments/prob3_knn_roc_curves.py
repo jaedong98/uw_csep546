@@ -14,7 +14,7 @@ def roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds):
     fname = 'prob3{}_w_{}_{}_thresholds.png'\
         .format(inspect.stack()[0][3], config['name'], len(thresholds))
     for k in [1]:  #, 3, 5, 10, 20, 50, 100]:
-        legends.append('K = '.format(k))
+        legends.append('K = {}'.format(k))
         del config['name']
 
         (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, config)

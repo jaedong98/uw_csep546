@@ -8,6 +8,8 @@ from model import cache_dir
 
 class KNearestNeighborModel(object):
 
+    runtime_data = {}
+
     def __init__(self, xTrains, yTrains):
         self.xTrains = xTrains
         self.yTrains = yTrains
@@ -19,9 +21,12 @@ class KNearestNeighborModel(object):
         knn_pkl = os.path.join(cache_dir, '{}.pkl'.format(knn_hash))
         if os.path.exists(knn_pkl):
             print("Found pickled xTrains sorted.")
-
-            with open(knn_pkl, 'rb') as f:
-                return pickle.load(f).split(',')
+            neighbors_ordered = KNearestNeighborModel.runtime_data.get(knn_hash, None)
+            if not neighbors_ordered:
+                with open(knn_pkl, 'rb') as f:
+                    neighbors_ordered = pickle.load(f)
+                    KNearestNeighborModel.runtime_data[knn_hash] = neighbors_ordered
+            return neighbors_ordered
 
         neighbors_ordered = []
         for xTest in xTests:
@@ -35,8 +40,9 @@ class KNearestNeighborModel(object):
 
             neighbors_ordered.append(sorted(distances))
 
+        KNearestNeighborModel.runtime_data[knn_hash] = neighbors_ordered
         with open(knn_pkl, 'wb') as f:
-            pickle.dump(','.join(neighbors_ordered), f)
+            pickle.dump(neighbors_ordered, f)
             print("Saved neighbors ordered in pickle {}".format(knn_pkl))
 
         return neighbors_ordered
@@ -47,20 +53,9 @@ class KNearestNeighborModel(object):
             k = len(self.xTrains)
 
         predictions = []
-
-        for xTest in xTests:
-
-            distances = []
-            for xt, yt in zip(self.xTrains, self.yTrains):
-
-                a1 = np.array(xTest)
-                a2 = np.array(xt)
-                d = np.linalg.norm(a1 - a2)
-                distances.append((d, xt, yt))
-
-            sorted_dist = sorted(distances)
-
-            k_neighbors = sorted_dist[:k]
+        neighbors_ordered = self.get_train_neighbors(xTests)
+        for neighbors in neighbors_ordered:
+            k_neighbors = neighbors[:k]
 
             k_predictions = [sd[-1] for sd in k_neighbors]
 
