@@ -1,4 +1,5 @@
 import inspect
+import numpy as np
 import os
 from Assignment5.Code import kDataPath, report_path
 from model.KnnModel import KNearestNeighborModel
@@ -26,7 +27,7 @@ def roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds):
         legends.append('K = {}'.format(k))
         cont_length_fpr_fnr = []
         for threshold in thresholds:
-            yTestPredicted = knn.predict(xTests, k, threshold)
+            yTestPredicted = knn.predict(np.array(xTests), k, threshold)
             ev = Evaluation(yTests, yTestPredicted)
             cont_length_fpr_fnr.append((ev.fpr, ev.fnr))
         graphs.append(cont_length_fpr_fnr)
