@@ -51,6 +51,23 @@ def plot_data_and_centroid_paths(xTrains, k, iterations):
         for pair in kmc.closest_pairs():
             f.write('\n* Centroid: {} - Sample {}'.format(pair[0], pair[1]))
 
+    # closest_points
+    for i, (color, centroid) in enumerate(zip(colors, kmc.centroids)):
+        plt.show()
+        cs = centroid.closest_sample()
+        plt.scatter([centroid.x, cs.x], [centroid.y, cs.y], s=5, c='black', alpha=0.8)
+        plt.plot([centroid.x, cs.x], [centroid.y, cs.y], 'black')
+        sample_xs, sample_ys = centroid.sample_xs_ys()
+        if not sample_xs and not sample_ys:
+            continue
+        plt.scatter(sample_xs, sample_ys, c=color, alpha=0.1)
+        plt.title("Clusterting K={}, {}th Centroid".format(k, i))
+        plt.xlabel("average Y gradient strength")
+        plt.ylabel("average Y gradient strength in middle 3rd")
+        fname = 'prob2_closest_sample_and_centroid{}(K={}).png'.format(i, k)
+        fpath = os.path.join(report_path, fname)
+        plt.savefig(fpath)
+
 
 if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)

@@ -22,5 +22,11 @@
 * Centroid: [61.41447243250806,85.39088410237919] - Sample [60.989583333333336,85.93229166666667]
 * Centroid: [75.44001842270298,120.85180013327052] - Sample [75.30902777777777,121.36458333333333]
 
+| | |
+|-|-|
+|![centroid0](prob2_closest_sample_and_centroid0(K=4).png)|![centroid1](prob2_closest_sample_and_centroid1(K=4).png)|
+|![centroid2](prob2_closest_sample_and_centroid2(K=4).png)|![centroid3](prob2_closest_sample_and_centroid3(K=4).png)|
+
+
 #### 1 Point -- In no more than 150 words describe the clustering process. Did the clustering converge? Do the images closest to the cluster centers make sense?
 
