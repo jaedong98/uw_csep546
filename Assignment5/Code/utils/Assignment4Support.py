@@ -454,6 +454,13 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends, inver
     print("Saved/Updated image {}".format(img_fname))
 
 
+def draw_roc_comparision(roc_data, xlabel, ylabel, title, img_fname, legends, invert_yaxis=False, data_pt='-*'):
+    """
+    roc_data: a list of list of (fp, fn)s
+    legends: a tuple/list of legends for each graphs
+    """
+    draw_accuracies(roc_data, xlabel, ylabel, title, img_fname, legends, invert_yaxis=False, data_pt='-*')
+
 def draw_comparison(data, xlabel, ylabel, title, img_fname, legends):
     """
     data: a list of [[(x1, y1), (x2, y2), ...], [(t1, s1), (t2, s2), ...], ...]
