@@ -5,10 +5,10 @@ import os
 import pickle
 from model import cache_dir
 
+runtime_data = {}
+
 
 class KNearestNeighborModel(object):
-
-    runtime_data = {}
 
     def __init__(self, xTrains, yTrains):
         self.xTrains = xTrains
@@ -20,12 +20,12 @@ class KNearestNeighborModel(object):
         knn_hash = hashlib.sha256(hash_str).hexdigest()
         knn_pkl = os.path.join(cache_dir, '{}.pkl'.format(knn_hash))
         if os.path.exists(knn_pkl):
-            neighbors_ordered = KNearestNeighborModel.runtime_data.get(knn_hash, None)
+            neighbors_ordered = runtime_data.get(knn_hash, None)
             if not neighbors_ordered:
                 print("Found pickled xTrains sorted.")
                 with open(knn_pkl, 'rb') as f:
                     neighbors_ordered = pickle.load(f)
-                    KNearestNeighborModel.runtime_data[knn_hash] = neighbors_ordered
+                    runtime_data[knn_hash] = neighbors_ordered
             return neighbors_ordered
 
         neighbors_ordered = []

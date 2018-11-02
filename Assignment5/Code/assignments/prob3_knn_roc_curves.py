@@ -9,17 +9,17 @@ from utils.EvaluationsStub import Evaluation
 
 def roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds):
 
-    (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, config)
-    yTrains = yTrainRaw
-    yTests = yTestRaw
-    knn = KNearestNeighborModel(xTrains, yTrains)
-
     graphs = []
     legends = []
     fname = 'prob3{}_w_{}_{}_thresholds.png'\
         .format(inspect.stack()[0][3], config['name'], len(thresholds))
     config_name = config['name']
     del config['name']
+
+    (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, **config)
+    yTrains = yTrainRaw
+    yTests = yTestRaw
+    knn = KNearestNeighborModel(xTrains, yTrains)
 
     for k in [1, 3, 5, 10, 20, 50, 100]:
         print("Predicting with K={}".format(k))

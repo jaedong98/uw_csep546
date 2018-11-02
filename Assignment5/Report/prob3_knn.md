@@ -12,7 +12,7 @@
 
 #### In no more than 100 words describe the results. Which k is best?
 
-##### ROC Curve Comparison among Feature Selections 
+##### Section 1. ROC Curve Comparison among Feature Selections (Constant K)
 
 |![prob3roc_curves_cmp_K1_11_thresholds](prob3roc_curves_cmp_K1_11_thresholds.png)|![prob3roc_curves_cmp_K3_11_thresholds](prob3roc_curves_cmp_K3_11_thresholds.png)|
 |:-:|:-:|
@@ -21,8 +21,13 @@
 |![prob3roc_curves_cmp_K100_11_thresholds](prob3roc_curves_cmp_K100_11_thresholds.png)| empty |
 
 
-##### ROC Curve Comparision with various Ks
+##### Section 2. ROC Curve Comparision by Feature Selection with various Ks
 
 |![prob3roc_curves_w_grid_y_gradients_101_thresholds](prob3roc_curves_w_grid_y_gradients_101_thresholds.png)|![prob3roc_curves_w_grid_x_gradients_101_thresholds](prob3roc_curves_w_grid_x_gradients_101_thresholds.png)|
 |-|-|
 |![prob3roc_curves_w_hist_y_gradients_101_thresholds](prob3roc_curves_w_hist_y_gradients_101_thresholds.png)|![prob3roc_curves_w_hist_x_gradients_101_thresholds](prob3roc_curves_w_hist_x_gradients_101_thresholds.png)|
+
+##### Results Discussion
+In section 1, I compared the ROC curves among feature selection aproaches. 
+
+In section 2, I compared the ROC curves varing K values. As shown, the results are very similar between graphs(features selected). But in general, more neighbor search gives better performance while K=50 and K=100 are very comparable. It indicates there is a reasonable thresholds that we can get the maximum performance.

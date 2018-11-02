@@ -23,7 +23,7 @@ def roc_curves_cmp(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, configs, thresholds
         legends = cnames
         for cname, config in zip(cnames, configs):
             print("Predicting for {}".format(cname))
-            (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, config)
+            (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, **config)
             yTrains = yTrainRaw
             yTests = yTestRaw
             knn = KNearestNeighborModel(xTrains, yTrains)
