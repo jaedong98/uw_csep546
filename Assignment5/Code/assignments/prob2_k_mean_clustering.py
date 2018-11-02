@@ -68,6 +68,34 @@ def plot_data_and_centroid_paths(xTrains, k, iterations):
         fpath = os.path.join(report_path, fname)
         plt.savefig(fpath)
 
+    # centroid movements
+    plt.clf()
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+
+    for i, (color, centroid) in enumerate(zip(colors, kmc.centroids)):
+        xs, ys = centroid.path_xs_ys()
+        ax1.set_title("average Y gradient strength over iterations")
+        ax1.set_xlabel("Iterations")
+        ax1.grid(True)
+        iters = [x for x in range(len(xs))]
+        ax1.plot(iters, xs, color)
+
+        ax2.set_title("average Y gradient strength in middle 3rd over iterations")
+        ax2.set_xlabel("Iterations")
+        ax2.grid(True)
+        ax2.plot(iters, ys, color)
+
+    fig.tight_layout()
+    fname = 'prob2_centroid_movements_k{}_iteration{}.png'.format(k, iterations)
+    fpath = os.path.join(report_path, fname)
+    plt.savefig(fpath)
+    plt.show()
+
+    fname = os.path.join(report_path, 'prob2_closest_samples.md')
+    with open(fname, 'w') as f:
+        for pair in kmc.closest_pairs():
+            f.write('\n* Centroid: {} - Sample {}'.format(pair[0], pair[1]))
+
 
 if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)

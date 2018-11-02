@@ -48,7 +48,9 @@ class Centroid(object):
         return self.x == other.x and self.y == other.y
 
     def add_sample(self, sample):
-        return Centroid([self.x, self.y], self.samples + [sample], self)
+        #return Centroid([self.x, self.y], self.samples + [sample], self)
+        self.samples.append(sample)
+        return self
 
     def reset_samples(self):
         self.samples = []
