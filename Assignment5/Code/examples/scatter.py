@@ -32,7 +32,7 @@ ax.set_title('Simple plot')
 #Creates two subplots and unpacks the output array immediately
 f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
 ax1.plot(x, y)
-ax1.set_title('Sharing Y axis')
+ax1.set_title('Sharing Y axis', y=1.08)
 ax2.scatter(x, y)
 
 plt.show()

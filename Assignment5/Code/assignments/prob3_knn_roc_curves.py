@@ -9,19 +9,21 @@ from utils.EvaluationsStub import Evaluation
 
 def roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds):
 
+    (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, config)
+    yTrains = yTrainRaw
+    yTests = yTestRaw
+    knn = KNearestNeighborModel(xTrains, yTrains)
+
     graphs = []
     legends = []
     fname = 'prob3{}_w_{}_{}_thresholds.png'\
         .format(inspect.stack()[0][3], config['name'], len(thresholds))
-    for k in [1]:  #, 3, 5, 10, 20, 50, 100]:
+    config_name = config['name']
+    del config['name']
+
+    for k in [1, 3, 5, 10, 20, 50, 100]:
+        print("Predicting with K={}".format(k))
         legends.append('K = {}'.format(k))
-        del config['name']
-
-        (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, config)
-        yTrains = yTrainRaw
-        yTests = yTestRaw
-        knn = KNearestNeighborModel(xTrains, yTrains)
-
         cont_length_fpr_fnr = []
         for threshold in thresholds:
             yTestPredicted = knn.predict(xTests, k, threshold)
@@ -32,7 +34,8 @@ def roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds):
     # plotting
     img_fname = os.path.join(report_path, fname)
     draw_accuracies(graphs,
-                    'False Positive Rate', 'False Negative Rate', '',
+                    'False Positive Rate', 'False Negative Rate',
+                    'ROC Curves for {}'.format(config_name),
                     img_fname,
                     legends=legends,
                     invert_yaxis=True,
@@ -64,7 +67,7 @@ if __name__ == '__main__':
                'hist_y_gradients': False,
                'hist_x_gradients': True}
 
-    N = 10
+    N = 100
     thresholds = [x / N for x in range(N + 1)]
     for config in [config0, config1, config2, config3]:
         roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds)

@@ -436,7 +436,8 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends, inver
                 len(accuracies), len(legends)))
 
     fig, ax = plt.subplots()
-    ax.set(xlabel=xlabel, ylabel=ylabel, title=title)
+    ax.set_title(title, y=1.08)
+    ax.set(xlabel=xlabel, ylabel=ylabel)
 
     for accus in accuracies:
         xs, ys = zip(*accus)

@@ -14,15 +14,15 @@ class KNearestNeighborModel(object):
         self.xTrains = xTrains
         self.yTrains = yTrains
 
-    def get_train_neighbors(self, xTests):
+    def get_ordered_train_neighbors(self, xTests):
 
         hash_str = '{}_{}'.format(self.xTrains, xTests).encode()
         knn_hash = hashlib.sha256(hash_str).hexdigest()
         knn_pkl = os.path.join(cache_dir, '{}.pkl'.format(knn_hash))
         if os.path.exists(knn_pkl):
-            print("Found pickled xTrains sorted.")
             neighbors_ordered = KNearestNeighborModel.runtime_data.get(knn_hash, None)
             if not neighbors_ordered:
+                print("Found pickled xTrains sorted.")
                 with open(knn_pkl, 'rb') as f:
                     neighbors_ordered = pickle.load(f)
                     KNearestNeighborModel.runtime_data[knn_hash] = neighbors_ordered
@@ -36,6 +36,8 @@ class KNearestNeighborModel(object):
                 a1 = np.array(xTest)
                 a2 = np.array(xt)
                 d = np.linalg.norm(a1 - a2)
+                if d == 0:
+                    continue
                 distances.append((d, xt, yt))
 
             neighbors_ordered.append(sorted(distances))
@@ -53,13 +55,13 @@ class KNearestNeighborModel(object):
             k = len(self.xTrains)
 
         predictions = []
-        neighbors_ordered = self.get_train_neighbors(xTests)
+        neighbors_ordered = self.get_ordered_train_neighbors(xTests)
         for neighbors in neighbors_ordered:
             k_neighbors = neighbors[:k]
 
             k_predictions = [sd[-1] for sd in k_neighbors]
 
-            if threshold:
+            if threshold is not None:
                 cnt_1 = k_predictions.count(1)
                 proposition = cnt_1 / k
                 if proposition >= threshold:
