@@ -49,7 +49,7 @@ def plot_data_and_centroid_paths(xTrains, k, iterations):
     fname = os.path.join(report_path, 'prob2_closest_samples.md')
     with open(fname, 'w') as f:
         for pair in kmc.closest_pairs():
-            f.write('Centroid: {} - Sample {}'.format(pair[0], pair[1]))
+            f.write('\n* Centroid: {} - Sample {}'.format(pair[0], pair[1]))
 
 
 if __name__ == "__main__":

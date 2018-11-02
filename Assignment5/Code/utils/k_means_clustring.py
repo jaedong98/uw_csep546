@@ -85,8 +85,8 @@ class Centroid(object):
         samples = [(s.x, s.y) for s in self.samples]
         return [x for x in zip(*samples)]
 
-    # def __repr__(self):
-    #     return "[{},{}]".format(self.x, self.y)
+    def __repr__(self):
+        return "[{},{}]".format(self.x, self.y)
 
 
 class Sample(object):
