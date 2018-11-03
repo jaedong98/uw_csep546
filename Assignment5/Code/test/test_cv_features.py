@@ -1,7 +1,7 @@
 import os
 import unittest
+import numpy as np
 
-import PIL
 from Assignment5.Code import kDataPath
 from PIL import Image
 from utils.cv_features import divide_image, get_x_gradients, get_x_gradient_features, get_y_gradient_features, \
@@ -10,6 +10,23 @@ from utils.cv_features import divide_image, get_x_gradients, get_x_gradient_feat
 
 class TestCVFeatures(unittest.TestCase):
 
+    def test_get_x_gradients_image1(self):
+        image = Image.open('image1.png', 'r')
+        grids = divide_image(image, grid_dim=(1, 1))
+        x_gradients = get_x_gradients(grids[0])
+        x_gradients_w_255 = [x * 255. for x in x_gradients]
+        data = np.array(x_gradients_w_255).reshape(24, 24)
+        img = Image.fromarray(data)
+        img.show()
+
+    def test_get_y_gradients_image2(self):
+        image = Image.open('image2.png', 'r').rotate(90)
+        grids = divide_image(image, grid_dim=(1, 1))
+        x_gradients = get_x_gradients(grids[0])
+        x_gradients_w_255 = [abs(x * 255.) for x in x_gradients]
+        data = np.array(x_gradients_w_255).reshape(24, 24)
+        img = Image.fromarray(data)
+        img.show()
 
     def test_grid_image(self):
         fname = os.path.join(kDataPath, r'closedRightEyes/closed_eye_0001.jpg_face_1_R.jpg')
