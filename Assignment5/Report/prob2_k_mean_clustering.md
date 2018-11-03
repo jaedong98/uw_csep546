@@ -17,7 +17,7 @@
 
 #### Find the closest training sample to the final location of each cluster center and the associated image.
 
-The centroid and the closet sample of each cluster are listed here. They are visualized below graph in **black* lines.
+The centroid and the closet sample of each cluster are listed here. They are visualized below graph in ***black*** lines.
 * Centroid: [41.78014019454241,53.68187548962004] - Sample [41.845486111111114,52.901041666666664]
 * Centroid: [91.76830476309645,174.5258383383384] - Sample [89.61631944444444,174.60416666666666]
 * Centroid: [61.41447243250806,85.39088410237919] - Sample [60.989583333333336,85.93229166666667]
@@ -31,7 +31,7 @@ The centroid and the closet sample of each cluster are listed here. They are vis
 
 #### In no more than 150 words describe the clustering process. Did the clustering converge? Do the images closest to the cluster centers make sense?
 
-The process initially picked four random samples as the centroid of four clusters. Each sample measures the distances from four centroids and selects the closest one to belong. Once the iteration finished, each centroid updates their position to the average of sample points belongs. Repeats N iterations. In this assignment, four centroids moved around until seven iterations and reached the average location of all samples. The below graph shows the values become steady after seven iterations.
+The process initially picked four random samples as the centroid of four clusters. Each sample measures the distances from four centroids and selects the closest K neighbors to belong. Once the iteration finished, each centroid updates their position to the average of neighbors that belong to them. Repeats N iterations. In this assignment, four centroids moved around until seven iterations and reached the average location of all samples. The below graph shows the values become steady after seven iterations.
 
 ![prob2_centroid_movements_k4_iteration10](prob2_centroid_movements_k4_iteration10.png)
 

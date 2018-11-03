@@ -16,7 +16,6 @@ def roc_curves(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, config, thresholds):
         .format(inspect.stack()[0][3], config['name'], len(thresholds))
     config_name = config['name']
     del config['name']
-    config['includeGradients'] = True
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw, **config)
     yTrains = yTrainRaw
     yTests = yTestRaw
