@@ -42,3 +42,5 @@ plt.show()
 
 img_fname = os.path.join(report_path, "prob1_histogram_analaysis.png")
 fig.savefig(img_fname)
+
+
