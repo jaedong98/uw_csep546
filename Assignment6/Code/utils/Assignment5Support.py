@@ -107,9 +107,9 @@ def Convolution3x3(image, filter):
 
 def Featurize(xTrainRaw,
               xTestRaw,
-              includeGradients=True,
+              includeGradients=False,
               includeRawPixels=False,
-              includeIntensities=False,
+              includeIntensities=True,
               grid_y_gradients=False,
               grid_x_gradients=False,
               hist_y_gradients=False,
