@@ -7,7 +7,7 @@ Created on Tuesday Oct 2, 2018
 
 # Imports
 import numpy as np
-
+np.random.seed(100)
 # Each row is a training example, each column is a feature  [X1, X2, X3]
 X = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
 y = np.array(([0], [1], [1], [0]), dtype=float)
@@ -27,22 +27,26 @@ def sigmoid_derivative(p):
 
 # Class definition
 class NeuralNetwork:
-    def __init__(self, x, y, num_nodes=4):
+    def __init__(self, x, y, num_nodes=10):
         self.input = x
         self.weights1 = np.random.rand(self.input.shape[1], num_nodes)  # considering we have 4 nodes in the hidden layer
         self.weights2 = np.random.rand(num_nodes, 1)  # weights
+        #self.weights3 = np.random.rand(num_nodes, 1)  # weights for output
         self.y = y
         self.output = np.zeros(y.shape)  # y_hat vector
 
     def feedforward(self):
         self.layer1 = sigmoid(np.dot(self.input, self.weights1))
         self.layer2 = sigmoid(np.dot(self.layer1, self.weights2))
+        #self.layer3 = sigmoid(np.dot(self.layer2, self.weights3))
         return self.layer2
 
     def backprop(self):
-        d_weights2 = np.dot(self.layer1.T, 2 * (self.y - self.output) * sigmoid_derivative(self.output))
-        d_weights1 = np.dot(self.input.T, np.dot(2 * (self.y - self.output) * sigmoid_derivative(self.output),
-                                                 self.weights2.T) * sigmoid_derivative(self.layer1))
+
+        error_terms_by_L1 = 2 * (self.y - self.output) * sigmoid_derivative(self.output)
+        d_weights2 = np.dot(self.layer1.T, error_terms_by_L1)  # np.dot(output from L1.T, error_terms_by_L1)
+        d_weights1 = np.dot(self.input.T, np.dot(error_terms_by_L1, self.weights2.T) * sigmoid_derivative(self.layer1))
+        # np.dot(
 
         self.weights1 += d_weights1
         self.weights2 += d_weights2
