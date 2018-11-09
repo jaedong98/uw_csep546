@@ -30,7 +30,7 @@ class NeuralNetwork:
         self.output = np.zeros(self.y.shape)
         self.weights = []
         self.get_initial_weights()
-        self.layers = []
+        self.outputs = []
 
     def get_initial_weights(self):
 
@@ -41,6 +41,7 @@ class NeuralNetwork:
                 w_dim = (num_features, self.num_nodes)
             else:
                 w_dim = (self.num_nodes, self.num_nodes)
+
             if LOCAL:
                 self.weights.append(np.random.rand(*w_dim))
             else:
@@ -58,15 +59,15 @@ class NeuralNetwork:
 
     def feedforward(self):
 
-        self.layers = [self.input]  # initial output from input layer
+        self.outputs = [self.input]  # initial output from input layer
         outputs = None
         for i, weights_in_layer in enumerate(self.weights):
             if i == 0:
                 outputs = sigmoid(np.dot(self.input, weights_in_layer))
             else:
                 outputs = sigmoid(np.dot(outputs, weights_in_layer))
-            self.layers.append(outputs)
-        return self.layers[-1]
+            self.outputs.append(outputs)
+        return self.outputs[-1]
 
     def loss(self, yTests=None):
         if yTests is None:
@@ -75,24 +76,82 @@ class NeuralNetwork:
         return 1 / 2. * s
         #return np.mean(np.square(yTests - self.feedforward()))
 
+    def backward(self):
+        # backward propgate through the network
+        # self.o_error = y - o  # error in output
+        # self.o_delta = self.o_error * self.sigmoidPrime(o)  # applying derivative of sigmoid to error
+        #
+        # self.z2_error = self.o_delta.dot(self.W2.T)  # z2 error: how much our hidden layer weights contributed to output error
+        # self.z2_delta = self.z2_error * self.sigmoidPrime(self.z2)  # applying derivative of sigmoid to z2 error
+        #
+        # self.W1 += X.T.dot(self.z2_delta)  # adjusting first set (input --> hidden) weights
+        # self.W2 += self.z2.T.dot(self.o_delta)  # adjusting second set (hidden --> output) weights
+
+        ## my version
+        o_delta = sigmoid_derivative(self.output) * (self.y - self.output)
+
+        z2_error = np.dot(o_delta, self.weights[1].T)
+        z2_delta = z2_error * sigmoid_derivative(self.outputs[1])
+
+        delta_w1 = np.dot(self.input.T, z2_delta)
+        delta_w2 = np.dot(self.outputs[1].T, o_delta)
+
+        self.weights[0] += delta_w1
+        self.weights[1] += delta_w2
+
 
     def backprop(self):
 
         delta_weights = []
-        propagated_errors = (self.y - self.output) * sigmoid_derivative(self.output)
-        for i in reversed(range(len(self.layers))):
+        # delta_k = o_k(1 - o_k)(t_k - o_k)
+        # error_terms = None
+        # for i in reversed(range(len(self.outputs))):
+        #     if i == 0:
+        #         break
+        #     op = self.outputs[i]
+        #     ws = self.weights[i - 1]
+        #     if error_terms is None:
+        #         error_terms = sigmoid_derivative(op) * (self.y - op)
+        #         all_deltas = (self.step_size * self.input * error_terms)
+        #         delta_weights = np.array([[x] for x in np.sum(all_deltas, axis=1)])
+        #     else:
+        #         error_terms = sigmoid_derivative(op) * np.dot(ws.T, error_terms)
+        #         delta_weights = self.step_size * self.input * error_terms
+        #     self.weights[i - 1] += delta_weights
+
+        delta_weights = []
+        # delta_k = o_k(1 - o_k)(t_k - o_k)
+        propagated_errors = sigmoid_derivative(self.output) * (self.y - self.output)
+        for i in reversed(range(len(self.outputs))):
             if i == 0:
                 break
-            prev_layer_outputs = self.layers[i - 1]
+            prev_layer_outputs = self.outputs[i - 1]
             d_weights = self.step_size * np.dot(prev_layer_outputs.T, propagated_errors)
+            # error_terms = self.step_size * sigmoid_derivative(prev_layer_outputs)*np.dot(self.weights[i-1].T, propagated_errors)
+            # d_weights = error_terms * self.input.T
             delta_weights.insert(0, d_weights)
             propagated_errors = np.dot(propagated_errors, self.weights[i - 1].T) * sigmoid_derivative(prev_layer_outputs)
 
         for i, dw in enumerate(delta_weights):
             self.weights[i] += dw
 
+        ########################################################################
+        # dummy case when node 2 and 1 hidden layer.
+        # self.layer1, self.layer2 = self.outputs[1], self.outputs[2]
+        # self.weights1, self.weights2 = self.weights
+        #
+        # error_terms_on_output_layer = 2 * (self.y - self.output) * sigmoid_derivative(self.output)
+        # d_weights2 = np.dot(self.layer1.T, error_terms_on_output_layer)  # np.dot(output from L1.T, error_terms_by_L1)
+        # d_weights1 = np.dot(self.input.T,
+        #                     np.dot(error_terms_on_output_layer, self.weights2.T) * sigmoid_derivative(self.layer1))
+        # # np.dot(
+        #
+        # self.weights[0] += d_weights1
+        # self.weights[1] += d_weights2
+
     def train(self, X, y):
         self.output = self.feedforward()
+        #self.backward()
         self.backprop()
 
 
@@ -101,7 +160,7 @@ if __name__ == "__main__":
     X = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
     y = np.array(([0], [1], [1], [0]), dtype=float)
     LOCAL = True
-    NN = NeuralNetwork(X, y, num_nodes=4, step_size=1)
+    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=2, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
             print("for iteration # " + str(i) + "\n")
