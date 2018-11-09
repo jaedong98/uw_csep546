@@ -389,6 +389,16 @@ def draw_random_forest_accuracy_variances(accuracies,
                     legends)
 
 
+def draw_loss_comparisions(loss_data, xlabel, ylabel, title, img_fname, legends,
+                           title_y=1):
+
+    draw_accuracies(loss_data,
+                    xlabel, ylabel,
+                    title, img_fname,
+                    legends,
+                    title_y=title_y)
+
+
 def draw_accuracies_vs_min_to_stps(min_to_stops, accuracies,
                                    xlabel, ylabel,
                                    title, img_fname,
@@ -425,7 +435,7 @@ def draw_weights(iter_cnts, weights,
     print("Saved/Updated image {}".format(img_fname))
 
 
-def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends, invert_yaxis=False, data_pt='-*'):
+def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends, invert_yaxis=False, data_pt='-*', title_y=1.08):
     """
     accuracies: a list of list of (iter_cnt, accurarcy)s
     legends: a tuple/list of legends for each graphs
@@ -436,7 +446,7 @@ def draw_accuracies(accuracies, xlabel, ylabel, title, img_fname, legends, inver
                 len(accuracies), len(legends)))
 
     fig, ax = plt.subplots()
-    ax.set_title(title, y=1.08)
+    ax.set_title(title, y=title_y)
     ax.set(xlabel=xlabel, ylabel=ylabel)
 
     for accus in accuracies:
