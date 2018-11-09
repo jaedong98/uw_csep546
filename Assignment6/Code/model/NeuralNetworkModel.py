@@ -87,17 +87,33 @@ class NeuralNetwork:
         # self.W1 += X.T.dot(self.z2_delta)  # adjusting first set (input --> hidden) weights
         # self.W2 += self.z2.T.dot(self.o_delta)  # adjusting second set (hidden --> output) weights
 
-        ## my version
-        o_delta = sigmoid_derivative(self.output) * (self.y - self.output)
+        ## my version - no iteration
+        # o_delta = sigmoid_derivative(self.output) * (self.y - self.output)
+        #
+        # z2_error = np.dot(o_delta, self.weights[1].T)
+        # z2_delta = z2_error * sigmoid_derivative(self.outputs[1])
+        #
+        # delta_w1 = np.dot(self.input.T, z2_delta)
+        # delta_w2 = np.dot(self.outputs[1].T, o_delta)
+        #
+        # self.weights[0] += delta_w1
+        # self.weights[1] += delta_w2
 
-        z2_error = np.dot(o_delta, self.weights[1].T)
-        z2_delta = z2_error * sigmoid_derivative(self.outputs[1])
-
-        delta_w1 = np.dot(self.input.T, z2_delta)
-        delta_w2 = np.dot(self.outputs[1].T, o_delta)
-
-        self.weights[0] += delta_w1
-        self.weights[1] += delta_w2
+        # with iteration
+        previous_delta = None
+        for i in reversed(range(len(self.outputs))):
+            if i == 0:
+                break
+            if previous_delta is None:
+                previous_delta = sigmoid_derivative(self.output) * (self.y - self.output)
+                delta_w = np.dot(self.outputs[i - 1].T, previous_delta)
+                self.weights[i - 1] += delta_w
+            else:
+                error = np.dot(previous_delta, self.weights[i].T)
+                delta = error * sigmoid_derivative(self.outputs[i])
+                delta_w = np.dot(self.outputs[i - 1].T, delta)
+                self.weights[i - 1] += delta_w
+                previous_delta = delta
 
 
     def backprop(self):
@@ -151,16 +167,17 @@ class NeuralNetwork:
 
     def train(self, X, y):
         self.output = self.feedforward()
-        #self.backward()
-        self.backprop()
+        self.backward()
+        #self.backprop()
 
 
 if __name__ == "__main__":
     # Each row is a training example, each column is a feature  [X1, X2, X3]
     X = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
     y = np.array(([0], [1], [1], [0]), dtype=float)
+
     LOCAL = True
-    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=2, step_size=1)
+    NN = NeuralNetwork(X, y, num_hidden_layer=2, num_nodes=4, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
             print("for iteration # " + str(i) + "\n")
