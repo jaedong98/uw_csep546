@@ -6,7 +6,7 @@ References:
 """
 import numpy as np
 np.random.seed(100)
-
+LOCAL = False
 
 # Activation function
 def sigmoid(t):
@@ -41,12 +41,17 @@ class NeuralNetwork:
                 w_dim = (num_features, self.num_nodes)
             else:
                 w_dim = (self.num_nodes, self.num_nodes)
-            #self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
-            self.weights.append(np.random.rand(*w_dim))
+            if LOCAL:
+                self.weights.append(np.random.rand(*w_dim))
+            else:
+                self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
 
         w_dim = (self.num_nodes, 1)  # output layer has one node
-        #self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
-        self.weights.append(np.random.rand(*w_dim))
+
+        if LOCAL:
+            self.weights.append(np.random.rand(*w_dim))
+        else:
+            self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
 
         if not len(self.weights) == (self.num_hidden_layer + 1):
             raise AssertionError("Weights doesn't match number of layers.")
@@ -95,7 +100,7 @@ if __name__ == "__main__":
     # Each row is a training example, each column is a feature  [X1, X2, X3]
     X = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
     y = np.array(([0], [1], [1], [0]), dtype=float)
-
+    LOCAL = True
     NN = NeuralNetwork(X, y, num_nodes=4, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
@@ -108,3 +113,4 @@ if __name__ == "__main__":
             print("\n")
 
         NN.train(X, y)
+    LOCAL = False
