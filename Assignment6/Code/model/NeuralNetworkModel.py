@@ -103,6 +103,7 @@ if __name__ == "__main__":
             print("Actual Output: \n" + str(y))
             print("Predicted Output: \n" + str(NN.feedforward()))
             print("Loss: \n" + str(np.mean(np.square(y - NN.feedforward()))))  # mean sum squared loss
+            print("My Loss: \n" + str(NN.loss()))
             print("\n")
 
         NN.train(X, y)
