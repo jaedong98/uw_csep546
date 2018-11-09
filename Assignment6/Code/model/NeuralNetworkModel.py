@@ -20,21 +20,21 @@ def sigmoid_derivative(p):
 
 # Class definition
 class NeuralNetwork:
-    def __init__(self, xTrains, yTrains, num_hidden_layers=2, num_nodes=10,
+    def __init__(self, xTrains, yTrains, num_hidden_layer=2, num_nodes=10,
                  step_size=0.05):
         self.input = np.array(xTrains)  # should be flattened!
         self.y = np.array(yTrains)
-        self.num_hidden_layers = num_hidden_layers
+        self.num_hidden_layer = num_hidden_layer
         self.num_nodes = num_nodes
-        self.step_size = 1  #0.05
-        self.output = np.zeros(y.shape)
+        self.step_size = step_size  #0.05
+        self.output = np.zeros(self.y.shape)
         self.weights = []
         self.get_initial_weights()
         self.layers = []
 
     def get_initial_weights(self):
 
-        for i in range(self.num_hidden_layers):
+        for i in range(self.num_hidden_layer):
 
             if i == 0:
                 num_features = len(self.input[0])
@@ -48,7 +48,7 @@ class NeuralNetwork:
         #self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
         self.weights.append(np.random.rand(*w_dim))
 
-        if not len(self.weights) == (self.num_hidden_layers + 1):
+        if not len(self.weights) == (self.num_hidden_layer + 1):
             raise AssertionError("Weights doesn't match number of layers.")
 
     def feedforward(self):
@@ -67,7 +67,7 @@ class NeuralNetwork:
     def loss(self, yTests=None):
         if yTests is None:
             yTests = self.y  # calculate loss with yTest
-        s = np.sum(np.square(np.array(self.feedforward()) - np.array(yTests)))
+        s = np.sum(np.square(np.array(self.feedforward()).flatten() - np.array(yTests)))
         return 1 / 2. * s
 
     def backprop(self):
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     X = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
     y = np.array(([0], [1], [1], [0]), dtype=float)
 
-    NN = NeuralNetwork(X, y, num_nodes=4)
+    NN = NeuralNetwork(X, y, num_nodes=4, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
             print("for iteration # " + str(i) + "\n")
