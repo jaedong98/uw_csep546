@@ -55,20 +55,21 @@ class NeuralNetwork:
 
         self.layers = [self.input]  # initial output from input layer
         outputs = None
-        for weights_in_layer in self.weights:
-            if outputs is None:
+        for i, weights_in_layer in enumerate(self.weights):
+            if i == 0:
                 outputs = sigmoid(np.dot(self.input, weights_in_layer))
-                self.layers.append(outputs)
             else:
                 outputs = sigmoid(np.dot(outputs, weights_in_layer))
-                self.layers.append(outputs)
-        return outputs
+            self.layers.append(outputs)
+        return self.layers[-1]
 
     def loss(self, yTests=None):
         if yTests is None:
             yTests = self.y  # calculate loss with yTest
-        s = np.sum(np.square(np.array(self.feedforward()).flatten() - np.array(yTests)))
+        s = np.sum(np.square(np.array(self.feedforward()) - np.array(yTests)))
         return 1 / 2. * s
+        #return np.mean(np.square(yTests - self.feedforward()))
+
 
     def backprop(self):
 
