@@ -57,6 +57,96 @@ class NeuralNetwork:
         if not len(self.weights) == (self.num_hidden_layer + 1):
             raise AssertionError("Weights doesn't match number of layers.")
 
+    def train(self):
+
+        for si, sample in enumerate(self.input):
+            input = sample
+            outputs = []
+            for weights in self.weights:
+                output = sigmoid(np.dot(input, weights))
+                outputs.append(output)
+                input = output
+
+            # calculate error term, delta
+            output_error = None
+            for i in reversed(range(len(outputs))):
+                if i == 0:
+                    input = self.input[si]
+                else:
+                    input = outputs[i - 1]
+
+                if output_error is None:
+
+                    output_error = sigmoid_derivative(output) * (self.y[si] - output)
+                    delta_w = self.step_size * input * output_error
+                    #delta_w = self.step_size * np.dot(outputs[i - 1].T, previous_delta)
+                    self.weights[i] += np.array([[d] for d in delta_w])
+                else:
+                    error = np.dot(output_error, self.weights[i + 1].T)
+                    delta = sigmoid_derivative(outputs[i]) * error  # (T4.4)
+                    delta_w = self.step_size * np.array([[x] for x in input]) * np.array([delta])
+                    self.weights[i] += delta_w
+                    output_error = delta
+
+    def predict(self, samples=None):
+
+        if samples is None:
+            samples = self.input
+        predictions = []
+        for sample in samples:
+            input = sample
+            for weights in self.weights:
+                output = sigmoid(np.dot(input, weights))
+                input = output
+            predictions.append(output)
+        return predictions
+
+    def loss(self, xTests=None):
+        if xTests is None:
+            xTests = self.input  # calculate loss with yTest
+        s = np.sum(np.square(np.array(self.predict(xTests)) - np.array(xTests)))
+        return 1 / 2. * s
+        #return np.mean(np.square(yTests - self.feedforward()))
+
+# Class definition
+class NeuralNetwork2:
+    def __init__(self, xTrains, yTrains, num_hidden_layer=2, num_nodes=10,
+                 step_size=0.05):
+        self.input = np.array(xTrains)  # should be flattened!
+        self.y = np.array(yTrains)
+        self.num_hidden_layer = num_hidden_layer
+        self.num_nodes = num_nodes
+        self.step_size = step_size  #0.05
+        self.output = np.zeros(self.y.shape)
+        self.weights = []
+        self.get_initial_weights()
+        self.outputs = []
+
+    def get_initial_weights(self):
+
+        for i in range(self.num_hidden_layer):
+
+            if i == 0:
+                num_features = len(self.input[0])
+                w_dim = (num_features, self.num_nodes)
+            else:
+                w_dim = (self.num_nodes, self.num_nodes)
+
+            if LOCAL:
+                self.weights.append(np.random.rand(*w_dim))
+            else:
+                self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
+
+        w_dim = (self.num_nodes, 1)  # output layer has one node
+
+        if LOCAL:
+            self.weights.append(np.random.rand(*w_dim))
+        else:
+            self.weights.append(np.random.uniform(-0.05, 0.05, w_dim))
+
+        if not len(self.weights) == (self.num_hidden_layer + 1):
+            raise AssertionError("Weights doesn't match number of layers.")
+
     def feedforward(self):
 
         self.outputs = [self.input]  # initial output from input layer
@@ -177,16 +267,30 @@ if __name__ == "__main__":
     y = np.array(([0], [1], [1], [0]), dtype=float)
 
     LOCAL = True
-    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=2, step_size=1)
+    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=4, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
-            print("for iteration # " + str(i) + "\n")
-            print("Input : \n" + str(X))
+        #     print("for iteration # " + str(i) + "\n")
+        #     print("Input : \n" + str(X))
+            predictions = NN.predict()
             print("Actual Output: \n" + str(y))
-            print("Predicted Output: \n" + str(NN.feedforward()))
-            print("Loss: \n" + str(np.mean(np.square(y - NN.feedforward()))))  # mean sum squared loss
-            print("My Loss: \n" + str(NN.loss()))
-            print("\n")
+            print("Predicted Output: \n" + str(predictions))
 
-        NN.train(X, y)
+            print("Loss: \n" + str(np.mean(np.square(y - predictions))))  # mean sum squared loss
+            print("My Loss: \n" + str(NN.loss()))
+        #     print("\n")
+
+        NN.train()
+    # NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=2, step_size=1)
+    # for i in range(3000):  # trains the NN 1,000 times
+    #     if i % 100 == 0:
+    #         print("for iteration # " + str(i) + "\n")
+    #         print("Input : \n" + str(X))
+    #         print("Actual Output: \n" + str(y))
+    #         print("Predicted Output: \n" + str(NN.feedforward()))
+    #         print("Loss: \n" + str(np.mean(np.square(y - NN.feedforward()))))  # mean sum squared loss
+    #         print("My Loss: \n" + str(NN.loss()))
+    #         print("\n")
+    #
+    #     NN.train(X, y)
     LOCAL = False

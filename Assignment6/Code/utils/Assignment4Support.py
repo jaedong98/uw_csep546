@@ -390,12 +390,14 @@ def draw_random_forest_accuracy_variances(accuracies,
 
 
 def draw_loss_comparisions(loss_data, xlabel, ylabel, title, img_fname, legends,
+                           data_pt='-',
                            title_y=1):
 
     draw_accuracies(loss_data,
                     xlabel, ylabel,
                     title, img_fname,
                     legends,
+                    data_pt=data_pt,
                     title_y=title_y)
 
 
