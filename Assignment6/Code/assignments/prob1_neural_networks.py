@@ -10,7 +10,7 @@ from utils.Assignment5Support import LoadRawData, TrainTestSplit, Featurize
 
 def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_hidden_layers=[1, 2],
-        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],  #[2, 5, 10, 15, 20],
+        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
         iterations=200,
         step_size=0.05):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
@@ -22,8 +22,8 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     yTrains = np.array([[y] for y in yTrainRaw])
     yTests = np.array([[y] for y in yTestRaw])
     legends = []
-    loss_data = OrderedDict()
-
+    training_loss_data = OrderedDict()
+    test_loss_data = OrderedDict()
     #xTrains = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
     #yTrains = np.array(([0], [1], [1], [0]), dtype=float)
 
@@ -44,7 +44,8 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         for num_nodes in num_nodes_per_hideen_layer:
             legends.append('{}_hidden(s)_{}_nodes'.format(num_hidden_layer, num_nodes))
             case = (num_hidden_layer, num_nodes)
-            loss_data[case] = []
+            training_loss_data[case] = []
+            test_loss_data[case] = []
             NN = NeuralNetwork(xTrains, yTrains,
                                num_hidden_layer=num_hidden_layer,
                                num_nodes=num_nodes,
@@ -54,7 +55,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
                 # outputs = NN.feedforward()
                 # loss = np.mean(np.square(yTrains - outputs))
-                # loss_data[case].append((i, loss))
+                # training_loss_data[case].append((i, loss))
                 # if i % 50 == 0:  # mean sum squared loss
                 #     print("Case: " + str(case) + " Loss: \n" + str(loss))
                 #     print("\n")
@@ -62,15 +63,25 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
                 predictions = NN.predict()
                 loss = np.mean(np.square(yTrains - predictions))
-                loss_data[case].append((i, loss))
+                training_loss_data[case].append((i, loss))
+
+                predictions = NN.predict(xTests)
+                test_loss = np.mean(np.square(yTests - predictions))
+                test_loss_data[case].append((i, test_loss))
                 if i % 10 == 0:
                     print("Loss: " + str(loss))  # mean sum squared loss
-
+                    print("Test Loss: " + str(test_loss))
                 NN.train()
 
     training_loss_fname = os.path.join(report_path, "prob1_training_loss.png")
-    draw_loss_comparisions(loss_data.values(), "Iterations", "Loss", "Training Set",
+    draw_loss_comparisions(training_loss_data.values(), "Iterations", "Loss", "Training Set",
                            training_loss_fname, legends,
+                           data_pt='-',
+                           title_y=1)
+
+    test_loss_fname = os.path.join(report_path, "prob1_test_loss.png")
+    draw_loss_comparisions(test_loss_data.values(), "Iterations", "Loss", "Test Set",
+                           test_loss_fname, legends,
                            data_pt='-',
                            title_y=1)
 
@@ -80,5 +91,7 @@ if __name__ == "__main__":
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_hidden_layers=[1, 2],
-        iterations=200)
+        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
+        iterations=200,
+        step_size=.05)
 
