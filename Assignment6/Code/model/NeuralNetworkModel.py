@@ -190,21 +190,24 @@ class NeuralNetwork2:
         # self.weights[1] += delta_w2
 
         # with iteration
-        previous_delta = None
-        for i in reversed(range(len(self.outputs))):
+        output_errors = None
+        for i in reversed(range(len(self.outputs) - 1)):
             if i == 0:
-                break
-            if previous_delta is None:
-                previous_delta = sigmoid_derivative(self.output) * (self.y - self.output)
-                delta_w = self.step_size * np.dot(self.outputs[i - 1].T, previous_delta)
-                self.weights[i - 1] += delta_w
+                input = self.input
             else:
-                error = np.dot(previous_delta, self.weights[i].T)
-                delta = sigmoid_derivative(self.outputs[i]) * error  # (T4.4)
-                delta_w = self.step_size * np.dot(self.outputs[i - 1].T, delta)
-                self.weights[i - 1] += delta_w
-                previous_delta = delta
+                input = self.outputs[i]
 
+            if output_errors is None:
+                output = self.outputs[-1]
+                output_errors = sigmoid_derivative(output) * (self.y - output)
+                delta_w = self.step_size * np.dot(input.T, output_errors)
+                self.weights[i] += delta_w
+            else:
+                error = np.dot(output_errors, self.weights[i + 1].T)
+                delta = sigmoid_derivative(self.outputs[i + 1]) * error  # (T4.4)
+                delta_w = self.step_size * np.dot(input.T, delta)
+                self.weights[i] += delta_w
+                output_errors = delta
 
     def backprop(self):
 
@@ -268,29 +271,30 @@ if __name__ == "__main__":
 
     LOCAL = True
     NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=4, step_size=1)
-    for i in range(3000):  # trains the NN 1,000 times
-        if i % 100 == 0:
-        #     print("for iteration # " + str(i) + "\n")
-        #     print("Input : \n" + str(X))
-            predictions = NN.predict()
-            print("Actual Output: \n" + str(y))
-            print("Predicted Output: \n" + str(predictions))
-
-            print("Loss: \n" + str(np.mean(np.square(y - predictions))))  # mean sum squared loss
-            print("My Loss: \n" + str(NN.loss()))
-        #     print("\n")
-
-        NN.train()
-    # NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=2, step_size=1)
     # for i in range(3000):  # trains the NN 1,000 times
     #     if i % 100 == 0:
-    #         print("for iteration # " + str(i) + "\n")
-    #         print("Input : \n" + str(X))
+    #     #     print("for iteration # " + str(i) + "\n")
+    #     #     print("Input : \n" + str(X))
+    #         predictions = NN.predict()
     #         print("Actual Output: \n" + str(y))
-    #         print("Predicted Output: \n" + str(NN.feedforward()))
-    #         print("Loss: \n" + str(np.mean(np.square(y - NN.feedforward()))))  # mean sum squared loss
-    #         print("My Loss: \n" + str(NN.loss()))
-    #         print("\n")
+    #         print("Predicted Output: \n" + str(predictions))
     #
-    #     NN.train(X, y)
+    #         print("Loss: \n" + str(np.mean(np.square(y - predictions))))  # mean sum squared loss
+    #         print("My Loss: \n" + str(NN.loss()))
+    #     #     print("\n")
+    #
+    #     NN.train()
+
+    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=4, step_size=1)
+    for i in range(3000):  # trains the NN 1,000 times
+        if i % 100 == 0:
+            print("for iteration # " + str(i) + "\n")
+            print("Input : \n" + str(X))
+            print("Actual Output: \n" + str(y))
+            print("Predicted Output: \n" + str(NN.feedforward()))
+            print("Loss: \n" + str(np.mean(np.square(y - NN.feedforward()))))  # mean sum squared loss
+            print("My Loss: \n" + str(NN.loss()))
+            print("\n")
+
+        NN.train(X, y)
     LOCAL = False

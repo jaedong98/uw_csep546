@@ -9,8 +9,8 @@ from utils.Assignment5Support import LoadRawData, TrainTestSplit, Featurize
 
 
 def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[1],
-        num_nodes_per_hideen_layer=[10],  #[2, 5, 10, 15, 20],
+        num_hidden_layers=[1, 2],
+        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],  #[2, 5, 10, 15, 20],
         iterations=200,
         step_size=0.05):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
@@ -52,13 +52,14 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
             for i in range(iterations):
 
-                # NN.feedforward()
-                # loss_data[case].append((i, NN.loss(yTrains)))
+                # outputs = NN.feedforward()
+                # loss = np.mean(np.square(yTrains - outputs))
+                # loss_data[case].append((i, loss))
                 # if i % 50 == 0:  # mean sum squared loss
-                #     print("Predicted Output: \n" + str(NN.feedforward()))
-                #     print("Case: " + str(case) + " Loss: \n" + str(NN.loss()))
+                #     print("Case: " + str(case) + " Loss: \n" + str(loss))
                 #     print("\n")
                 # NN.train(xTrains, yTrains)
+
                 predictions = NN.predict()
                 loss = np.mean(np.square(yTrains - predictions))
                 loss_data[case].append((i, loss))
@@ -77,5 +78,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
-    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw, num_hidden_layers=[2], iterations=200)
+    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+        num_hidden_layers=[1, 2],
+        iterations=200)
 
