@@ -73,13 +73,35 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                     print("Test Loss: " + str(test_loss))
                 NN.train()
 
-    training_loss_fname = os.path.join(report_path, "prob1_training_loss.png")
+            training_loss_fname = os.path.join(report_path,
+                                               "prob1_training_loss_"
+                                               "case_{}_{}.png"
+                                               .format(num_hidden_layer,
+                                                       num_nodes))
+            case_legend = ['{} hidden layer with {} nodes'.format(num_hidden_layer, num_nodes)]
+            draw_loss_comparisions([training_loss_data[case]], "Iterations", "Loss", "Training Set",
+                                   training_loss_fname, case_legend,
+                                   data_pt='-',
+                                   title_y=1)
+
+            test_loss_fname = os.path.join(report_path,
+                                               "prob1_test_loss_"
+                                               "case_{}_{}.png"
+                                               .format(num_hidden_layer,
+                                                       num_nodes))
+            draw_loss_comparisions([test_loss_data[case]], "Iterations", "Loss", "Test Set",
+                                   test_loss_fname, case_legend,
+                                   data_pt='-',
+                                   title_y=1)
+
+
+    training_loss_fname = os.path.join(report_path, "prob1_training_loss_{}_{}.png".format(max(num_hidden_layers), max(num_nodes_per_hideen_layer)))
     draw_loss_comparisions(training_loss_data.values(), "Iterations", "Loss", "Training Set",
                            training_loss_fname, legends,
                            data_pt='-',
                            title_y=1)
 
-    test_loss_fname = os.path.join(report_path, "prob1_test_loss.png")
+    test_loss_fname = os.path.join(report_path, "prob1_test_loss_{}_{}.png".format(max(num_hidden_layers), max(num_nodes_per_hideen_layer)))
     draw_loss_comparisions(test_loss_data.values(), "Iterations", "Loss", "Test Set",
                            test_loss_fname, legends,
                            data_pt='-',

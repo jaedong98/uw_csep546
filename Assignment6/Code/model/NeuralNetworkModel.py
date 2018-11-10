@@ -78,15 +78,17 @@ class NeuralNetwork:
                 if output_error is None:
 
                     output_error = sigmoid_derivative(output) * (self.y[si] - output)
-                    delta_w = self.step_size * input * output_error
-                    #delta_w = self.step_size * np.dot(outputs[i - 1].T, previous_delta)
+                    delta = input * output_error
+                    delta_w = self.step_size * delta
                     self.weights[i] += np.array([[d] for d in delta_w])
+
                 else:
                     error = np.dot(output_error, self.weights[i + 1].T)
                     delta = sigmoid_derivative(outputs[i]) * error  # (T4.4)
                     delta_w = self.step_size * np.array([[x] for x in input]) * np.array([delta])
-                    self.weights[i] += delta_w
                     output_error = delta
+
+                    self.weights[i] += delta_w
 
     def predict(self, samples=None):
 
@@ -285,7 +287,7 @@ if __name__ == "__main__":
     #
     #     NN.train()
 
-    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=4, step_size=1)
+    NN = NeuralNetwork2(X, y, num_hidden_layer=1, num_nodes=4, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
             print("for iteration # " + str(i) + "\n")
@@ -298,3 +300,34 @@ if __name__ == "__main__":
 
         NN.train(X, y)
     LOCAL = False
+
+    #####
+    from collections import OrderedDict
+    import numpy as np
+    import os
+
+    from Assignment6.Code import kDataPath
+    from utils.Assignment5Support import LoadRawData, TrainTestSplit, Featurize
+    (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
+    (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
+
+    (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
+                                includeGradients=False,
+                                includeRawPixels=False,
+                                includeIntensities=True)
+    xTrains = np.array([[1] + x for x in xTrains])
+    xTests = np.array([[1] + x for x in xTests])
+    yTrains = np.array([[y] for y in yTrainRaw])
+    yTests = np.array([[y] for y in yTestRaw])
+
+    NN = NeuralNetwork2(xTrains, yTrains, num_hidden_layer=1, num_nodes=4, step_size=1)
+    for i in range(3000):  # trains the NN 1,000 times
+        if i % 100 == 0:
+            print("for iteration # " + str(i) + "\n")
+            print("Input : \n" + str(X))
+            print("Actual Output: \n" + str(y))
+            print("Predicted Output: \n" + str(NN.feedforward())) # mean sum squared loss
+            print("My Loss: \n" + str(NN.loss()))
+            print("\n")
+
+        NN.train(X, y)
