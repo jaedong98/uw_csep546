@@ -27,7 +27,7 @@ def sigmoid_derivative(p):
 
 # Class definition
 class NeuralNetwork:
-    def __init__(self, x, y, num_nodes=10):
+    def __init__(self, x, y, num_nodes=2):
         self.input = x
         self.weights1 = np.random.rand(self.input.shape[1], num_nodes)  # considering we have 4 nodes in the hidden layer
         self.weights2 = np.random.rand(num_nodes, 1)  # weights
@@ -43,9 +43,9 @@ class NeuralNetwork:
 
     def backprop(self):
 
-        error_terms_by_L1 = 2 * (self.y - self.output) * sigmoid_derivative(self.output)
-        d_weights2 = np.dot(self.layer1.T, error_terms_by_L1)  # np.dot(output from L1.T, error_terms_by_L1)
-        d_weights1 = np.dot(self.input.T, np.dot(error_terms_by_L1, self.weights2.T) * sigmoid_derivative(self.layer1))
+        error_terms_on_output_layer = 2 * (self.y - self.output) * sigmoid_derivative(self.output)
+        d_weights2 = np.dot(self.layer1.T, error_terms_on_output_layer)  # np.dot(output from L1.T, error_terms_by_L1)
+        d_weights1 = np.dot(self.input.T, np.dot(error_terms_on_output_layer, self.weights2.T) * sigmoid_derivative(self.layer1))
         # np.dot(
 
         self.weights1 += d_weights1

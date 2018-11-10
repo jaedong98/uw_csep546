@@ -106,12 +106,12 @@ class NeuralNetwork:
                 break
             if previous_delta is None:
                 previous_delta = sigmoid_derivative(self.output) * (self.y - self.output)
-                delta_w = np.dot(self.outputs[i - 1].T, previous_delta)
+                delta_w = self.step_size * np.dot(self.outputs[i - 1].T, previous_delta)
                 self.weights[i - 1] += delta_w
             else:
                 error = np.dot(previous_delta, self.weights[i].T)
-                delta = error * sigmoid_derivative(self.outputs[i])
-                delta_w = np.dot(self.outputs[i - 1].T, delta)
+                delta = sigmoid_derivative(self.outputs[i]) * error  # (T4.4)
+                delta_w = self.step_size * np.dot(self.outputs[i - 1].T, delta)
                 self.weights[i - 1] += delta_w
                 previous_delta = delta
 
@@ -177,7 +177,7 @@ if __name__ == "__main__":
     y = np.array(([0], [1], [1], [0]), dtype=float)
 
     LOCAL = True
-    NN = NeuralNetwork(X, y, num_hidden_layer=2, num_nodes=4, step_size=1)
+    NN = NeuralNetwork(X, y, num_hidden_layer=1, num_nodes=2, step_size=1)
     for i in range(3000):  # trains the NN 1,000 times
         if i % 100 == 0:
             print("for iteration # " + str(i) + "\n")
