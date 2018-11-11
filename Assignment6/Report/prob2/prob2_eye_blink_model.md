@@ -21,10 +21,10 @@ Use just the training data to tune your parameters (cross validation or a hold-o
 
 * Statistics: 
 
-|          |    1     |    0     |
-|----------|----------|----------|
-|    1     | (TP) 488 | (FN) 110 |
-|    0     | (FP) 107 | (TN) 507 |
+|     | 1        | 0        |
+| --- | -------- | -------- |
+| 1   | (TP) 488 | (FN) 110 |
+| 0   | (FP) 107 | (TN) 507 |
 Accuracy: 0.820957095709571
 Precision: 0.8201680672268907
 Recall: 0.8160535117056856
@@ -76,8 +76,7 @@ FPR: 0.10586319218241043
 FNR: 0.08361204013377926
 
 #### Tunning step size change
-
-I tried to tunning step size and got similary accuracy results.
+After many trials on parameter sweeps with a results shown above(not so impressive results), I tried to tunning step size and got accuracy results below. What interesting to me was the step size with 0.08 (agressive learning rate) took more time to accually start dropping (visiable) loss. And also the loss function ($\eta=0.08$) fluctuated after 120 iterations. I think the learning rate is little too high to our data.
 
 | Stepsize = 0.05 | Stepsize = 0.08 |
 |-|-|
