@@ -17,7 +17,7 @@ Use just the training data to tune your parameters (cross validation or a hold-o
 1 Point -- In no more than 300 words describe the process, which model is best, why, and what you think could improve your results further.
 
 ***
-
+#### IntensityGradient = False
 ![prob2_training_loss_case_2_15_wo_intensites](prob2_training_loss_case_2_15_wo_intensites.png)
 
 #### Chaning Normalization

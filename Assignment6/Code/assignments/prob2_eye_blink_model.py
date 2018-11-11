@@ -17,11 +17,12 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_nodes=15,
         iterations=200,
         step_size=0.05,
-        norm_factor=255.):
+        norm_factor=255.,
+        includeIntensities=True):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=False,
                                 includeRawPixels=False,
-                                includeIntensities=True,
+                                includeIntensities=includeIntensities,
                                 norm_factor=norm_factor)
     xTrains = np.array([[1] + x for x in xTrains])
     xTests = np.array([[1] + x for x in xTests])
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
     #paramters with best accuracy
-    for norm_factor in [64, 133.0, 255.0, 255 * 2.]:
+    for norm_factor in [255.0]:
         run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
             num_hidden_layer=2,
             num_nodes=15,
