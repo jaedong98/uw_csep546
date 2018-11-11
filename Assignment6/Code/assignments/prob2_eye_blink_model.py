@@ -21,7 +21,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=False,
                                 includeRawPixels=False,
-                                includeIntensities=True)
+                                includeIntensities=False)
     xTrains = np.array([[1] + x for x in xTrains])
     xTests = np.array([[1] + x for x in xTests])
     yTrains = np.array([[y] for y in yTrainRaw])
