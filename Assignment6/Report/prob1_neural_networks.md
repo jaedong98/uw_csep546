@@ -28,5 +28,7 @@ Hand in a writeup including:
 |![prob1_training_loss.png](prob1_training_loss.png) | ![prob1_test_loss.png](prob1_test_loss.png)|
 |-|-|
 
-
+|weights_node0_of_2_in_1_layer |weights_node1_of_2_in_1_layer |
+|-|-|
+|![weights_node0_of_2_in_1_layer](weights_node0_of_2_in_1_layer.jpg) | ![weights_node1_of_2_in_1_layer](weights_node1_of_2_in_1_layer.jpg) |
 ***

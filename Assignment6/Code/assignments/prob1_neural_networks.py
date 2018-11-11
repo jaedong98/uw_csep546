@@ -5,14 +5,15 @@ import os
 from Assignment6.Code import kDataPath, report_path
 from model.NeuralNetworkModel import NeuralNetwork
 from utils.Assignment4Support import draw_loss_comparisions
-from utils.Assignment5Support import LoadRawData, TrainTestSplit, Featurize
+from utils.Assignment5Support import LoadRawData, TrainTestSplit, Featurize, VisualizeWeights
 
 
 def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_hidden_layers=[1, 2],
         num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
         iterations=200,
-        step_size=0.05):
+        step_size=0.05,
+        weights_on_image=False):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=False,
                                 includeRawPixels=False,
@@ -72,7 +73,13 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                     print("Loss: " + str(loss))  # mean sum squared loss
                     print("Test Loss: " + str(test_loss))
                 NN.train()
-
+            if weights_on_image:
+                for i, w in enumerate(NN.weights):
+                    img_path = os.path.join(report_path,
+                                            "weights_node{}_of_{}_in_{}_layer"
+                                            ".jpg".format(i, num_nodes,
+                                                          num_hidden_layer))
+                    VisualizeWeights(NN.weights[0][:, 1], img_path, resize=(288, 288))
             training_loss_fname = os.path.join(report_path,
                                                "prob1_training_loss_"
                                                "case_{}_{}.png"
@@ -112,8 +119,9 @@ if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[1, 2],
-        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
+        num_hidden_layers=[1], #, 2],
+        num_nodes_per_hideen_layer=[2],#, 5, 10, 15, 20],
         iterations=200,
-        step_size=.05)
+        step_size=.05,
+        weights_on_image=True)
 

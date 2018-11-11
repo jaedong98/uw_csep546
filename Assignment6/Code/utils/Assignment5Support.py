@@ -242,9 +242,8 @@ def Featurize(xTrainRaw,
 import PIL
 from PIL import Image
 
-def VisualizeWeights(weightArray, outputPath):
+def VisualizeWeights(weightArray, outputPath, resize=()):
     size = 12
-
     # note the extra weight for the bias is where the +1 comes from, just ignore it
     if len(weightArray) != (size*size) + 1:
         raise UserWarning("size of the weight array is %d but it should be %d" % (len(weightArray), (size*size) + 1))
@@ -260,4 +259,6 @@ def VisualizeWeights(weightArray, outputPath):
         for y in range(size):
             pixels[x,y] = int(abs(weightArray[(x*size) + y]) * 255)
 
+    if resize is not None:
+        image = image.resize(resize)
     image.save(outputPath)
