@@ -26,10 +26,10 @@ Use just the training data to tune your parameters (cross validation or a hold-o
 
 * Statistics: 
 
-|          |    1     |    0     |
-|----------|----------|----------|
-|    1     | (TP) 533 | (FN) 65  |
-|    0     | (FP) 36  | (TN) 578 |
+|     | 1        | 0        |
+| --- | -------- | -------- |
+| 1   | (TP) 533 | (FN) 65  |
+| 0   | (FP) 36  | (TN) 578 |
 Accuracy: 0.9166666666666666
 Precision: 0.9367311072056239
 Recall: 0.8913043478260869
@@ -40,10 +40,10 @@ FNR: 0.10869565217391304
 
 * Statistics: 
 
-|          |    1     |    0     |
-|----------|----------|----------|
-|    1     | (TP) 515 | (FN) 83  |
-|    0     | (FP) 22  | (TN) 592 |
+|     | 1        | 0        |
+| --- | -------- | -------- |
+| 1   | (TP) 515 | (FN) 83  |
+| 0   | (FP) 22  | (TN) 592 |
 Accuracy: 0.9133663366336634
 Precision: 0.9590316573556797
 Recall: 0.8612040133779264
@@ -54,12 +54,51 @@ FNR: 0.13879598662207357
 
 * Statistics: 
 
-|          |    1     |    0     |
-|----------|----------|----------|
-|    1     | (TP) 548 | (FN) 50  |
-|    0     | (FP) 65  | (TN) 549 |
+|     | 1        | 0        |
+| --- | -------- | -------- |
+| 1   | (TP) 548 | (FN) 50  |
+| 0   | (FP) 65  | (TN) 549 |
 Accuracy: 0.9051155115511551
 Precision: 0.8939641109298532
 Recall: 0.9163879598662207
 FPR: 0.10586319218241043
 FNR: 0.08361204013377926
+
+#### Tunning step size change
+
+I tried to tunning step size and got similary accuracy results.
+
+| Stepsize = 0.05 | Stepsize = 0.08 |
+|-|-|
+|![prob2_training_loss_case_2_15_255.0_ss0.05](prob2_training_loss_case_2_15_255.0_ss0.05.png) |![prob2_training_loss_case_2_15_255.0_ss0.08](prob2_training_loss_case_2_15_255.0_ss0.08.png) |
+
+##### Step Size = 0.05
+
+* Statistics: 
+
+|     | 1        | 0        |
+| --- | -------- | -------- |
+| 1   | (TP) 526 | (FN) 72  |
+| 0   | (FP) 22  | (TN) 592 |
+Accuracy: 0.9224422442244224
+Precision: 0.9598540145985401
+Recall: 0.8795986622073578
+FPR: 0.035830618892508145
+FNR: 0.12040133779264214
+
+##### Step Size = 0.08
+
+* Statistics: 
+
+|     | 1        | 0        |
+| --- | -------- | -------- |
+| 1   | (TP) 550 | (FN) 48  |
+| 0   | (FP) 42  | (TN) 572 |
+Accuracy: 0.9257425742574258
+Precision: 0.9290540540540541
+Recall: 0.919732441471572
+FPR: 0.06840390879478828
+FNR: 0.0802675585284281
+
+##### Step Size = 0.1
+

@@ -33,8 +33,7 @@ Hand in a writeup including:
 |50 |![weights_node0_of_2_in_1_layer_iter50](weights_node0_of_2_in_1_layer_iter50.jpg) | ![weights_node0_of_2_in_1_layer_iter50](weights_node0_of_2_in_1_layer_iter50.jpg) |
 |200 |![weights_node0_of_2_in_1_layer](weights_node0_of_2_in_1_layer.jpg) | ![weights_node1_of_2_in_1_layer](weights_node1_of_2_in_1_layer.jpg) |
 
-
-* Best Accuracy With 2 layers with 15 nodes
+* Best Accuracy With 2 layers with 15 nodes (during 200 iterations)
 
 * Statistics: 
 

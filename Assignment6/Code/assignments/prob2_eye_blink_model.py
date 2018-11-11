@@ -72,16 +72,19 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                          [1 if x[0] >= 0.5 else 0 for x in predictions])
     print("Accuracy after iteration: {}".format(test_ev.accuracy))
 
-    best_accuracy_md = os.path.join(prob2_report_path, 'prob2_accuracy_{}.md'.format(norm_factor))
+    best_accuracy_md = os.path.join(prob2_report_path,
+                                    'prob2_accuracy_{}_{}.md'
+                                    .format(norm_factor, step_size))
     with open(best_accuracy_md, 'w') as f:
         f.write(str(test_ev))
 
     training_loss_fname = os.path.join(prob2_report_path,
                                        "prob2_training_loss_"
-                                       "case_{}_{}_{}.png"
+                                       "case_{}_{}_{}_ss{}.png"
                                        .format(num_hidden_layer,
                                                num_nodes,
-                                               norm_factor))
+                                               norm_factor,
+                                               step_size))
     case_legend = ['{} hidden layer with {} nodes'.format(num_hidden_layer, num_nodes)]
     draw_loss_comparisions([training_loss_data[case]], "Iterations", "Loss", "Training Set",
                            training_loss_fname, case_legend,
@@ -90,10 +93,11 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
     test_loss_fname = os.path.join(prob2_report_path,
                                    "prob2_test_loss_"
-                                   "case_{}_{}_{}.png"
+                                   "case_{}_{}_{}_ss{}.png"
                                    .format(num_hidden_layer,
                                            num_nodes,
-                                           norm_factor))
+                                           norm_factor,
+                                           step_size))
     draw_loss_comparisions([test_loss_data[case]], "Iterations", "Loss", "Test Set",
                            test_loss_fname, case_legend,
                            data_pt='-',
@@ -110,5 +114,5 @@ if __name__ == "__main__":
             num_hidden_layer=2,
             num_nodes=15,
             iterations=200,
-            step_size=.05,
+            step_size=.08,
             norm_factor=norm_factor)
