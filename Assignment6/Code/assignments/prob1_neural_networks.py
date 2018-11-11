@@ -119,8 +119,8 @@ if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[1], #, 2],
-        num_nodes_per_hideen_layer=[2],#, 5, 10, 15, 20],
+        num_hidden_layers=[2], #, 2],
+        num_nodes_per_hideen_layer=[3],#, 5, 10, 15, 20],
         iterations=200,
         step_size=.05,
         weights_on_image=True)

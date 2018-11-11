@@ -78,16 +78,17 @@ class NeuralNetwork:
                 if output_error is None:
 
                     output_error = sigmoid_derivative(output) * (self.y[si] - output)
-                    delta = input * output_error
+                    delta = np.array([input]) * output_error
                     delta_w = self.step_size * delta
-                    self.weights[i] += np.array([[d] for d in delta_w])
+                    self.weights[i] += delta_w.T
 
                 else:
                     error = np.dot(output_error, self.weights[i + 1].T)
                     delta = sigmoid_derivative(outputs[i]) * error  # (T4.4)
-                    delta_w = self.step_size * np.array([[x] for x in input]) * np.array([delta])
+                    # delta_w = self.step_size * np.array([[x] for x in input]) * np.array([delta])
                     output_error = delta
 
+                    delta_w = self.step_size * delta * np.array([[x] for x in input])
                     self.weights[i] += delta_w
 
     def predict(self, samples=None):
