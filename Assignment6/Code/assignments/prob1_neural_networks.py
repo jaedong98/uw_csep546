@@ -27,7 +27,8 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     training_loss_data = OrderedDict()
     test_loss_data = OrderedDict()
     test_accuracy_data = OrderedDict()
-
+    best_accuracy = -1
+    best_accuracy_case = None
     for num_hidden_layer in num_hidden_layers:
         for num_nodes in num_nodes_per_hideen_layer:
             legends.append('{}_hidden(s)_{}_nodes'.format(num_hidden_layer, num_nodes))
@@ -70,6 +71,12 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                  [1 if x[0] >= 0.5 else 0 for x in predictions])
             print("Accuracy after iteration: {}".format(test_ev.accuracy))
 
+            if test_ev.accuracy > best_accuracy:
+                best_accuracy = test_ev.accuracy
+                best_accuracy_case = "* Best Accuracy With {} layers with {} nodes".format(num_hidden_layer, num_nodes)
+                best_accuracy_case += "\n\n"
+                best_accuracy_case += str(test_ev)
+
             if weights_on_image:
                 for i, w in enumerate(NN.weights):
                     img_path = os.path.join(report_path,
@@ -99,6 +106,10 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                    data_pt='-',
                                    title_y=1)
 
+    best_accuracy_md = os.path.join(report_path, 'prob1_best_accuracy.md')
+    with open(best_accuracy_md, 'w') as f:
+        f.write(best_accuracy_case)
+
     test_accuracy_fname = os.path.join(report_path, "prob1_test_accuracy_{}_{}.png".format(max(num_hidden_layers), max(
         num_nodes_per_hideen_layer)))
     draw_loss_comparisions(test_accuracy_data.values(), "Iterations", "Accuracy", "Accuracies on Test Set",
@@ -126,7 +137,7 @@ if __name__ == "__main__":
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_hidden_layers=[1, 2],
         num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
-        iterations=200,
+        iterations=2,
         step_size=.05,
         weights_on_image=True)
 
