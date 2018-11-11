@@ -112,4 +112,22 @@ FNR: 0.0802675585284281
 
 #### ROC Curve Comparison
 
+For ROC curve comparsion, I used the following parameters, which was aggregated from previous homework.
+
+```python
+    config = {'min_to_split': 2,
+              'bagging_w_replacement': True,
+              'num_trees': 40,
+              'feature_restriction': 0,   # all features
+              'num_hidden_layer' : 2,
+              'num_nodes' : 15,
+              'step_size' : 0.08,
+              'iterations' : 200}
+
+```
+
 ![prob2compare_roc_curves_nn_rf_0.0_1.0_0.01](prob2compare_roc_curves_nn_rf_0.0_1.0_0.01.png)
+
+As shown above, I got the better results from neural network model. 300 words....
+
+***
