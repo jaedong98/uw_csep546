@@ -18,12 +18,14 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         iterations=200,
         step_size=0.05,
         norm_factor=255.,
-        includeIntensities=True):
+        includeIntensities=True,
+        decrease_size_by=2):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=False,
                                 includeRawPixels=False,
                                 includeIntensities=includeIntensities,
-                                norm_factor=norm_factor)
+                                norm_factor=norm_factor,
+                                decrease_size_by=decrease_size_by)
     xTrains = np.array([[1] + x for x in xTrains])
     xTests = np.array([[1] + x for x in xTests])
     yTrains = np.array([[y] for y in yTrainRaw])
@@ -73,18 +75,19 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     print("Accuracy after iteration: {}".format(test_ev.accuracy))
 
     best_accuracy_md = os.path.join(prob2_report_path,
-                                    'prob2_accuracy_{}_{}.md'
-                                    .format(norm_factor, step_size))
+                                    'prob2_accuracy_{}_{}_{}.md'
+                                    .format(norm_factor, step_size, decrease_size_by))
     with open(best_accuracy_md, 'w') as f:
         f.write(str(test_ev))
 
     training_loss_fname = os.path.join(prob2_report_path,
                                        "prob2_training_loss_"
-                                       "case_{}_{}_{}_ss{}.png"
+                                       "case_{}_{}_{}_ss{}_{}.png"
                                        .format(num_hidden_layer,
                                                num_nodes,
                                                norm_factor,
-                                               step_size))
+                                               step_size,
+                                               decrease_size_by))
     case_legend = ['{} hidden layer with {} nodes'.format(num_hidden_layer, num_nodes)]
     draw_loss_comparisions([training_loss_data[case]], "Iterations", "Loss", "Training Set",
                            training_loss_fname, case_legend,
@@ -93,11 +96,12 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
     test_loss_fname = os.path.join(prob2_report_path,
                                    "prob2_test_loss_"
-                                   "case_{}_{}_{}_ss{}.png"
+                                   "case_{}_{}_{}_ss{}_{}.png"
                                    .format(num_hidden_layer,
                                            num_nodes,
                                            norm_factor,
-                                           step_size))
+                                           step_size,
+                                           decrease_size_by))
     draw_loss_comparisions([test_loss_data[case]], "Iterations", "Loss", "Test Set",
                            test_loss_fname, case_legend,
                            data_pt='-',
@@ -115,4 +119,5 @@ if __name__ == "__main__":
             num_nodes=15,
             iterations=200,
             step_size=.08,
-            norm_factor=norm_factor)
+            norm_factor=norm_factor,
+            decrease_size_by=4)

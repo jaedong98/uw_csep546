@@ -14,11 +14,14 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
         iterations=200,
         step_size=0.05,
+        includeGradients=False,
+        includeRawPixels=False,
+        includeIntensities=True,
         weights_on_image=False):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
-                                includeGradients=False,
-                                includeRawPixels=False,
-                                includeIntensities=True)
+                                includeGradients=includeGradients,
+                                includeRawPixels=includeRawPixels,
+                                includeIntensities=includeIntensities)
     xTrains = np.array([[1] + x for x in xTrains])
     xTests = np.array([[1] + x for x in xTests])
     yTrains = np.array([[y] for y in yTrainRaw])
@@ -143,19 +146,22 @@ if __name__ == "__main__":
     #     weights_on_image=True)
 
     # weight drawing
-    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[1],
-        num_nodes_per_hideen_layer=[2],
-        iterations=50,
-        step_size=.05,
-        weights_on_image=True)
-
-    # paramters with best accuracy
     # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-    #     num_hidden_layers=[2],
-    #     num_nodes_per_hideen_layer=[15],
-    #     iterations=200,
+    #     num_hidden_layers=[1],
+    #     num_nodes_per_hideen_layer=[2],
+    #     iterations=50,
     #     step_size=.05,
     #     weights_on_image=True)
+
+    # paramters with best accuracy
+    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+        num_hidden_layers=[2],
+        num_nodes_per_hideen_layer=[15],
+        iterations=200,
+        step_size=.05,
+        includeGradients=False,
+        includeRawPixels=False,
+        includeIntensities=True,
+        weights_on_image=True)
 
 

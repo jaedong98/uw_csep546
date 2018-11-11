@@ -17,8 +17,19 @@ Use just the training data to tune your parameters (cross validation or a hold-o
 1 Point -- In no more than 300 words describe the process, which model is best, why, and what you think could improve your results further.
 
 ***
-#### IntensityGradient = False
-![prob2_training_loss_case_2_15_wo_intensites](prob2_training_loss_case_2_15_wo_intensites.png)
+#### Changing Image Scale by 4 (to 6 x 6)
+
+* Statistics: 
+
+|          |    1     |    0     |
+|----------|----------|----------|
+|    1     | (TP) 488 | (FN) 110 |
+|    0     | (FP) 107 | (TN) 507 |
+Accuracy: 0.820957095709571
+Precision: 0.8201680672268907
+Recall: 0.8160535117056856
+FPR: 0.1742671009771987
+FNR: 0.18394648829431437
 
 #### Chaning Normalization
 
