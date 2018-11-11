@@ -100,5 +100,6 @@ Recall: 0.919732441471572
 FPR: 0.06840390879478828
 FNR: 0.0802675585284281
 
-##### Step Size = 0.1
+#### ROC Curve Comparison
 
+![prob2compare_roc_curves_nn_rf_0.0_1.0_0.01](prob2compare_roc_curves_nn_rf_0.0_1.0_0.01.png)
