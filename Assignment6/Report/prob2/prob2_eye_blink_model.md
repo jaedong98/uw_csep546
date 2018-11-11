@@ -76,9 +76,9 @@ FPR: 0.10586319218241043
 FNR: 0.08361204013377926
 
 #### Tunning step size change
-After many trials on parameter sweeps with a results shown above(not so impressive results), I tried to tunning step size and got accuracy results below. What interesting to me was the step size with 0.08 (agressive learning rate) took more time to accually start dropping (visiable) loss. And also the loss function ($\eta=0.08$) fluctuated after 120 iterations. I think the learning rate is little too high to our data.
+After many trials on parameter sweeps with a results shown above(not so impressive results), I examinened output data and graphs and noticed the there is a initial period where loss function doesn't decrease. I thought it is related to learning rate ($\eta$). I tunned step size and got accuracy results below. What interesting to me was the step size with 0.08 (agressive learning rate) took more time to accually start dropping (visiable) loss. And also the loss function ($\eta=0.08$) fluctuated after 120 iterations. I think the learning rate is little too high to our data.
 
-| Stepsize = 0.05 | Stepsize = 0.08 |
+| Step Size = 0.05 | Step Size = 0.08 |
 |-|-|
 |![prob2_training_loss_case_2_15_255.0_ss0.05](prob2_training_loss_case_2_15_255.0_ss0.05.png) |![prob2_training_loss_case_2_15_255.0_ss0.08](prob2_training_loss_case_2_15_255.0_ss0.08.png) |
 
