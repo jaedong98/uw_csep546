@@ -137,7 +137,7 @@ if __name__ == "__main__":
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_hidden_layers=[1, 2],
         num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
-        iterations=2,
+        iterations=200,
         step_size=.05,
         weights_on_image=True)
 
