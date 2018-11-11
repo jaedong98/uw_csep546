@@ -113,7 +113,8 @@ def Featurize(xTrainRaw,
               grid_y_gradients=False,
               grid_x_gradients=False,
               hist_y_gradients=False,
-              hist_x_gradients=False
+              hist_x_gradients=False,
+              norm_factor=255.
               ):
     """
     from PIL import Image
@@ -167,7 +168,7 @@ def Featurize(xTrainRaw,
         if includeIntensities:
             for x in range(0, xSize, 2):
                 for y in range(0, ySize, 2):
-                    features.append(pixels[x,y]/255.0)
+                    features.append(pixels[x,y]/norm_factor)
 
         if grid_y_gradients:
             features.extend(get_y_gradient_features(image, grid_dim=(3, 3)))
@@ -219,7 +220,7 @@ def Featurize(xTrainRaw,
         if includeIntensities:
             for x in range(0, xSize, 2):
                 for y in range(0, ySize, 2):
-                    features.append(pixels[x,y]/255.0)
+                    features.append(pixels[x,y]/norm_factor)
 
         if grid_y_gradients:
             features.extend(get_y_gradient_features(image, grid_dim=(3, 3)))

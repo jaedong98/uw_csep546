@@ -19,3 +19,47 @@ Use just the training data to tune your parameters (cross validation or a hold-o
 ***
 
 ![prob2_training_loss_case_2_15_wo_intensites](prob2_training_loss_case_2_15_wo_intensites.png)
+
+#### Chaning Normalization
+
+##### norm_factor = 133
+
+* Statistics: 
+
+|          |    1     |    0     |
+|----------|----------|----------|
+|    1     | (TP) 533 | (FN) 65  |
+|    0     | (FP) 36  | (TN) 578 |
+Accuracy: 0.9166666666666666
+Precision: 0.9367311072056239
+Recall: 0.8913043478260869
+FPR: 0.05863192182410423
+FNR: 0.10869565217391304
+
+##### norm_factor = 255
+
+* Statistics: 
+
+|          |    1     |    0     |
+|----------|----------|----------|
+|    1     | (TP) 515 | (FN) 83  |
+|    0     | (FP) 22  | (TN) 592 |
+Accuracy: 0.9133663366336634
+Precision: 0.9590316573556797
+Recall: 0.8612040133779264
+FPR: 0.035830618892508145
+FNR: 0.13879598662207357
+
+##### norm_factor = 510
+
+* Statistics: 
+
+|          |    1     |    0     |
+|----------|----------|----------|
+|    1     | (TP) 548 | (FN) 50  |
+|    0     | (FP) 65  | (TN) 549 |
+Accuracy: 0.9051155115511551
+Precision: 0.8939641109298532
+Recall: 0.9163879598662207
+FPR: 0.10586319218241043
+FNR: 0.08361204013377926

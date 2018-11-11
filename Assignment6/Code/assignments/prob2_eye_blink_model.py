@@ -17,11 +17,12 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         num_nodes=15,
         iterations=200,
         step_size=0.05,
-        weights_on_image=False):
+        norm_factor=255.):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=False,
                                 includeRawPixels=False,
-                                includeIntensities=False)
+                                includeIntensities=True,
+                                norm_factor=norm_factor)
     xTrains = np.array([[1] + x for x in xTrains])
     xTests = np.array([[1] + x for x in xTests])
     yTrains = np.array([[y] for y in yTrainRaw])
@@ -70,11 +71,16 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                          [1 if x[0] >= 0.5 else 0 for x in predictions])
     print("Accuracy after iteration: {}".format(test_ev.accuracy))
 
+    best_accuracy_md = os.path.join(prob2_report_path, 'prob2_accuracy_{}.md'.format(norm_factor))
+    with open(best_accuracy_md, 'w') as f:
+        f.write(str(test_ev))
+
     training_loss_fname = os.path.join(prob2_report_path,
                                        "prob2_training_loss_"
-                                       "case_{}_{}.png"
+                                       "case_{}_{}_{}.png"
                                        .format(num_hidden_layer,
-                                               num_nodes))
+                                               num_nodes,
+                                               norm_factor))
     case_legend = ['{} hidden layer with {} nodes'.format(num_hidden_layer, num_nodes)]
     draw_loss_comparisions([training_loss_data[case]], "Iterations", "Loss", "Training Set",
                            training_loss_fname, case_legend,
@@ -83,9 +89,10 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 
     test_loss_fname = os.path.join(prob2_report_path,
                                    "prob2_test_loss_"
-                                   "case_{}_{}.png"
+                                   "case_{}_{}_{}.png"
                                    .format(num_hidden_layer,
-                                           num_nodes))
+                                           num_nodes,
+                                           norm_factor))
     draw_loss_comparisions([test_loss_data[case]], "Iterations", "Loss", "Test Set",
                            test_loss_fname, case_legend,
                            data_pt='-',
@@ -97,9 +104,10 @@ if __name__ == "__main__":
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
     #paramters with best accuracy
-    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layer=2,
-        num_nodes=15,
-        iterations=200,
-        step_size=.05,
-        weights_on_image=True)
+    for norm_factor in [64, 133.0, 255.0, 255 * 2.]:
+        run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+            num_hidden_layer=2,
+            num_nodes=15,
+            iterations=200,
+            step_size=.05,
+            norm_factor=norm_factor)
