@@ -80,9 +80,10 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
             if weights_on_image:
                 for i, w in enumerate(NN.weights):
                     img_path = os.path.join(report_path,
-                                            "weights_node{}_of_{}_in_{}_layer"
+                                            "weights_node{}_of_{}_in_{}_layer_iter{}"
                                             ".jpg".format(i, num_nodes,
-                                                          num_hidden_layer))
+                                                          num_hidden_layer,
+                                                          iterations))
                     VisualizeWeights(NN.weights[0][:, 1], img_path, resize=(288, 288))
 
             training_loss_fname = os.path.join(report_path,
@@ -134,10 +135,27 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
+    # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+    #     num_hidden_layers=[1, 2],
+    #     num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
+    #     iterations=200,
+    #     step_size=.05,
+    #     weights_on_image=True)
+
+    # weight drawing
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[1, 2],
-        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
-        iterations=200,
+        num_hidden_layers=[1],
+        num_nodes_per_hideen_layer=[2],
+        iterations=50,
         step_size=.05,
         weights_on_image=True)
+
+    # paramters with best accuracy
+    # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+    #     num_hidden_layers=[2],
+    #     num_nodes_per_hideen_layer=[15],
+    #     iterations=200,
+    #     step_size=.05,
+    #     weights_on_image=True)
+
 

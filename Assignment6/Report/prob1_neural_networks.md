@@ -28,9 +28,11 @@ Hand in a writeup including:
 |![prob1_training_loss.png](prob1_training_loss.png) | ![prob1_test_loss.png](prob1_test_loss.png)|
 |-|-|
 
-|weights_node0_of_2_in_1_layer |weights_node1_of_2_in_1_layer |
-|-|-|
-|![weights_node0_of_2_in_1_layer](weights_node0_of_2_in_1_layer.jpg) | ![weights_node1_of_2_in_1_layer](weights_node1_of_2_in_1_layer.jpg) |
+| Iterations |weights_node0_of_2_in_1_layer |weights_node1_of_2_in_1_layer |
+|:-:|-|-|
+|50 |![weights_node0_of_2_in_1_layer_iter50](weights_node0_of_2_in_1_layer_iter50.jpg) | ![weights_node0_of_2_in_1_layer_iter50](weights_node0_of_2_in_1_layer_iter50.jpg) |
+|200 |![weights_node0_of_2_in_1_layer](weights_node0_of_2_in_1_layer.jpg) | ![weights_node1_of_2_in_1_layer](weights_node1_of_2_in_1_layer.jpg) |
+
 
 * Best Accuracy With 2 layers with 15 nodes
 
@@ -46,8 +48,10 @@ Recall: 0.9130434782608695
 FPR: 0.06026058631921824
 FNR: 0.08695652173913043
 
-![prob1_test_accuracy_2_20](prob1_test_accuracy_2_20.png)
-
+Overall acuracy graph - 
+| Accuracy with Best Paramters | Overall Accuracies |
+|-|-|
+|![prob1_test_accuracy_2_15](prob1_test_accuracy_2_15.png) | ![prob1_test_accuracy_2_20](prob1_test_accuracy_2_20.png)|
 
 
 ***
