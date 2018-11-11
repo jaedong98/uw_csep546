@@ -6,6 +6,7 @@ from Assignment6.Code import kDataPath, report_path
 from model.NeuralNetworkModel import NeuralNetwork
 from utils.Assignment4Support import draw_loss_comparisions
 from utils.Assignment5Support import LoadRawData, TrainTestSplit, Featurize, VisualizeWeights
+from utils.EvaluationsStub import Evaluation
 
 
 def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
@@ -25,33 +26,21 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
     legends = []
     training_loss_data = OrderedDict()
     test_loss_data = OrderedDict()
-    #xTrains = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
-    #yTrains = np.array(([0], [1], [1], [0]), dtype=float)
-
-    # NN = NeuralNetwork(xTrains, yTrains, num_hidden_layer=1, num_nodes=4, step_size=1)
-    # for i in range(3000):  # trains the NN 1,000 times
-    #     if i % 100 == 0:
-    #         print("for iteration # " + str(i) + "\n")
-    #         print("Input : \n" + str(xTrains))
-    #         print("Actual Output: \n" + str(yTrains))
-    #         print("Predicted Output: \n" + str(NN.feedforward()))
-    #         print("Loss: \n" + str(np.mean(np.square(yTrains - NN.feedforward()))))  # mean sum squared loss
-    #         print("My Loss: \n" + str(NN.loss()))
-    #         print("\n")
-    #
-    #     NN.train(xTrains, yTrains)
-    # return
+    test_accuracy_data = OrderedDict()
+    best_accuracy = -1
+    best_accuracy_case = None
     for num_hidden_layer in num_hidden_layers:
         for num_nodes in num_nodes_per_hideen_layer:
             legends.append('{}_hidden(s)_{}_nodes'.format(num_hidden_layer, num_nodes))
             case = (num_hidden_layer, num_nodes)
             training_loss_data[case] = []
             test_loss_data[case] = []
+            test_accuracy_data[case] = []
             NN = NeuralNetwork(xTrains, yTrains,
                                num_hidden_layer=num_hidden_layer,
                                num_nodes=num_nodes,
                                step_size=step_size)
-
+            predictions = np.zeros(yTrains.shape)
             for i in range(iterations):
 
                 # outputs = NN.feedforward()
@@ -67,19 +56,36 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                 training_loss_data[case].append((i, loss))
 
                 predictions = NN.predict(xTests)
-                test_loss = np.mean(np.square(yTests - predictions))
+                # test_loss = np.mean(np.square(yTests - predictions))
+                test_loss = np.sum(np.square(yTests - predictions)) / 2.
+                test_ev = Evaluation([x[0] for x in yTests],[1 if x[0] >= 0.5 else 0 for x in predictions])
+                test_accuracy_data[case].append((i, test_ev.accuracy))
                 test_loss_data[case].append((i, test_loss))
                 if i % 10 == 0:
                     print("Loss: " + str(loss))  # mean sum squared loss
                     print("Test Loss: " + str(test_loss))
+                    print("Accuracy: {}".format(test_ev.accuracy))
+
                 NN.train()
+            test_ev = Evaluation([x[0] for x in yTests],
+                                 [1 if x[0] >= 0.5 else 0 for x in predictions])
+            print("Accuracy after iteration: {}".format(test_ev.accuracy))
+
+            if test_ev.accuracy > best_accuracy:
+                best_accuracy = test_ev.accuracy
+                best_accuracy_case = "* Best Accuracy With {} layers with {} nodes".format(num_hidden_layer, num_nodes)
+                best_accuracy_case += "\n\n"
+                best_accuracy_case += str(test_ev)
+
             if weights_on_image:
                 for i, w in enumerate(NN.weights):
                     img_path = os.path.join(report_path,
-                                            "weights_node{}_of_{}_in_{}_layer"
+                                            "weights_node{}_of_{}_in_{}_layer_iter{}"
                                             ".jpg".format(i, num_nodes,
-                                                          num_hidden_layer))
+                                                          num_hidden_layer,
+                                                          iterations))
                     VisualizeWeights(NN.weights[0][:, 1], img_path, resize=(288, 288))
+
             training_loss_fname = os.path.join(report_path,
                                                "prob1_training_loss_"
                                                "case_{}_{}.png"
@@ -101,6 +107,17 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                    data_pt='-',
                                    title_y=1)
 
+    best_accuracy_md = os.path.join(report_path, 'prob1_best_accuracy.md')
+    with open(best_accuracy_md, 'w') as f:
+        f.write(best_accuracy_case)
+
+    test_accuracy_fname = os.path.join(report_path, "prob1_test_accuracy_{}_{}.png".format(max(num_hidden_layers), max(
+        num_nodes_per_hideen_layer)))
+    draw_loss_comparisions(test_accuracy_data.values(), "Iterations", "Accuracy", "Accuracies on Test Set",
+                           test_accuracy_fname, legends,
+                           data_pt='-',
+                           title_y=1)
+
 
     training_loss_fname = os.path.join(report_path, "prob1_training_loss_{}_{}.png".format(max(num_hidden_layers), max(num_nodes_per_hideen_layer)))
     draw_loss_comparisions(training_loss_data.values(), "Iterations", "Loss", "Training Set",
@@ -118,10 +135,27 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
+    # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+    #     num_hidden_layers=[1, 2],
+    #     num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
+    #     iterations=200,
+    #     step_size=.05,
+    #     weights_on_image=True)
+
+    # weight drawing
     run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[2], #, 2],
-        num_nodes_per_hideen_layer=[3],#, 5, 10, 15, 20],
-        iterations=200,
+        num_hidden_layers=[1],
+        num_nodes_per_hideen_layer=[2],
+        iterations=50,
         step_size=.05,
         weights_on_image=True)
+
+    # paramters with best accuracy
+    # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+    #     num_hidden_layers=[2],
+    #     num_nodes_per_hideen_layer=[15],
+    #     iterations=200,
+    #     step_size=.05,
+    #     weights_on_image=True)
+
 
