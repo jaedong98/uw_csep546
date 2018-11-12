@@ -18,7 +18,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         includeRawPixels=False,
         includeIntensities=True,
         weights_on_image=False,
-        with_momentum=False):
+        momentum=0.0):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=includeGradients,
                                 includeRawPixels=includeRawPixels,
@@ -43,7 +43,8 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
             NN = NeuralNetwork(xTrains, yTrains,
                                num_hidden_layer=num_hidden_layer,
                                num_nodes=num_nodes,
-                               step_size=step_size)
+                               step_size=step_size,
+                               momentum=momentum)
             predictions = np.zeros(yTrains.shape)
             previous_delta_ws = []
             for i in range(iterations):
@@ -71,10 +72,8 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                     print("Test Loss: " + str(test_loss))
                     print("Accuracy: {}".format(test_ev.accuracy))
 
-                if with_momentum:
-                    previous_delta_ws = NN.train(previous_delta_ws)
-                else:
-                    NN.train()
+                previous_delta_ws = NN.train(previous_delta_ws)
+
 
             test_ev = Evaluation([x[0] for x in yTests],
                                  [1 if x[0] >= 0.5 else 0 for x in predictions])
@@ -150,7 +149,7 @@ if __name__ == "__main__":
         iterations=200,
         step_size=.05,
         weights_on_image=True,
-        with_momentum=True)
+        momentum=0.05)
 
     # weight drawing
     # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
@@ -170,6 +169,6 @@ if __name__ == "__main__":
     #     includeRawPixels=False,
     #     includeIntensities=True,
     #     weights_on_image=True,
-    #     with_momentum=True)
+    #     momentum=0.05)
 
 

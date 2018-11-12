@@ -21,7 +21,8 @@ def sigmoid_derivative(p):
 # Class definition
 class NeuralNetwork:
     def __init__(self, xTrains, yTrains, num_hidden_layer=2, num_nodes=10,
-                 step_size=0.05):
+                 step_size=0.05,
+                 momentum=0):
         self.input = np.array(xTrains)  # should be flattened!
         self.y = np.array(yTrains)
         self.num_hidden_layer = num_hidden_layer
@@ -31,6 +32,7 @@ class NeuralNetwork:
         self.weights = []
         self.get_initial_weights()
         self.outputs = []
+        self.momentum = momentum
 
     def get_initial_weights(self):
 
@@ -104,7 +106,7 @@ class NeuralNetwork:
                 prev_delta_w = get_prev_delta_w(si, i)
                 if prev_delta_w is not None:
                     #print(self.weights[i].shape, prev_delta_w.shape)
-                    self.weights[i] += 0.05 * prev_delta_w
+                    self.weights[i] += self.momentum * prev_delta_w
             current_delta_ws.append(current_delta_w)
 
         return current_delta_ws
