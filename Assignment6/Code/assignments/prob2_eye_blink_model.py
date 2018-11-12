@@ -61,7 +61,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         # NN.train(xTrains, yTrains)
 
         predictions = NN.predict()
-        loss = np.mean(np.square(yTrains - predictions))
+        loss = np.sum(np.square(yTrains - predictions)) / 2.
         training_loss_data[case].append((i, loss))
 
         predictions = NN.predict(xTests)
@@ -134,13 +134,13 @@ if __name__ == "__main__":
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
     #paramters with best accuracy
-    for momentum in [0.0, 0.1, 0.25, 0.5, 0.75, 1.0]:
+    for momentum in [0.0]: #, 0.1, 0.25, 0.5, 0.75, 1.0]:
         for norm_factor in [255.0]:
             run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                 num_hidden_layer=2,
                 num_nodes=15,
                 iterations=200,
-                step_size=.05,
+                step_size=.08,
                 norm_factor=norm_factor,
                 decrease_size_by=2,
                 momentum=momentum)

@@ -15,14 +15,14 @@
 
 ***
 
-The loss results from training and test set shows similar gradient resent behavior overall. In 2 hidden layer cases, during early gradient descent steps, the network represents almost linear in both data set. And more nodes help model to accelerate the learning rate (dropping loss rate), but it causes the overfitting as each weight looks for their own local optimal values. I also noticed the model produced slightly higher learning rate on test set, but in general, the network produced similar loss results.  
+The loss results from training and test set show similar gradient descent behavior overall. In 2 hidden layer cases, during early gradient descent steps, the network represents almost linear in both data set. And more nodes help the model to accelerate the learning rate (dropping loss rate), but it causes the overfitting as each weight looks for their local minimum values. I also noticed the model produced slightly higher learning rate on the test set, but in general, the network produced similar loss results.  
 
 |# of Layers | Loss in Training Set | Loss in Test Set |
 |:-:|-|-|
 |1|![prob1_training_loss_1_20.png](prob1_training_loss_1_20.png) | ![prob1_test_loss_1_20.png](prob1_test_loss_1_20.png)|
 |2|![prob1_training_loss_2_20.png](prob1_training_loss_2_20.png) | ![prob1_test_loss_2_20.png](prob1_test_loss_2_20.png)|
 
-For 1 layer with 2 nodes case, I produced the images of two nodes at iteration 50 and 200. The image in third column helps to locate the pixcels where the values between two nodes are different.
+For one layer with two nodes case, I produced the images of two nodes at iteration 50 and 200. The picture in the third column helps to locate the pixels where the values between two nodes are different.
 
 | Iterations |weights_node0_of_2_in_1_layer |weights_node1_of_2_in_1_layer | abs(weight delta) between nodes |
 |:-:|-|-|-|
@@ -45,7 +45,8 @@ Recall: 0.9130434782608695
 FPR: 0.06026058631921824
 FNR: 0.08695652173913043
 
-The accuracy graph from the network with 2 hidden layer indicates the network is underfitting data during early stage of gradient decents. And it behaviors the overfitting once 145 weights start fighting each other for their local optimal values.
+The accuracy graph from the network with two hidden layers indicates the network is underfitting data during the early stage of gradient descents. And it behaviors the overfitting once 145 weights start fighting each other for their local minimum values.
+
 | Accuracy with Best Paramters | Overall Accuracies |
 |-|-|
 |![prob1_test_accuracy_2_15](prob1_test_accuracy_2_15.png) | ![prob1_test_accuracy_2_20](prob1_test_accuracy_2_20.png)|
