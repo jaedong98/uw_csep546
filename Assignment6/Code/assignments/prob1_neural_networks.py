@@ -17,7 +17,8 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
         includeGradients=False,
         includeRawPixels=False,
         includeIntensities=True,
-        weights_on_image=False):
+        weights_on_image=False,
+        with_momentum=False):
     (xTrains, xTests) = Featurize(xTrainRaw, xTestRaw,
                                 includeGradients=includeGradients,
                                 includeRawPixels=includeRawPixels,
@@ -44,6 +45,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                                num_nodes=num_nodes,
                                step_size=step_size)
             predictions = np.zeros(yTrains.shape)
+            previous_delta_ws = []
             for i in range(iterations):
 
                 # outputs = NN.feedforward()
@@ -69,7 +71,11 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                     print("Test Loss: " + str(test_loss))
                     print("Accuracy: {}".format(test_ev.accuracy))
 
-                NN.train()
+                if with_momentum:
+                    previous_delta_ws = NN.train(previous_delta_ws)
+                else:
+                    NN.train()
+
             test_ev = Evaluation([x[0] for x in yTests],
                                  [1 if x[0] >= 0.5 else 0 for x in predictions])
             print("Accuracy after iteration: {}".format(test_ev.accuracy))
@@ -138,12 +144,13 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
 if __name__ == "__main__":
     (xRaw, yRaw) = LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit(xRaw, yRaw, percentTest=.25)
-    # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-    #     num_hidden_layers=[1, 2],
-    #     num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
-    #     iterations=200,
-    #     step_size=.05,
-    #     weights_on_image=True)
+    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+        num_hidden_layers=[1, 2],
+        num_nodes_per_hideen_layer=[2, 5, 10, 15, 20],
+        iterations=200,
+        step_size=.05,
+        weights_on_image=True,
+        with_momentum=True)
 
     # weight drawing
     # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
@@ -154,14 +161,15 @@ if __name__ == "__main__":
     #     weights_on_image=True)
 
     # paramters with best accuracy
-    run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
-        num_hidden_layers=[2],
-        num_nodes_per_hideen_layer=[15],
-        iterations=200,
-        step_size=.05,
-        includeGradients=False,
-        includeRawPixels=False,
-        includeIntensities=True,
-        weights_on_image=True)
+    # run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
+    #     num_hidden_layers=[1],
+    #     num_nodes_per_hideen_layer=[5],
+    #     iterations=200,
+    #     step_size=.05,
+    #     includeGradients=False,
+    #     includeRawPixels=False,
+    #     includeIntensities=True,
+    #     weights_on_image=True,
+    #     with_momentum=True)
 
 

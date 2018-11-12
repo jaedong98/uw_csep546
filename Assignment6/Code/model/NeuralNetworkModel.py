@@ -57,8 +57,15 @@ class NeuralNetwork:
         if not len(self.weights) == (self.num_hidden_layer + 1):
             raise AssertionError("Weights doesn't match number of layers.")
 
-    def train(self):
+    def train(self, previous_delta_ws=[]):
 
+        def get_prev_delta_w(si, wi):
+
+            if not previous_delta_ws:
+                return None
+            return previous_delta_ws[si][wi]
+
+        current_delta_ws = []
         for si, sample in enumerate(self.input):
             input = sample
             outputs = []
@@ -69,6 +76,7 @@ class NeuralNetwork:
 
             # calculate error term, delta
             output_error = None
+            current_delta_w = [None] * len(self.weights)
             for i in reversed(range(len(outputs))):
                 if i == 0:
                     input = self.input[si]
@@ -81,6 +89,7 @@ class NeuralNetwork:
                     delta = np.array([input]) * output_error
                     delta_w = self.step_size * delta
                     self.weights[i] += delta_w.T
+                    current_delta_w[i] = delta_w.T
 
                 else:
                     error = np.dot(output_error, self.weights[i + 1].T)
@@ -90,6 +99,15 @@ class NeuralNetwork:
 
                     delta_w = self.step_size * delta * np.array([[x] for x in input])
                     self.weights[i] += delta_w
+                    current_delta_w[i] = delta_w
+
+                prev_delta_w = get_prev_delta_w(si, i)
+                if prev_delta_w is not None:
+                    #print(self.weights[i].shape, prev_delta_w.shape)
+                    self.weights[i] += 0.05 * prev_delta_w
+            current_delta_ws.append(current_delta_w)
+
+        return current_delta_ws
 
     def predict(self, samples=None):
 
@@ -368,7 +386,7 @@ if __name__ == "__main__":
             #print("Predicted Output: \n" + str(NN.feedforward())) # mean sum squared loss
             #print("My Loss: \n" + str(NN.loss()))
             predictions = NN.feedforward()
-            print("Loss: \n" + str(np.mean(np.square(yTrains - predictions))))
-            print("\n")
+            print("Loss: " + str(np.mean(np.square(yTrains - predictions))))
+            #print("\n")
 
-        #NN.train(X, y)
+        NN.train(X, y)
