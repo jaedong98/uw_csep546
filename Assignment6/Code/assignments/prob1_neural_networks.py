@@ -58,7 +58,7 @@ def run(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw,
                 # NN.train(xTrains, yTrains)
 
                 predictions = NN.predict()
-                loss = np.mean(np.square(yTrains - predictions))
+                loss = np.sum(np.square(yTrains - predictions)) / 2.
                 training_loss_data[case].append((i, loss))
 
                 predictions = NN.predict(xTests)
