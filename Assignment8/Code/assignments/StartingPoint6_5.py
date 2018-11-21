@@ -48,7 +48,7 @@ yTest = torch.Tensor([ [ yValue ] for yValue in yTestRaw ])
 model = SimpleBlinkNeuralNetwork.SimpleBlinkNeuralNetwork(hiddenNodes=5,
                                                           conv1_input_channel=1,
                                                           conv1_output_channel=5,
-                                                          conv1_sq_convolution=6,
+                                                          conv1_sq_convolution=12,
                                                           avg_pooling_kernel_size=2,
                                                           avg_pooling_kernel_stride=2)
 lossFunction = torch.nn.MSELoss(reduction='sum')
