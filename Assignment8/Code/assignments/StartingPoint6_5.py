@@ -44,7 +44,7 @@ yTest = torch.Tensor([ [ yValue ] for yValue in yTestRaw ])
 # Create the model and set up:
 #     the loss function to use (Mean Square Error)
 #     the optimization method (Stochastic Gradient Descent) and the step size
-model = SimpleBlinkNeuralNetwork.SimpleBlinkNeuralNetwork(hiddenNodes = 5)
+model = SimpleBlinkNeuralNetwork.SimpleBlinkNeuralNetwork(hiddenNodes=5)
 lossFunction = torch.nn.MSELoss(reduction='sum')
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 

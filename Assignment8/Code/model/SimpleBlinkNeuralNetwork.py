@@ -1,15 +1,20 @@
 import torch
 
+
 class SimpleBlinkNeuralNetwork(torch.nn.Module):
     def __init__(self, hiddenNodes = 20):
         super(SimpleBlinkNeuralNetwork, self).__init__()
 
         # Down sample the image to 12x12
-        self.avgPooling = torch.nn.AvgPool2d(kernel_size = 2, stride = 2) 
+        #self.avgPooling = torch.nn.AvgPool2d(kernel_size=2, stride=2)
+
+        #
+        self.avgPooling = torch.nn.Conv2d(1, 5, 12)
 
         # Fully connected layer to all the down-sampled pixels to all the hidden nodes
         self.fullyConnectedOne = torch.nn.Sequential(
-           torch.nn.Linear(12*12, hiddenNodes),
+           #torch.nn.Linear(12*12, hiddenNodes),
+           torch.nn.Linear(5 * 13 * 13, hiddenNodes),
            torch.nn.Sigmoid()
            )
 
