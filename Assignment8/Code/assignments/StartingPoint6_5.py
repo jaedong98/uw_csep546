@@ -4,18 +4,18 @@
 ## IMPORTANT NOTE !!
 ## Remember to install the Pillow library (which is required to execute 'import PIL')
 ## Remember to install Pytorch: https://pytorch.org/get-started/locally/ (if you want GPU you need to figure out CUDA...)
-
-
+from Assignment8.Code import kDataPath
+from EvaluationsStub import Evaluation
+from model import SimpleBlinkNeuralNetwork
 import Assignment5Support
 
 ## NOTE update this with your equivalent code.
-import TrainTestSplit
 
-kDataPath = "..\\..\\..\\Datasets\\FaceData\\dataset_B_Eye_Images"
+#kDataPath = "..\\..\\..\\Datasets\\FaceData\\dataset_B_Eye_Images"
 
 (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath, includeLeftEye = True, includeRightEye = True)
 
-(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = TrainTestSplit.TrainTestSplit(xRaw, yRaw, percentTest = .25)
+(xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest = .25)
 
 print("Train is %f percent closed." % (sum(yTrainRaw)/len(yTrainRaw)))
 print("Test is %f percent closed." % (sum(yTestRaw)/len(yTestRaw)))
@@ -35,13 +35,11 @@ yTrain = torch.Tensor([ [ yValue ] for yValue in yTrainRaw ])
 yTest = torch.Tensor([ [ yValue ] for yValue in yTestRaw ])
 
 
-import Evaluations
-import ErrorBounds
+#import Evaluations
+#import ErrorBounds
 
 ######
 ######
-
-import SimpleBlinkNeuralNetwork
 
 # Create the model and set up:
 #     the loss function to use (Mean Square Error)
@@ -71,6 +69,11 @@ yTestPredicted = model(xTest)
 
 yPred = [ 1 if pred > 0.5 else 0 for pred in yTestPredicted ]
 
-print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
-simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+ev = Evaluation(yTest, yPred)
+#print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
+#simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+print("Accuracy simple:", ev.accuracy)
+simpleAccuracy = ev.accuracy
+
+
 
