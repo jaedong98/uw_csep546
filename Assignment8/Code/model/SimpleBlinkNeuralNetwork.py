@@ -8,10 +8,14 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
                  conv1_output_channel=5,
                  conv1_sq_convolution=12,
                  avg_pooling_kernel_size=-1,
-                 avg_pooling_kernel_stride=-1):
+                 avg_pooling_kernel_stride=-1,
+                 conv2_input_channel=-1,
+                 conv2_output_channel=5,
+                 conv2_sq_convolution=12,
+                 ):
         super(SimpleBlinkNeuralNetwork, self).__init__()
 
-        # convolution
+        # convolution 1
         full_connected_one_len = 24 * 24
         self.conv1 = None
         if conv1_input_channel > 0:
@@ -26,9 +30,20 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
             self.avg_pooling = torch.nn.AvgPool2d(kernel_size=avg_pooling_kernel_size,
                                                   stride=avg_pooling_kernel_stride)
             if conv1_input_channel > 0:
-                full_connected_one_len = conv1_output_channel * ((24 - conv1_sq_convolution + 1) // 2)**2
+                full_connected_one_len = conv1_output_channel * ((24 - conv1_sq_convolution + 1) // avg_pooling_kernel_size)**2
             else:
                 full_connected_one_len = (24 // avg_pooling_kernel_stride)**2
+
+        # convolution 2
+        self.conv2 = None
+        if conv2_input_channel > 0:
+            self.conv2 = torch.nn.Conv2d(conv2_input_channel,
+                                         conv2_output_channel,
+                                         conv2_sq_convolution)
+            if avg_pooling_kernel_size:
+                full_connected_one_len = 'UPDATE'
+            else:
+                full_connected_one_len = conv2_output_channel * (24 - conv2_sq_convolution + 1)**2
 
         # Fully connected layer to all the down-sampled pixels to all the hidden nodes
         self.fullyConnectedOne = torch.nn.Sequential(
