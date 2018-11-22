@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class LeNet(nn.Module):
 
-    def __init__(self):
+    def __init__(self, hiddenNodes=20):
         super(LeNet, self).__init__()
         # input channel = 1, output channel = 6, kernel_size = 5
         # input size = (32, 32),
@@ -22,18 +22,18 @@ class LeNet(nn.Module):
         # pulling (2, 2)
         # output size = (5, 5)
 
-        # input dim = 16*5*5, output dim = 120
-        self.fc1 = nn.Linear(16 * 5 * 5, 144)
+        # input dim = 16*5*5, output dim = hiddenNodes
+        self.fc1 = nn.Linear(144, 120)
         # input dim = 120, output dim = 84
-        self.fc2 = nn.Linear(144, 84)
+        self.fc2 = nn.Linear(120, 84)
         # input dim = 84, output dim = 10
-        self.fc3 = nn.Linear(84, 10)
+        self.fc3 = nn.Linear(84, 1)
 
     def forward(self, x):
         x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
         x = F.max_pool2d(F.relu(self.conv2(x)), (2, 2))
-        #x = x.view(-1, self.num_flat_features(x))
-        x = x.reshape(x.size(0), -1)
+        x = x.view(-1, self.num_flat_features(x))
+        #x = x.reshape(x.size(0), -1)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
