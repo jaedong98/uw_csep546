@@ -64,7 +64,8 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
         # Fully connected layer to all the down-sampled pixels to all the hidden nodes
         self.fullyConnectedOne = torch.nn.Sequential(
            #torch.nn.Linear(12*12, hiddenNodes),
-           torch.nn.Linear(full_connected_one_len, hiddenNodes),
+           #torch.nn.Linear(full_connected_one_len, hiddenNodes),
+           torch.nn.Linear(15, hiddenNodes),
            torch.nn.Sigmoid()
            )
 
@@ -85,6 +86,9 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
 
         if self.conv2:
             out = self.conv2(out)
+
+        out = self.avg_pooling(out)
+
 
         out = out.reshape(out.size(0), -1)
         out = self.fullyConnectedOne(out)
