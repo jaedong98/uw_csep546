@@ -23,13 +23,17 @@ class LeNet(nn.Module):
         # output size = (5, 5)
 
         # input dim = 16*5*5, output dim = hiddenNodes
+        # self.fc1 = nn.Sequential(
+        #     nn.Linear(144, 120),
+        #     nn.Sigmoid()
+        # )
+        # # input dim = 120, output dim = 84
+        # self.fc2 = nn.Sequential(
+        #     nn.Linear(120, hiddenNodes),
+        #     nn.Sigmoid()
+        # )
         self.fc1 = nn.Sequential(
-            nn.Linear(144, 120),
-            nn.Sigmoid()
-        )
-        # input dim = 120, output dim = 84
-        self.fc2 = nn.Sequential(
-            nn.Linear(120, hiddenNodes),
+            nn.Linear(144, hiddenNodes),
             nn.Sigmoid()
         )
         # input dim = 84, output dim = 10
@@ -44,7 +48,7 @@ class LeNet(nn.Module):
         x = x.view(-1, self.num_flat_features(x))
         #x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
-        x = self.fc2(x)
+        # x = self.fc2(x)
         x = self.fc3(x)
         return x
 
