@@ -63,7 +63,7 @@ if __name__ == "__main__":
     from Assignment8.Code import kDataPath
     import Assignment5Support
 
-    (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=True)
+    (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=False)
 
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
@@ -82,13 +82,11 @@ if __name__ == "__main__":
 
     # Load the images and then convert them into tensors (no normalization)
     xTrainImages = [Image.open(path) for path in xTrainRaw]
-    xTrainImages += [Image.open(path).transpose(Image.FLIP_LEFT_RIGHT) for path in xTrainRaw]
     xTrain = torch.stack([transforms.ToTensor()(image) for image in xTrainImages])
 
     xTestImages = [Image.open(path) for path in xTestRaw]
     xTest = torch.stack([transforms.ToTensor()(image) for image in xTestImages])
 
-    yTrainRaw += yTrainRaw
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
