@@ -82,11 +82,13 @@ if __name__ == "__main__":
 
     # Load the images and then convert them into tensors (no normalization)
     xTrainImages = [Image.open(path) for path in xTrainRaw]
+    xTrainImages += [Image.open(path).transpose(Image.FLIP_LEFT_RIGHT) for path in xTrainRaw]
     xTrain = torch.stack([transforms.ToTensor()(image) for image in xTrainImages])
 
     xTestImages = [Image.open(path) for path in xTestRaw]
     xTest = torch.stack([transforms.ToTensor()(image) for image in xTestImages])
 
+    yTrainRaw += yTrainRaw
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
