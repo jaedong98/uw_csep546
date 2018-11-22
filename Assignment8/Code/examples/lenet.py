@@ -51,19 +51,15 @@ class LeNet(nn.Module):
         x = self.fc3(x)
         return x
 
-    def num_flat_features(self, x):
-        size = x.size()[1:]
-        num_features = 1
-        for s in size:
-            num_features *= s
-        return num_features
-
 
 if __name__ == "__main__":
     from Assignment8.Code import kDataPath
     import Assignment5Support
 
-    (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath, includeLeftEye=True, includeRightEye=False)
+    (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
+                                                  includeLeftEye=True,
+                                                  includeRightEye=False,
+                                                  augments=['rot'])
 
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
@@ -106,6 +102,12 @@ if __name__ == "__main__":
 
         # Do a weight update step
         optimizer.step()
+
+        if i > 0 and i % 100 == 0:
+            yTestPredicted = model(xTest)
+            yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+            ev = Evaluation(yTest, yPred)
+            print("Accuracy simple:", ev.accuracy)
 
     yTestPredicted = model(xTest)
 

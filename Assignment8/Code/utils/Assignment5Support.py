@@ -5,7 +5,15 @@ from utils.cv_features import get_y_gradient_features, get_x_gradient_features, 
     get_x_gradient_histogram_features
 
 
-def LoadRawData(kDataPath, includeLeftEye = True, includeRightEye = True, shuffle=True):
+def included(fileName, augments):
+    header = fileName.split('_')[0]
+    if header in augments:
+        return True
+    return False
+
+
+def LoadRawData(kDataPath, includeLeftEye = True, includeRightEye = True, shuffle=True,
+                augments=[]):
     xRaw = []
     yRaw = []
 
@@ -13,27 +21,47 @@ def LoadRawData(kDataPath, includeLeftEye = True, includeRightEye = True, shuffl
         closedEyeDir = os.path.join(kDataPath, "closedLeftEyes")
         for fileName in os.listdir(closedEyeDir):
             if fileName.endswith(".jpg"):
-                xRaw.append(os.path.join(closedEyeDir, fileName))
-                yRaw.append(1)
+                if augments == []:
+                    xRaw.append(os.path.join(closedEyeDir, fileName))
+                    yRaw.append(1)
+                else:
+                    if included(fileName, fileName):
+                        xRaw.append(os.path.join(closedEyeDir, fileName))
+                        yRaw.append(1)
 
         openEyeDir = os.path.join(kDataPath, "openLeftEyes")
         for fileName in os.listdir(openEyeDir):
             if fileName.endswith(".jpg"):
-                xRaw.append(os.path.join(openEyeDir, fileName))
-                yRaw.append(0)
+                if augments == []:
+                    xRaw.append(os.path.join(openEyeDir, fileName))
+                    yRaw.append(0)
+                else:
+                    if included(fileName, fileName):
+                        xRaw.append(os.path.join(openEyeDir, fileName))
+                        yRaw.append(0)
 
     if includeRightEye:
         closedEyeDir = os.path.join(kDataPath, "closedRightEyes")
         for fileName in os.listdir(closedEyeDir):
             if fileName.endswith(".jpg"):
-                xRaw.append(os.path.join(closedEyeDir, fileName))
-                yRaw.append(1)
+                if augments == []:
+                    xRaw.append(os.path.join(closedEyeDir, fileName))
+                    yRaw.append(1)
+                else:
+                    if included(fileName, fileName):
+                        xRaw.append(os.path.join(closedEyeDir, fileName))
+                        yRaw.append(1)
 
         openEyeDir = os.path.join(kDataPath, "openRightEyes")
         for fileName in os.listdir(openEyeDir):
             if fileName.endswith(".jpg"):
-                xRaw.append(os.path.join(openEyeDir, fileName))
-                yRaw.append(0)
+                if augments == []:
+                    xRaw.append(os.path.join(openEyeDir, fileName))
+                    yRaw.append(0)
+                else:
+                    if included(fileName, fileName):
+                        xRaw.append(os.path.join(openEyeDir, fileName))
+                        yRaw.append(0)
 
     if shuffle:
         random.seed(1000)
