@@ -86,7 +86,7 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    for i in range(1000):
+    for i in range(2000):
         # Do the forward pass
         yTrainPredicted = model(xTrain)
 
