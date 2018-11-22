@@ -55,7 +55,7 @@ model = SimpleBlinkNeuralNetwork.SimpleBlinkNeuralNetwork(hiddenNodes=5,
                                                           conv2_output_channel=15,
                                                           conv2_sq_convolution=4)
 lossFunction = torch.nn.MSELoss(reduction='sum')
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
+optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.5)
 
 for i in range(500):
     # Do the forward pass
