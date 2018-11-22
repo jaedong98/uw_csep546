@@ -23,19 +23,28 @@ class LeNet(nn.Module):
         # output size = (5, 5)
 
         # input dim = 16*5*5, output dim = hiddenNodes
-        self.fc1 = nn.Linear(144, 120)
+        self.fc1 = nn.Sequential(
+            nn.Linear(144, 120),
+            nn.Sigmoid()
+        )
         # input dim = 120, output dim = 84
-        self.fc2 = nn.Linear(120, 84)
+        self.fc2 = nn.Sequential(
+            nn.Linear(120, hiddenNodes),
+            nn.Sigmoid()
+        )
         # input dim = 84, output dim = 10
-        self.fc3 = nn.Linear(84, 1)
+        self.fc3 = nn.Sequential(
+            nn.Linear(hiddenNodes, 1),
+            nn.Sigmoid()
+        )
 
     def forward(self, x):
         x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
         x = F.max_pool2d(F.relu(self.conv2(x)), (2, 2))
         x = x.view(-1, self.num_flat_features(x))
         #x = x.reshape(x.size(0), -1)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        x = self.fc1(x)
+        x = self.fc2(x)
         x = self.fc3(x)
         return x
 
