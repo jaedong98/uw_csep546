@@ -37,13 +37,29 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
         # convolution 2
         self.conv2 = None
         if conv2_input_channel > 0:
+            if conv1_input_channel > 0:
+                conv2_input_channel = conv1_output_channel
             self.conv2 = torch.nn.Conv2d(conv2_input_channel,
                                          conv2_output_channel,
                                          conv2_sq_convolution)
             if avg_pooling_kernel_size:
-                full_connected_one_len = 'UPDATE'
+                full_connected_one_len = conv2_output_channel * (6 - conv2_sq_convolution + 1)**2
             else:
-                full_connected_one_len = conv2_output_channel * (24 - conv2_sq_convolution + 1)**2
+                full_connected_one_len = conv2_output_channel * (6 - conv2_sq_convolution + 1)**2
+
+        # # convolution 2
+        # self.conv2 = None
+        # if conv2_input_channel > 0:
+        #     if conv1_input_channel > 0:
+        #         conv2_input_channel = conv1_output_channel
+        #     self.conv2 = torch.nn.Conv2d(conv2_input_channel,
+        #                                  conv2_output_channel,
+        #                                  conv2_sq_convolution)
+        #     dim = 24
+        #     if conv1_sq_convolution / avg_pooling_kernel_size > 0:
+        #         dim = conv1_sq_convolution // avg_pooling_kernel_size
+        #
+        #     full_connected_one_len = conv2_output_channel * (dim - conv2_sq_convolution + 1) ** 2
 
         # Fully connected layer to all the down-sampled pixels to all the hidden nodes
         self.fullyConnectedOne = torch.nn.Sequential(
@@ -66,6 +82,9 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
 
         if self.avg_pooling:
             out = self.avg_pooling(out)
+
+        if self.conv2:
+            out = self.conv2(out)
 
         out = out.reshape(out.size(0), -1)
         out = self.fullyConnectedOne(out)

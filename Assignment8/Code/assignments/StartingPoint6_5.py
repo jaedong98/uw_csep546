@@ -49,8 +49,11 @@ model = SimpleBlinkNeuralNetwork.SimpleBlinkNeuralNetwork(hiddenNodes=5,
                                                           conv1_input_channel=1,
                                                           conv1_output_channel=5,
                                                           conv1_sq_convolution=12,
-                                                          avg_pooling_kernel_size=8,
-                                                          avg_pooling_kernel_stride=8)
+                                                          avg_pooling_kernel_size=2,
+                                                          avg_pooling_kernel_stride=2,
+                                                          conv2_input_channel=-1,
+                                                          conv2_output_channel=15,
+                                                          conv2_sq_convolution=4)
 lossFunction = torch.nn.MSELoss(reduction='sum')
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
