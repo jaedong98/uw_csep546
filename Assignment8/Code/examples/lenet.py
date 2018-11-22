@@ -72,6 +72,7 @@ if __name__ == "__main__":
     import torch
     from EvaluationsStub import Evaluation
 
+    torch.manual_seed(1)
     model = LeNet()
     lossFunction = torch.nn.MSELoss(reduction='sum')
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
