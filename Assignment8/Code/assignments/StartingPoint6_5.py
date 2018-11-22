@@ -57,7 +57,7 @@ model = SimpleBlinkNeuralNetwork.SimpleBlinkNeuralNetwork(hiddenNodes=5,
 lossFunction = torch.nn.MSELoss(reduction='sum')
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
-for i in range(500):
+for i in range(1000):
     # Do the forward pass
     yTrainPredicted = model(xTrain)
 
