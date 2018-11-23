@@ -58,9 +58,10 @@ if __name__ == "__main__":
 
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
-                                                  includeRightEye=False,
+                                                  includeRightEye=True,
                                                   augments=['noise'])
-
+    xRaw = xRaw[: len(xRaw) // 2]
+    yRaw = yRaw[: len(yRaw) // 2]
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
     print("Train is %f percent closed." % (sum(yTrainRaw) / len(yTrainRaw)))
