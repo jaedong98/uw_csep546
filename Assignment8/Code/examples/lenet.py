@@ -45,9 +45,9 @@ class LeNet(nn.Module):
 
     def forward(self, x):
         dropout = nn.Dropout2d(p=0.2)
-        x = F.max_pool2d(dropout(self.conv1(x)), (2, 2), stride=2)
+        x = F.max_pool2d(self.conv1(x), (2, 2), stride=2)
         #x = nn.Softmax2d()(x)
-        x = F.max_pool2d(dropout(self.conv2(x)), (2, 2), stride=2)
+        x = F.max_pool2d(self.conv2(x), (2, 2), stride=2)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
         # x = self.fc2(x)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
-                                                  augments=['rot'])
+                                                  augments=['hflip'])
     #xRaw = xRaw[: len(xRaw) // 2]
     #yRaw = yRaw[: len(yRaw) // 2]
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    configuration = 'conv1_12out_hidden_node_20_dropout_left_only_w_rot_500'
+    configuration = 'conv1_12out_hidden_node_20_left_only_w_hflip_500'
     report_fname = os.path.join(report_path, '{}.md'.format(configuration))
     loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
     accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
