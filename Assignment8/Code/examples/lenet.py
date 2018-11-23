@@ -44,9 +44,10 @@ class LeNet(nn.Module):
         )
 
     def forward(self, x):
-        x = F.max_pool2d(self.conv1(x), (2, 2), stride=2)
+        dropout = nn.Dropout2d(p=0.2)
+        x = F.max_pool2d(dropout(self.conv1(x)), (2, 2), stride=2)
         #x = nn.Softmax2d()(x)
-        x = F.max_pool2d(self.conv2(x), (2, 2), stride=2)
+        x = F.max_pool2d(dropout(self.conv2(x)), (2, 2), stride=2)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
         # x = self.fc2(x)
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     from EvaluationsStub import Evaluation
 
     torch.manual_seed(1)
-    model = LeNet(hiddenNodes=40)
+    model = LeNet(hiddenNodes=20)
     lossFunction = torch.nn.MSELoss(reduction='sum')
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    configuration = 'conv1_12out_hidden_node_40_left_only_w_rot_500'
+    configuration = 'conv1_12out_hidden_node_20_dropout_left_only_w_rot_500'
     report_fname = os.path.join(report_path, '{}.md'.format(configuration))
     loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
     accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
@@ -126,15 +127,16 @@ if __name__ == "__main__":
                 reporter.write(str(ev))
                 reporter.write('\n')
 
-    yTestPredicted = model(xTest)
+        yTestPredicted = model(xTest)
 
-    yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+        yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
 
-    ev = Evaluation(yTest, yPred)
-    # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
-    # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
-    print("Accuracy simple:", ev.accuracy)
-    simpleAccuracy = ev.accuracy
+        ev = Evaluation(yTest, yPred)
+        # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
+        # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+        print("Accuracy simple:", ev.accuracy)
+        reporter.write(str(ev))
+        simpleAccuracy = ev.accuracy
 
     #accuracies.append((ITERATION, ev.accuracy))
     #accuracies.append((400, 100))
