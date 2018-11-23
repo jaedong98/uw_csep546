@@ -94,11 +94,6 @@ if __name__ == "__main__":
     import torch
     from EvaluationsStub import Evaluation
 
-    torch.manual_seed(1)
-    model = LeNet(hiddenNodes=20,
-                  conv_kernel_size=3)
-    lossFunction = torch.nn.MSELoss(reduction='sum')
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
     # Load the images and then convert them into tensors (no normalization)
     xTrainImages = [Image.open(path) for path in xTrainRaw]
@@ -110,55 +105,76 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
+    output_path = os.path.join(report_path, 'param_sweeps')
+    highest_accuracy = -1
+    highest_accuracy_fname = ''
 
-    ITERATION = 500
-    configuration = '{}_rot_iter{}'.format(model.config_name, ITERATION)
-    report_fname = os.path.join(report_path, '{}.md'.format(configuration))
-    loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
-    accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
+    for iteration in [500, 1000]:
+        for conv1_output_channel in [6, 8, 10, 12]:
+            for conv2_output_channel in [16, 20, 24, 28]:
+                for hiddenNodes in [10, 20, 40]:
+                    for conv_kernel_size in [3, 4, 5]:
 
-    losses = []
-    accuracies = []
-    with open(report_fname, 'w') as reporter:
-        for i in range(ITERATION):
-            # Do the forward pass
-            yTrainPredicted = model(xTrain)
+                        torch.manual_seed(1)
+                        model = LeNet(conv1_output_channel=conv1_output_channel,
+                                      conv2_output_channel=conv2_output_channel,
+                                      hiddenNodes=hiddenNodes,
+                                      conv_kernel_size=conv_kernel_size,
+                                      pooling_size=2)
+                        lossFunction = torch.nn.MSELoss(reduction='sum')
+                        optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
-            # Compute the training set loss
-            loss = lossFunction(yTrainPredicted, yTrain)
-            print(i, loss.item())
-            losses.append((i, loss.item()))
+                        configuration = '{}_rot_iter{}'.format(model.config_name, iteration)
+                        report_fname = os.path.join(output_path, '{}.md'.format(configuration))
+                        loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
+                        accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
 
-            # Reset the gradients in the network to zero
-            optimizer.zero_grad()
+                        losses = []
+                        accuracies = []
+                        with open(report_fname, 'w') as reporter:
+                            for i in range(iteration):
+                                # Do the forward pass
+                                yTrainPredicted = model(xTrain)
 
-            # Backprop the errors from the loss on this iteration
-            loss.backward()
+                                # Compute the training set loss
+                                loss = lossFunction(yTrainPredicted, yTrain)
+                                print(i, loss.item())
+                                losses.append((i, loss.item()))
 
-            # Do a weight update step
-            optimizer.step()
+                                # Reset the gradients in the network to zero
+                                optimizer.zero_grad()
 
-            if i > 0 and i % 100 == 0:
-                yTestPredicted = model(xTest)
-                yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
-                ev = Evaluation(yTest, yPred)
-                print("Accuracy simple:", ev.accuracy)
-                accuracies.append((i, ev.accuracy))
-                reporter.write(str(ev))
-                reporter.write('\n')
+                                # Backprop the errors from the loss on this iteration
+                                loss.backward()
 
-        yTestPredicted = model(xTest)
+                                # Do a weight update step
+                                optimizer.step()
 
-        yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                                if i > 0 and i % 100 == 0:
+                                    yTestPredicted = model(xTest)
+                                    yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                                    ev = Evaluation(yTest, yPred)
+                                    print("Accuracy simple:", ev.accuracy)
+                                    accuracies.append((i, ev.accuracy))
+                                    reporter.write(str(ev))
+                                    reporter.write('\n')
 
-        ev = Evaluation(yTest, yPred)
-        # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
-        # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
-        print("Accuracy simple:", ev.accuracy)
-        reporter.write(str(ev))
-        simpleAccuracy = ev.accuracy
+                            yTestPredicted = model(xTest)
 
-    accuracies.append((ITERATION, ev.accuracy))
-    draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
+                            yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
 
-    draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
+                            ev = Evaluation(yTest, yPred)
+                            # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
+                            # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+                            print("Accuracy simple:", ev.accuracy)
+                            reporter.write(str(ev))
+                            if ev.accuracy > highest_accuracy:
+                                highest_accuracy = ev.accuracy
+                                highest_accuracy_fname = configuration
+                        accuracies.append((iteration, ev.accuracy))
+                        draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
+
+                        draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
+
+    print("Highest Accuracy: {}".format(highest_accuracy))
+    print(highest_accuracy_fname)
