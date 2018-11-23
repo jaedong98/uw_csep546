@@ -8,22 +8,22 @@ class LeNet(nn.Module):
     def __init__(self, conv1_output_channel=6, conv2_output_channel=16, hiddenNodes=20):
         super(LeNet, self).__init__()
         # input channel = 1, output channel = 6, kernel_size = 5
-        # input size = (32, 32),
+        # input size = (24, 24),
         self.conv1 = nn.Conv2d(1, conv1_output_channel, 5)
-        # output size = (28, 28)  # (28 = 32 - 5 + 1)
+        # output size = (20, 20)  # (20 = 24 - 5 + 1)
 
-        # pulling (2, 2)
-        # output size = (14, 14)
+        # pooling (2, 2)
+        # output size = (10, 10)
 
         # input channel = 6, output channel = 16, kernel_size = 5
-        # input size = (14, 14),
+        # input size = (10, 10),
         self.conv2 = nn.Conv2d(conv1_output_channel, conv2_output_channel, 5)
-        # output size = (10, 10)  # (10 = 14 - 5 + 1)
+        # output size = (6, 6)  # (6 = 10 - 5 + 1)
 
         # pulling (2, 2)
-        # output size = (5, 5)
+        # output size = (3, 3)
 
-        # input dim = 16*5*5, output dim = hiddenNodes
+        # input dim = 16*3*3, output dim = hiddenNodes
         # self.fc1 = nn.Sequential(
         #     nn.Linear(144, 120),
         #     nn.Sigmoid()
@@ -33,6 +33,7 @@ class LeNet(nn.Module):
         #     nn.Linear(120, hiddenNodes),
         #     nn.Sigmoid()
         # )
+
         self.fc1 = nn.Sequential(
             nn.Linear(144, hiddenNodes),
             nn.Sigmoid()
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
-                                                  augments=['hflip'])
+                                                  augments=['rot', 'hflip'])
     #xRaw = xRaw[: len(xRaw) // 2]
     #yRaw = yRaw[: len(yRaw) // 2]
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
@@ -91,7 +92,7 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    configuration = 'conv1_12out_hidden_node_20_left_only_w_hflip_500'
+    configuration = 'conv1_12out_hidden_node_20_left_only_w_rot_hflip_500'
     report_fname = os.path.join(report_path, '{}.md'.format(configuration))
     loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
     accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
