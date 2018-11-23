@@ -1,3 +1,4 @@
+from Assignment4Support import draw_accuracies
 from torch import nn
 import torch.nn.functional as F
 
@@ -44,6 +45,7 @@ class LeNet(nn.Module):
 
     def forward(self, x):
         x = F.max_pool2d(self.conv1(x), (2, 2), stride=2)
+        #x = nn.Softmax2d()(x)
         x = F.max_pool2d(self.conv2(x), (2, 2), stride=2)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
@@ -53,20 +55,21 @@ class LeNet(nn.Module):
 
 
 if __name__ == "__main__":
-    from Assignment8.Code import kDataPath
+    from Assignment8.Code import kDataPath, report_path
     import Assignment5Support
 
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
-                                                  includeRightEye=True,
-                                                  augments=['rot', 'noise'])
-    xRaw = xRaw[: len(xRaw) // 2]
-    yRaw = yRaw[: len(yRaw) // 2]
+                                                  includeRightEye=False,
+                                                  augments=['rot'])
+    #xRaw = xRaw[: len(xRaw) // 2]
+    #yRaw = yRaw[: len(yRaw) // 2]
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
     print("Train is %f percent closed." % (sum(yTrainRaw) / len(yTrainRaw)))
     print("Test is %f percent closed." % (sum(yTestRaw) / len(yTestRaw)))
 
+    import os
     from PIL import Image
     import torchvision.transforms as transforms
     import torch
@@ -87,28 +90,41 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    for i in range(500):
-        # Do the forward pass
-        yTrainPredicted = model(xTrain)
+    configuration = 'softmax'
+    report_fname = os.path.join(report_path, '{}.md'.format(configuration))
+    loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
+    accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
 
-        # Compute the training set loss
-        loss = lossFunction(yTrainPredicted, yTrain)
-        print(i, loss.item())
+    ITERATION = 500
+    losses = []
+    accuracies = []
+    with open(report_fname, 'w') as reporter:
+        for i in range(ITERATION):
+            # Do the forward pass
+            yTrainPredicted = model(xTrain)
 
-        # Reset the gradients in the network to zero
-        optimizer.zero_grad()
+            # Compute the training set loss
+            loss = lossFunction(yTrainPredicted, yTrain)
+            print(i, loss.item())
+            losses.append((i, loss.item()))
 
-        # Backprop the errors from the loss on this iteration
-        loss.backward()
+            # Reset the gradients in the network to zero
+            optimizer.zero_grad()
 
-        # Do a weight update step
-        optimizer.step()
+            # Backprop the errors from the loss on this iteration
+            loss.backward()
 
-        if i > 0 and i % 100 == 0:
-            yTestPredicted = model(xTest)
-            yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
-            ev = Evaluation(yTest, yPred)
-            print("Accuracy simple:", ev.accuracy)
+            # Do a weight update step
+            optimizer.step()
+
+            if i > 0 and i % 100 == 0:
+                yTestPredicted = model(xTest)
+                yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                ev = Evaluation(yTest, yPred)
+                print("Accuracy simple:", ev.accuracy)
+                accuracies.append((i, ev.accuracy))
+                reporter.write(str(ev))
+                reporter.write('\n')
 
     yTestPredicted = model(xTest)
 
@@ -119,3 +135,8 @@ if __name__ == "__main__":
     # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
     print("Accuracy simple:", ev.accuracy)
     simpleAccuracy = ev.accuracy
+
+    #accuracies.append((ITERATION, ev.accuracy))
+    #accuracies.append((400, 100))
+
+    #draw_accuracies(accuracies, 'Iterations', 'Accuracy', configuration, accu_fname, [])
