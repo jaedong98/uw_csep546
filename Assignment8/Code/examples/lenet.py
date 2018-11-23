@@ -9,7 +9,7 @@ class LeNet(nn.Module):
         super(LeNet, self).__init__()
         # input channel = 1, output channel = 6, kernel_size = 5
         # input size = (32, 32),
-        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.conv1 = nn.Conv2d(1, 12, 5)
         # output size = (28, 28)  # (28 = 32 - 5 + 1)
 
         # pulling (2, 2)
@@ -17,7 +17,7 @@ class LeNet(nn.Module):
 
         # input channel = 6, output channel = 16, kernel_size = 5
         # input size = (14, 14),
-        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.conv2 = nn.Conv2d(12, 16, 5)
         # output size = (10, 10)  # (10 = 14 - 5 + 1)
 
         # pulling (2, 2)
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    configuration = 'softmax'
+    configuration = 'conv1_12out_left_only_w_rot_500'
     report_fname = os.path.join(report_path, '{}.md'.format(configuration))
     loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
     accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
