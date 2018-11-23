@@ -59,7 +59,7 @@ if __name__ == "__main__":
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
-                                                  augments=['rot'])
+                                                  augments=['noise'])
 
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
