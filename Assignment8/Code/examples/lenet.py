@@ -5,23 +5,40 @@ import torch.nn.functional as F
 
 class LeNet(nn.Module):
 
-    def __init__(self, conv1_output_channel=6, conv2_output_channel=16, hiddenNodes=20):
+    def __init__(self,
+                 conv1_output_channel=6,
+                 conv2_output_channel=16,
+                 conv_kernel_size=5,
+                 pooling_size=2,
+                 hiddenNodes=20):
+
+        self.config_name = 'c1oc{}_c2oc{}_cksize{}_psize{}_hnodes{}'\
+                            .format(conv1_output_channel,
+                                    conv2_output_channel,
+                                    conv_kernel_size,
+                                    pooling_size,
+                                    hiddenNodes)
+
         super(LeNet, self).__init__()
         # input channel = 1, output channel = 6, kernel_size = 5
         # input size = (24, 24),
-        self.conv1 = nn.Conv2d(1, conv1_output_channel, 5)
+        self.conv1 = nn.Conv2d(1, conv1_output_channel, conv_kernel_size)
+        conv1_out_dim = 24 - conv_kernel_size + 1
         # output size = (20, 20)  # (20 = 24 - 5 + 1)
 
         # pooling (2, 2)
         # output size = (10, 10)
+        pooling1_out_dim = conv1_out_dim // pooling_size
 
         # input channel = 6, output channel = 16, kernel_size = 5
         # input size = (10, 10),
-        self.conv2 = nn.Conv2d(conv1_output_channel, conv2_output_channel, 5)
+        self.conv2 = nn.Conv2d(conv1_output_channel, conv2_output_channel, conv_kernel_size)
+        conv2_out_dim = pooling1_out_dim - conv_kernel_size + 1
         # output size = (6, 6)  # (6 = 10 - 5 + 1)
 
         # pulling (2, 2)
         # output size = (3, 3)
+        pooling2_out_dim = conv2_out_dim // pooling_size
 
         # input dim = 16*3*3, output dim = hiddenNodes
         # self.fc1 = nn.Sequential(
@@ -35,7 +52,7 @@ class LeNet(nn.Module):
         # )
 
         self.fc1 = nn.Sequential(
-            nn.Linear(144, hiddenNodes),
+            nn.Linear(conv2_output_channel * pooling2_out_dim**2, hiddenNodes),
             nn.Sigmoid()
         )
         # input dim = 84, output dim = 10
@@ -63,7 +80,7 @@ if __name__ == "__main__":
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
-                                                  augments=['rot', 'hflip'])
+                                                  augments=['rot'])
     #xRaw = xRaw[: len(xRaw) // 2]
     #yRaw = yRaw[: len(yRaw) // 2]
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
@@ -78,7 +95,8 @@ if __name__ == "__main__":
     from EvaluationsStub import Evaluation
 
     torch.manual_seed(1)
-    model = LeNet(hiddenNodes=20)
+    model = LeNet(hiddenNodes=20,
+                  conv_kernel_size=3)
     lossFunction = torch.nn.MSELoss(reduction='sum')
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
@@ -92,12 +110,13 @@ if __name__ == "__main__":
     yTrain = torch.Tensor([[yValue] for yValue in yTrainRaw])
     yTest = torch.Tensor([[yValue] for yValue in yTestRaw])
 
-    configuration = 'conv1_12out_hidden_node_20_left_only_w_rot_hflip_500'
+
+    ITERATION = 500
+    configuration = '{}_rot_iter{}'.format(model.config_name, ITERATION)
     report_fname = os.path.join(report_path, '{}.md'.format(configuration))
     loss_fname = os.path.join(report_path, 'loss_{}.png'.format(configuration))
     accu_fname = os.path.join(report_path, 'accuracy_{}.png'.format(configuration))
 
-    ITERATION = 500
     losses = []
     accuracies = []
     with open(report_fname, 'w') as reporter:
@@ -139,7 +158,7 @@ if __name__ == "__main__":
         reporter.write(str(ev))
         simpleAccuracy = ev.accuracy
 
-    #accuracies.append((ITERATION, ev.accuracy))
-    #accuracies.append((400, 100))
+    accuracies.append((ITERATION, ev.accuracy))
+    draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
 
-    #draw_accuracies(accuracies, 'Iterations', 'Accuracy', configuration, accu_fname, [])
+    draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
