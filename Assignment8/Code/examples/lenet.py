@@ -78,8 +78,8 @@ if __name__ == "__main__":
     import Assignment5Support
 
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
-                                                  includeLeftEye=False,
-                                                  includeRightEye=True,
+                                                  includeLeftEye=True,
+                                                  includeRightEye=False,
                                                   augments=['rot'])
     #xRaw = xRaw[: len(xRaw) // 2]
     #yRaw = yRaw[: len(yRaw) // 2]
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     for iteration in [1000]:
         for conv1_output_channel in [6, 8, 10]:
             for conv2_output_channel in [16, 20, 24, 28]:
-                for hiddenNodes in [40]:
+                for hiddenNodes in [84]:
                     for conv_kernel_size in [3, 4, 5]:
                         for pooling_size in [2]:
                             torch.manual_seed(1)
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                             lossFunction = torch.nn.MSELoss(reduction='sum')
                             optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
-                            configuration = '{}_right_rot_iter{}'.format(model.config_name, iteration)
+                            configuration = '{}_rot_iter{}'.format(model.config_name, iteration)
                             report_fname = os.path.join(output_path, '{}.md'.format(configuration))
                             loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
                             accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
