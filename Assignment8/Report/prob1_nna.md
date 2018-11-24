@@ -55,7 +55,12 @@ And I updated the model to make the model similar to LeNet to begin with and see
     I increase the volume of the training set by augmenting images with three methods; rotation, noise, and flipping.
 
   * SoftMax2D and Dropout2D
-    I also tried both options on top of both convolutions but didn't see the noticeable changes. Dorpout2D showed the randomness as expected but didn't improve the accuracy dramatically.
+    I also tried both options on top of both convolutions but didn't see the noticeable changes. Dorpout2D showed the randomness as expected but didn't either improve the accuracy or continue the learning momentum above 96% accuracy.
+
+    | SoftMax2D (output: 92.076 %)| Dropout2D (output: highest 96.32 %)|
+    |:-:|:-:|
+    | ![accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000](param_sweeps/accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000.png)| ![accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000](param_sweeps/accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000.png)|
+    | ![loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000](param_sweeps/loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000.png)| ![loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000](param_sweeps/loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000.png)|
 
 * Architecutre of the Best Model
   Given the results of parameter sweeps and studying the options of activations, selections(dropout), normalization(softmax), below architecture configuration provided the highest accuracy on test set including randomly rotated images.
