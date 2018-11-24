@@ -78,8 +78,8 @@ if __name__ == "__main__":
     import Assignment5Support
 
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
-                                                  includeLeftEye=True,
-                                                  includeRightEye=False,
+                                                  includeLeftEye=False,
+                                                  includeRightEye=True,
                                                   augments=['rot'])
     #xRaw = xRaw[: len(xRaw) // 2]
     #yRaw = yRaw[: len(yRaw) // 2]
@@ -114,67 +114,67 @@ if __name__ == "__main__":
             for conv2_output_channel in [16, 20, 24, 28]:
                 for hiddenNodes in [40]:
                     for conv_kernel_size in [3, 4, 5]:
+                        for pooling_size in [2]:
+                            torch.manual_seed(1)
+                            model = LeNet(conv1_output_channel=conv1_output_channel,
+                                          conv2_output_channel=conv2_output_channel,
+                                          hiddenNodes=hiddenNodes,
+                                          conv_kernel_size=conv_kernel_size,
+                                          pooling_size=pooling_size)
+                            lossFunction = torch.nn.MSELoss(reduction='sum')
+                            optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
-                        torch.manual_seed(1)
-                        model = LeNet(conv1_output_channel=conv1_output_channel,
-                                      conv2_output_channel=conv2_output_channel,
-                                      hiddenNodes=hiddenNodes,
-                                      conv_kernel_size=conv_kernel_size,
-                                      pooling_size=2)
-                        lossFunction = torch.nn.MSELoss(reduction='sum')
-                        optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
+                            configuration = '{}_right_rot_iter{}'.format(model.config_name, iteration)
+                            report_fname = os.path.join(output_path, '{}.md'.format(configuration))
+                            loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
+                            accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
 
-                        configuration = '{}_rot_iter{}'.format(model.config_name, iteration)
-                        report_fname = os.path.join(output_path, '{}.md'.format(configuration))
-                        loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
-                        accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
+                            losses = []
+                            accuracies = []
+                            with open(report_fname, 'w') as reporter:
+                                for i in range(iteration):
+                                    # Do the forward pass
+                                    yTrainPredicted = model(xTrain)
 
-                        losses = []
-                        accuracies = []
-                        with open(report_fname, 'w') as reporter:
-                            for i in range(iteration):
-                                # Do the forward pass
-                                yTrainPredicted = model(xTrain)
+                                    # Compute the training set loss
+                                    loss = lossFunction(yTrainPredicted, yTrain)
+                                    print(i, loss.item())
+                                    losses.append((i, loss.item()))
 
-                                # Compute the training set loss
-                                loss = lossFunction(yTrainPredicted, yTrain)
-                                print(i, loss.item())
-                                losses.append((i, loss.item()))
+                                    # Reset the gradients in the network to zero
+                                    optimizer.zero_grad()
 
-                                # Reset the gradients in the network to zero
-                                optimizer.zero_grad()
+                                    # Backprop the errors from the loss on this iteration
+                                    loss.backward()
 
-                                # Backprop the errors from the loss on this iteration
-                                loss.backward()
+                                    # Do a weight update step
+                                    optimizer.step()
 
-                                # Do a weight update step
-                                optimizer.step()
+                                    if i > 0 and i % 100 == 0:
+                                        yTestPredicted = model(xTest)
+                                        yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                                        ev = Evaluation(yTest, yPred)
+                                        print("Accuracy simple:", ev.accuracy)
+                                        accuracies.append((i, ev.accuracy))
+                                        reporter.write(str(ev))
+                                        reporter.write('\n')
 
-                                if i > 0 and i % 100 == 0:
-                                    yTestPredicted = model(xTest)
-                                    yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
-                                    ev = Evaluation(yTest, yPred)
-                                    print("Accuracy simple:", ev.accuracy)
-                                    accuracies.append((i, ev.accuracy))
-                                    reporter.write(str(ev))
-                                    reporter.write('\n')
+                                yTestPredicted = model(xTest)
 
-                            yTestPredicted = model(xTest)
+                                yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
 
-                            yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                                ev = Evaluation(yTest, yPred)
+                                # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
+                                # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+                                print("Accuracy simple:", ev.accuracy)
+                                reporter.write(str(ev))
+                                if ev.accuracy > highest_accuracy:
+                                    highest_accuracy = ev.accuracy
+                                    highest_accuracy_fname = configuration
+                            accuracies.append((iteration, ev.accuracy))
+                            draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
 
-                            ev = Evaluation(yTest, yPred)
-                            # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
-                            # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
-                            print("Accuracy simple:", ev.accuracy)
-                            reporter.write(str(ev))
-                            if ev.accuracy > highest_accuracy:
-                                highest_accuracy = ev.accuracy
-                                highest_accuracy_fname = configuration
-                        accuracies.append((iteration, ev.accuracy))
-                        draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
-
-                        draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
+                            draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
 
     print("Highest Accuracy: {}".format(highest_accuracy))
     print(highest_accuracy_fname)
