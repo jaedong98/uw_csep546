@@ -1,6 +1,5 @@
 from Assignment4Support import draw_accuracies
 import torch
-import torch.nn.functional as F
 
 
 class SimpleBlinkNeuralNetwork(torch.nn.Module):
@@ -20,23 +19,21 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
                                     hiddenNodes)
 
         super(SimpleBlinkNeuralNetwork, self).__init__()
-        # input channel = 1, output channel = 6, kernel_size = 5
-        # input size = (24, 24),
+        # input size = (24, 24)
         self.conv1 = torch.nn.Conv2d(1, conv1_output_channel, conv_kernel_size)
         conv1_out_dim = 24 - conv_kernel_size + 1
         # output size = (20, 20)  # (20 = 24 - 5 + 1)
 
-        # pooling (2, 2)
+        # pooling (2, 2) in forward()
         # output size = (10, 10)
         pooling1_out_dim = conv1_out_dim // pooling_size
 
-        # input channel = 6, output channel = 16, kernel_size = 5
         # input size = (10, 10),
         self.conv2 = torch.nn.Conv2d(conv1_output_channel, conv2_output_channel, conv_kernel_size)
         conv2_out_dim = pooling1_out_dim - conv_kernel_size + 1
         # output size = (6, 6)  # (6 = 10 - 5 + 1)
 
-        # pulling (2, 2)
+        # pooling (2, 2) in forward()
         # output size = (3, 3)
         pooling2_out_dim = conv2_out_dim // pooling_size
 
@@ -45,12 +42,12 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
             torch.nn.Sigmoid()
         )
 
+        # Note: this layer is disabled for highest accuracy.
         self.fc2 = torch.nn.Sequential(
             torch.nn.Linear(hiddenNodes, 10),
             torch.nn.Sigmoid()
         )
 
-        # input dim = 84, output dim = 10
         self.fc3 = torch.nn.Sequential(
             torch.nn.Linear(10, 1),
             torch.nn.Sigmoid()
@@ -58,9 +55,9 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
 
     def forward(self, x):
         # dropout = torch.nnDropout2d(p=0.2) # didn't increase accuracy
-        x = F.max_pool2d(self.conv1(x), (2, 2), stride=2)
+        x = torch.nn.functional.max_pool2d(self.conv1(x), (2, 2), stride=2)
         # x = torch.nnSoftmax2d()(x)  # didn't increase accuracy
-        x = F.max_pool2d(self.conv2(x), (2, 2), stride=2)
+        x = torch.nn.functional.max_pool2d(self.conv2(x), (2, 2), stride=2)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
         x = self.fc2(x)
@@ -72,6 +69,7 @@ if __name__ == "__main__":
     from Assignment8.Code import kDataPath, report_path
     import Assignment5Support
 
+    # modifed load raw data to select which group of image to read
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
