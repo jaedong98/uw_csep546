@@ -61,12 +61,14 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
     def forward(self, x):
         # dropout = torch.nnnDropout2d(p=0.2) # didn't increase accuracy
         x = torch.nn.functional.max_pool2d(self.conv1(x), (2, 2), stride=2)
-        x = torch.nn.Softmax2d()(x)  # didn't increase accuracy
+        # x = torch.nn.Softmax2d()(x)  # didn't increase accuracy
         x = torch.nn.functional.max_pool2d(self.conv2(x), (2, 2), stride=2)
+        x = torch.nn.Softmax2d()(x)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
         #x = self.fc2(x)
         x = self.fc3(x)
+
         return x
 
 
