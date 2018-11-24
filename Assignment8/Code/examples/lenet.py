@@ -1,9 +1,9 @@
 from Assignment4Support import draw_accuracies
-from torch import nn
+import torch
 import torch.nn.functional as F
 
 
-class LeNet(nn.Module):
+class SimpleBlinkNeuralNetwork(torch.nn.Module):
 
     def __init__(self,
                  conv1_output_channel=6,
@@ -19,10 +19,10 @@ class LeNet(nn.Module):
                                     pooling_size,
                                     hiddenNodes)
 
-        super(LeNet, self).__init__()
+        super(SimpleBlinkNeuralNetwork, self).__init__()
         # input channel = 1, output channel = 6, kernel_size = 5
         # input size = (24, 24),
-        self.conv1 = nn.Conv2d(1, conv1_output_channel, conv_kernel_size)
+        self.conv1 = torch.nn.Conv2d(1, conv1_output_channel, conv_kernel_size)
         conv1_out_dim = 24 - conv_kernel_size + 1
         # output size = (20, 20)  # (20 = 24 - 5 + 1)
 
@@ -32,7 +32,7 @@ class LeNet(nn.Module):
 
         # input channel = 6, output channel = 16, kernel_size = 5
         # input size = (10, 10),
-        self.conv2 = nn.Conv2d(conv1_output_channel, conv2_output_channel, conv_kernel_size)
+        self.conv2 = torch.nn.Conv2d(conv1_output_channel, conv2_output_channel, conv_kernel_size)
         conv2_out_dim = pooling1_out_dim - conv_kernel_size + 1
         # output size = (6, 6)  # (6 = 10 - 5 + 1)
 
@@ -40,35 +40,30 @@ class LeNet(nn.Module):
         # output size = (3, 3)
         pooling2_out_dim = conv2_out_dim // pooling_size
 
-        # input dim = 16*3*3, output dim = hiddenNodes
-        # self.fc1 = nn.Sequential(
-        #     nn.Linear(144, 120),
-        #     nn.Sigmoid()
-        # )
-        # # input dim = 120, output dim = 84
-        # self.fc2 = nn.Sequential(
-        #     nn.Linear(120, hiddenNodes),
-        #     nn.Sigmoid()
-        # )
-
-        self.fc1 = nn.Sequential(
-            nn.Linear(conv2_output_channel * pooling2_out_dim**2, hiddenNodes),
-            nn.Sigmoid()
+        self.fc1 = torch.nn.Sequential(
+            torch.nn.Linear(conv2_output_channel * pooling2_out_dim**2, hiddenNodes),
+            torch.nn.Sigmoid()
         )
+
+        self.fc2 = torch.nn.Sequential(
+            torch.nn.Linear(hiddenNodes, 10),
+            torch.nn.Sigmoid()
+        )
+
         # input dim = 84, output dim = 10
-        self.fc3 = nn.Sequential(
-            nn.Linear(hiddenNodes, 1),
-            nn.Sigmoid()
+        self.fc3 = torch.nn.Sequential(
+            torch.nn.Linear(10, 1),
+            torch.nn.Sigmoid()
         )
 
     def forward(self, x):
-        dropout = nn.Dropout2d(p=0.2)
+        # dropout = torch.nnDropout2d(p=0.2) # didn't increase accuracy
         x = F.max_pool2d(self.conv1(x), (2, 2), stride=2)
-        #x = nn.Softmax2d()(x)
+        # x = torch.nnSoftmax2d()(x)  # didn't increase accuracy
         x = F.max_pool2d(self.conv2(x), (2, 2), stride=2)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
-        # x = self.fc2(x)
+        x = self.fc2(x)
         x = self.fc3(x)
         return x
 
@@ -81,8 +76,7 @@ if __name__ == "__main__":
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
                                                   augments=['rot'])
-    #xRaw = xRaw[: len(xRaw) // 2]
-    #yRaw = yRaw[: len(yRaw) // 2]
+
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
     print("Train is %f percent closed." % (sum(yTrainRaw) / len(yTrainRaw)))
@@ -93,7 +87,6 @@ if __name__ == "__main__":
     import torchvision.transforms as transforms
     import torch
     from EvaluationsStub import Evaluation
-
 
     # Load the images and then convert them into tensors (no normalization)
     xTrainImages = [Image.open(path) for path in xTrainRaw]
@@ -112,15 +105,16 @@ if __name__ == "__main__":
     for iteration in [1000]:
         for conv1_output_channel in [6, 8, 10]:
             for conv2_output_channel in [16, 20, 24, 28]:
-                for hiddenNodes in [84]:
-                    for conv_kernel_size in [3, 4, 5]:
+                for hiddenNodes in [80]:
+                    for conv_kernel_size in [5, 4, 3]:
                         for pooling_size in [2]:
                             torch.manual_seed(1)
-                            model = LeNet(conv1_output_channel=conv1_output_channel,
-                                          conv2_output_channel=conv2_output_channel,
-                                          hiddenNodes=hiddenNodes,
-                                          conv_kernel_size=conv_kernel_size,
-                                          pooling_size=pooling_size)
+                            model = SimpleBlinkNeuralNetwork(
+                                    conv1_output_channel=conv1_output_channel,
+                                    conv2_output_channel=conv2_output_channel,
+                                    hiddenNodes=hiddenNodes,
+                                    conv_kernel_size=conv_kernel_size,
+                                    pooling_size=pooling_size)
                             lossFunction = torch.nn.MSELoss(reduction='sum')
                             optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
