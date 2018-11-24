@@ -26,6 +26,7 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
 
         # pooling (2, 2) in forward()
         # output size = (10, 10)
+        self.pooling_size = pooling_size
         pooling1_out_dim = conv1_out_dim // pooling_size
 
         # input size = (10, 10),
@@ -60,9 +61,9 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
 
     def forward(self, x):
         #dropout = torch.nn.Dropout2d(p=0.2)  # didn't increase accuracy
-        x = torch.nn.functional.max_pool2d(self.conv1(x), (2, 2), stride=2)
+        x = torch.nn.functional.max_pool2d(self.conv1(x), self.pooling_size, stride=2)
         # x = torch.nn.Softmax2d()(x)  # didn't increase accuracy
-        x = torch.nn.functional.max_pool2d(self.conv2(x), (2, 2), stride=2)
+        x = torch.nn.functional.max_pool2d(self.conv2(x), self.pooling_size, stride=2)
         #x = torch.nn.Softmax2d()(x)
         #x = dropout(x)
         x = x.reshape(x.size(0), -1)
@@ -108,73 +109,141 @@ if __name__ == "__main__":
     highest_accuracy = -1
     highest_accuracy_fname = ''
 
-    for iteration in [1000]:
-        for conv1_output_channel in [6]:
-            for conv2_output_channel in [16]:
-                for hiddenNodes in [40]:
-                    for conv_kernel_size in [3]:
-                        for pooling_size in [2]:
-                            torch.manual_seed(1)
-                            model = SimpleBlinkNeuralNetwork(
-                                    conv1_output_channel=conv1_output_channel,
-                                    conv2_output_channel=conv2_output_channel,
-                                    hiddenNodes=hiddenNodes,
-                                    conv_kernel_size=conv_kernel_size,
-                                    pooling_size=pooling_size)
-                            lossFunction = torch.nn.MSELoss(reduction='sum')
-                            optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
+    iteration = 2000
+    for lr in [1e-3, 1e-4]:
+        for momentum in [0.5, 0.7]:
+            torch.manual_seed(1)
+            model = SimpleBlinkNeuralNetwork(
+                    conv1_output_channel=6,
+                    conv2_output_channel=16,
+                    hiddenNodes=40,
+                    conv_kernel_size=2,
+                    pooling_size=2)
+            lossFunction = torch.nn.MSELoss(reduction='sum')
+            optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=momentum)
 
-                            configuration = '{}_highest_rot_hflip_iter{}'.format(model.config_name, iteration)
-                            report_fname = os.path.join(output_path, '{}.md'.format(configuration))
-                            loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
-                            accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
+            configuration = '{}_rot_hflip_lr{}_mt{}_iter{}'.format(model.config_name, lr, momentum, iteration)
+            report_fname = os.path.join(output_path, '{}.md'.format(configuration))
+            loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
+            accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
 
-                            losses = []
-                            accuracies = []
-                            with open(report_fname, 'w') as reporter:
-                                for i in range(iteration):
-                                    # Do the forward pass
-                                    yTrainPredicted = model(xTrain)
+            losses = []
+            accuracies = []
+            with open(report_fname, 'w') as reporter:
+                for i in range(iteration):
+                    # Do the forward pass
+                    yTrainPredicted = model(xTrain)
 
-                                    # Compute the training set loss
-                                    loss = lossFunction(yTrainPredicted, yTrain)
-                                    print(i, loss.item())
-                                    losses.append((i, loss.item()))
+                    # Compute the training set loss
+                    loss = lossFunction(yTrainPredicted, yTrain)
+                    print(i, loss.item())
+                    losses.append((i, loss.item()))
 
-                                    # Reset the gradients in the network to zero
-                                    optimizer.zero_grad()
+                    # Reset the gradients in the network to zero
+                    optimizer.zero_grad()
 
-                                    # Backprop the errors from the loss on this iteration
-                                    loss.backward()
+                    # Backprop the errors from the loss on this iteration
+                    loss.backward()
 
-                                    # Do a weight update step
-                                    optimizer.step()
+                    # Do a weight update step
+                    optimizer.step()
 
-                                    if i > 0 and i % 100 == 0:
-                                        yTestPredicted = model(xTest)
-                                        yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
-                                        ev = Evaluation(yTest, yPred)
-                                        print("Accuracy simple:", ev.accuracy)
-                                        accuracies.append((i, ev.accuracy))
-                                        reporter.write(str(ev))
-                                        reporter.write('\n')
+                    if i > 0 and i % 100 == 0:
+                        yTestPredicted = model(xTest)
+                        yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                        ev = Evaluation(yTest, yPred)
+                        print("Accuracy simple:", ev.accuracy)
+                        accuracies.append((i, ev.accuracy))
+                        reporter.write(str(ev))
+                        reporter.write('\n')
 
-                                yTestPredicted = model(xTest)
+                yTestPredicted = model(xTest)
 
-                                yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+                yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
 
-                                ev = Evaluation(yTest, yPred)
-                                # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
-                                # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
-                                print("Accuracy simple:", ev.accuracy)
-                                reporter.write(str(ev))
-                                if ev.accuracy > highest_accuracy:
-                                    highest_accuracy = ev.accuracy
-                                    highest_accuracy_fname = configuration
-                            accuracies.append((iteration, ev.accuracy))
-                            draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
+                ev = Evaluation(yTest, yPred)
+                # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
+                # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+                print("Accuracy simple:", ev.accuracy)
+                reporter.write(str(ev))
+                if ev.accuracy > highest_accuracy:
+                    highest_accuracy = ev.accuracy
+                    highest_accuracy_fname = configuration
+            accuracies.append((iteration, ev.accuracy))
+            draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
 
-                            draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
+            draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
 
     print("Highest Accuracy: {}".format(highest_accuracy))
     print(highest_accuracy_fname)
+
+    # for iteration in [1000]:
+    #     for conv1_output_channel in [6]:
+    #         for conv2_output_channel in [16]:
+    #             for hiddenNodes in [40]:
+    #                 for conv_kernel_size in [2]:
+    #                     for pooling_size in [2]:
+    #                         torch.manual_seed(1)
+    #                         model = SimpleBlinkNeuralNetwork(
+    #                                 conv1_output_channel=conv1_output_channel,
+    #                                 conv2_output_channel=conv2_output_channel,
+    #                                 hiddenNodes=hiddenNodes,
+    #                                 conv_kernel_size=conv_kernel_size,
+    #                                 pooling_size=pooling_size)
+    #                         lossFunction = torch.nn.MSELoss(reduction='sum')
+    #                         optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.7)
+    #
+    #                         configuration = '{}_highest_rot_hflip_mt07_iter{}'.format(model.config_name, iteration)
+    #                         report_fname = os.path.join(output_path, '{}.md'.format(configuration))
+    #                         loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
+    #                         accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
+    #
+    #                         losses = []
+    #                         accuracies = []
+    #                         with open(report_fname, 'w') as reporter:
+    #                             for i in range(iteration):
+    #                                 # Do the forward pass
+    #                                 yTrainPredicted = model(xTrain)
+    #
+    #                                 # Compute the training set loss
+    #                                 loss = lossFunction(yTrainPredicted, yTrain)
+    #                                 print(i, loss.item())
+    #                                 losses.append((i, loss.item()))
+    #
+    #                                 # Reset the gradients in the network to zero
+    #                                 optimizer.zero_grad()
+    #
+    #                                 # Backprop the errors from the loss on this iteration
+    #                                 loss.backward()
+    #
+    #                                 # Do a weight update step
+    #                                 optimizer.step()
+    #
+    #                                 if i > 0 and i % 100 == 0:
+    #                                     yTestPredicted = model(xTest)
+    #                                     yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+    #                                     ev = Evaluation(yTest, yPred)
+    #                                     print("Accuracy simple:", ev.accuracy)
+    #                                     accuracies.append((i, ev.accuracy))
+    #                                     reporter.write(str(ev))
+    #                                     reporter.write('\n')
+    #
+    #                             yTestPredicted = model(xTest)
+    #
+    #                             yPred = [1 if pred > 0.5 else 0 for pred in yTestPredicted]
+    #
+    #                             ev = Evaluation(yTest, yPred)
+    #                             # print("Accuracy simple:", Evaluations.Accuracy(yTest, yPred))
+    #                             # simpleAccuracy = Evaluations.Accuracy(yTest, yPred)
+    #                             print("Accuracy simple:", ev.accuracy)
+    #                             reporter.write(str(ev))
+    #                             if ev.accuracy > highest_accuracy:
+    #                                 highest_accuracy = ev.accuracy
+    #                                 highest_accuracy_fname = configuration
+    #                         accuracies.append((iteration, ev.accuracy))
+    #                         draw_accuracies([accuracies], 'Iterations', 'Accuracy', configuration, accu_fname, [])
+    #
+    #                         draw_accuracies([losses], 'Iterations', 'Losses', configuration, loss_fname, [], data_pt='-')
+    #
+    # print("Highest Accuracy: {}".format(highest_accuracy))
+    # print(highest_accuracy_fname)
