@@ -109,10 +109,10 @@ if __name__ == "__main__":
     highest_accuracy = -1
     highest_accuracy_fname = ''
 
-    for iteration in [500, 1000]:
-        for conv1_output_channel in [6, 8, 10, 12]:
+    for iteration in [1000]:
+        for conv1_output_channel in [6, 8, 10]:
             for conv2_output_channel in [16, 20, 24, 28]:
-                for hiddenNodes in [10, 20, 40]:
+                for hiddenNodes in [40]:
                     for conv_kernel_size in [3, 4, 5]:
 
                         torch.manual_seed(1)
