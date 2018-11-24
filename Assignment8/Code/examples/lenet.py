@@ -59,12 +59,12 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
         )
 
     def forward(self, x):
-        dropout = torch.nn.Dropout2d(p=0.2)  # didn't increase accuracy
+        #dropout = torch.nn.Dropout2d(p=0.2)  # didn't increase accuracy
         x = torch.nn.functional.max_pool2d(self.conv1(x), (2, 2), stride=2)
         # x = torch.nn.Softmax2d()(x)  # didn't increase accuracy
         x = torch.nn.functional.max_pool2d(self.conv2(x), (2, 2), stride=2)
         #x = torch.nn.Softmax2d()(x)
-        x = dropout(x)
+        #x = dropout(x)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
         #x = self.fc2(x)
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     (xRaw, yRaw) = Assignment5Support.LoadRawData(kDataPath,
                                                   includeLeftEye=True,
                                                   includeRightEye=False,
-                                                  augments=['rot'])
+                                                  augments=['rot', 'hflip'])
 
     (xTrainRaw, yTrainRaw, xTestRaw, yTestRaw) = Assignment5Support.TrainTestSplit(xRaw, yRaw, percentTest=.25)
 
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                             lossFunction = torch.nn.MSELoss(reduction='sum')
                             optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
-                            configuration = '{}_dropout_rot_iter{}'.format(model.config_name, iteration)
+                            configuration = '{}_highest_rot_hflip_iter{}'.format(model.config_name, iteration)
                             report_fname = os.path.join(output_path, '{}.md'.format(configuration))
                             loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
                             accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
