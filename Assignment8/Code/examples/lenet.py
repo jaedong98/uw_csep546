@@ -43,24 +43,29 @@ class SimpleBlinkNeuralNetwork(torch.nn.Module):
         )
 
         # Note: this layer is disabled for highest accuracy.
-        self.fc2 = torch.nn.Sequential(
-            torch.nn.Linear(hiddenNodes, 10),
-            torch.nn.Sigmoid()
-        )
+        # self.fc2 = torch.nn.Sequential(
+        #     torch.nn.Linear(hiddenNodes, 10),
+        #     torch.nn.Sigmoid()
+        # )
+        #
+        # self.fc3 = torch.nn.Sequential(
+        #     torch.nn.Linear(10, 1),
+        #     torch.nn.Sigmoid()
+        # )
 
         self.fc3 = torch.nn.Sequential(
-            torch.nn.Linear(10, 1),
+            torch.nn.Linear(hiddenNodes, 1),
             torch.nn.Sigmoid()
         )
 
     def forward(self, x):
-        # dropout = torch.nnDropout2d(p=0.2) # didn't increase accuracy
+        # dropout = torch.nnnDropout2d(p=0.2) # didn't increase accuracy
         x = torch.nn.functional.max_pool2d(self.conv1(x), (2, 2), stride=2)
-        # x = torch.nnSoftmax2d()(x)  # didn't increase accuracy
+        x = torch.nn.Softmax2d()(x)  # didn't increase accuracy
         x = torch.nn.functional.max_pool2d(self.conv2(x), (2, 2), stride=2)
         x = x.reshape(x.size(0), -1)
         x = self.fc1(x)
-        x = self.fc2(x)
+        #x = self.fc2(x)
         x = self.fc3(x)
         return x
 
@@ -101,10 +106,10 @@ if __name__ == "__main__":
     highest_accuracy_fname = ''
 
     for iteration in [1000]:
-        for conv1_output_channel in [6, 8, 10]:
-            for conv2_output_channel in [16, 20, 24, 28]:
-                for hiddenNodes in [80]:
-                    for conv_kernel_size in [5, 4, 3]:
+        for conv1_output_channel in [6]:
+            for conv2_output_channel in [16]:
+                for hiddenNodes in [40]:
+                    for conv_kernel_size in [3]:
                         for pooling_size in [2]:
                             torch.manual_seed(1)
                             model = SimpleBlinkNeuralNetwork(
@@ -116,7 +121,7 @@ if __name__ == "__main__":
                             lossFunction = torch.nn.MSELoss(reduction='sum')
                             optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
-                            configuration = '{}_rot_iter{}'.format(model.config_name, iteration)
+                            configuration = '{}_soft_max_rot_iter{}'.format(model.config_name, iteration)
                             report_fname = os.path.join(output_path, '{}.md'.format(configuration))
                             loss_fname = os.path.join(output_path, 'loss_{}.png'.format(configuration))
                             accu_fname = os.path.join(output_path, 'accuracy_{}.png'.format(configuration))
