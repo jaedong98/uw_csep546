@@ -52,10 +52,7 @@ for runNumber in range(n):
 
         currentState = Assignment7Support.CartPoleObservationToStateSpace(observation)
         observation, reward, isDone, info = env.step(qlearner.GetAction(currentState,
-                                                                        learningMode=False,
-                                                                        randomActionRate=randomActionRate,
-                                                                        actionProbabilityBase=actionProbabilityBase
-                                                                        ))
+                                                                        learningMode=False))
 
         totalReward += reward
 

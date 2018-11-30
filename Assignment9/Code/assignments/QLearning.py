@@ -18,9 +18,12 @@ class QLearning(object):
     def GetAction(self,
                   currentState,
                   learningMode,
-                  randomActionRate,
-                  actionProbabilityBase):
-        return np.argmax(self.q_table[tuple(currentState)])
+                  actionProbabilityBase=1.8,
+                  randomActionRate=0.01):
+        action = np.argmax(self.q_table[tuple(currentState)])
+        return action
+        if not learningMode:
+            return action
 
     def ObserveAction(self,
                       oldState,
@@ -28,6 +31,11 @@ class QLearning(object):
                       newState,
                       reward,
                       learningRateScale):
-        best_q = np.amax(self.q_table[oldState])
-        self.q_table[tuple(oldState) + (action,)] += learningRateScale * (reward + self._discountRate * (best_q) - self.q_table[tuple(newState) + (action,)])
+
+        alpha_n = 1 / (1 + learningRateScale * self.visit_n[tuple(newState) + (action,)])  # (13.11)
+        updates = (1 - alpha_n) * self.q_table[tuple(oldState) + (action,)] + alpha_n * (self._discountRate + np.argmax(self.q_table[tuple(newState)]))
+        self.q_table[tuple(oldState) + (action,)] = updates
+        self.visit_n[tuple(newState), (action,)] += 1
+        #best_q = np.amax(self.q_table[oldState])
+        #self.q_table[tuple(oldState) + (action,)] += learningRateScale * (reward + self._discountRate * (best_q) - self.q_table[tuple(newState) + (action,)])
 
