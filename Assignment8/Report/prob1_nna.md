@@ -51,7 +51,7 @@ And I updated the model to make the model similar to LeNet to begin with and see
   ```
 
    * Data Augmentation
-     I had the hard time to hit the about 92.5% accuracy at most and decided the option to augment input data and use more volume of the training set. I wrote a script that reads all sample files and randomly rotate, flip, add noise to each image and save them in each associated input folder (so that I can use same label; close/open and sides).
+     The model the hard time to hit the about 92.5% accuracy at most. I decided the option to augment input data and use more volume of the training set. I wrote a script that reads all sample files and randomly rotate, flip, add noise to each image and save them in each associated input folder (so that I can use same label; close/open and sides).
     I increase the volume of the training set by augmenting images with three methods; rotation, noise, and flipping.
 
   * SoftMax2D and Dropout2D
@@ -61,6 +61,9 @@ And I updated the model to make the model similar to LeNet to begin with and see
     |:-:|:-:|
     | ![accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000](param_sweeps/accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000.png)| ![accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000](param_sweeps/accuracy_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000.png)|
     | ![loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000](param_sweeps/loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_soft_max_rot_iter1000.png)| ![loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000](param_sweeps/loss_c1oc6_c2oc16_cksize3_psize2_hnodes40_dropout_rot_iter1000.png)|
+
+  * Once I figure the parameters for the best model, I also ran parameter sweep on optimizers. I picked the different momemtums and learning rates but got 95% at highest when running rate is 1e-4 and momemtum is 0.7, which is still lower than the case with momentum, 0.9.
+  ![accuracy_c1oc6_c2oc16_cksize2_psize2_hnodes40_highest_rot_hflip_mt07_iter1000](param_sweeps/accuracy_c1oc6_c2oc16_cksize2_psize2_hnodes40_highest_rot_hflip_mt07_iter1000.png)
 
 * Architecutre of the Best Model
   Given the results of parameter sweeps and studying the options of activations, selections(dropout), normalization(softmax), below architecture configuration provided the highest accuracy on test set including randomly rotated images.
