@@ -105,7 +105,7 @@ if __name__ == '__main__':
         data.append((i, avg_score))
 
     draw_accuracies([data],
-                    'Run Numbers',
+                    'Trials',
                     'Avg. Score',
                     'Independent Runs with Selected Parameters',
                     mt_cart_best_params_img_fname, [], title_y=1.03)
