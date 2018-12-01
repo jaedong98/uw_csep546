@@ -9,10 +9,10 @@ mountainCarBinsPerDimension = 20
 mountainCarLow = [ -1.2 , -0.07 ]
 mountainCarHigh = [ 0.6 , 0.07 ]
 
-def MountainCarStateSpaceShape():
+def MountainCarStateSpaceShape(mountainCarBinsPerDimension=mountainCarBinsPerDimension):
     return [ mountainCarBinsPerDimension, mountainCarBinsPerDimension ]
 
-def MountainCarObservationToStateSpace(observation):
+def MountainCarObservationToStateSpace(observation, mountainCarBinsPerDimension=mountainCarBinsPerDimension):
     return [ _DimensionBinIndex(mountainCarLow[i], mountainCarHigh[i], mountainCarBinsPerDimension, observation[i]) for i in range(len(mountainCarLow)) ]
 
 def _DimensionBinIndex(binMin, binMax, binsPerDimension, value):
