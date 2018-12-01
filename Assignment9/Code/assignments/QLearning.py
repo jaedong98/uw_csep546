@@ -20,10 +20,19 @@ class QLearning(object):
                   learningMode,
                   actionProbabilityBase=1.8,
                   randomActionRate=0.01):
-        action = np.argmax(self.q_table[tuple(currentState)])
-        return action
-        if not learningMode:
-            return action
+
+        if random.random() < randomActionRate:
+            return random.choice([x for x in range(self._numActions)])
+
+        if learningMode:
+            deno = sum([actionProbabilityBase*self.q_table[tuple(currentState)][i] for i in range(self._numActions)])
+            if deno == 0:
+                prob = [0] * self._numActions
+            else:
+                prob = [actionProbabilityBase * Q / deno for Q in self.q_table[tuple(currentState)]]
+            return np.argmax(prob)
+
+        return np.argmax(self.q_table[tuple(currentState)])
 
     def ObserveAction(self,
                       oldState,
