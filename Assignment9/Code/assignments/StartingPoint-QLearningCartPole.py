@@ -48,7 +48,7 @@ for trialNumber in range(trainingIterations):
 ## Now do the best n runs I can
 #input("Enter to continue...")
 
-cart_pole_md = os.path.join(report_path, "cart_pole_scores.md")
+cart_pole_md = os.path.join(report_path, "cart_pole_scores0.md")
 with open(cart_pole_md, 'w') as writer:
     writer.write('| runNumber | Rewards |')
     writer.write('\n|:-:|:-:|')
