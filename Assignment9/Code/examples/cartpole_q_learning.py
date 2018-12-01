@@ -55,7 +55,7 @@ def simulate():
         state_0 = state_to_bucket(obv)
 
         for t in range(MAX_T):
-            env.render()
+            #env.render()
 
             # Select an action
             action = select_action(state_0, explore_rate)
@@ -68,7 +68,8 @@ def simulate():
 
             # Update the Q based on the result
             best_q = np.amax(q_table[state])
-            q_table[state_0 + (action,)] += learning_rate*(reward + discount_factor*(best_q) - q_table[state_0 + (action,)])
+            update = learning_rate*(reward + discount_factor*(best_q) - q_table[state_0 + (action,)])
+            q_table[state_0 + (action,)] += update
 
             # Setting up for the next iteration
             state_0 = state
