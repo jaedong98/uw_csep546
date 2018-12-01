@@ -30,9 +30,9 @@ def qlearning(discountRate=0.98,
             currentState = Assignment7Support.MountainCarObservationToStateSpace(observation, mountainCarBinsPerDimension)
             action = qlearner.GetAction(currentState, learningMode=True, randomActionRate=randomActionRate, actionProbabilityBase=actionProbabilityBase)
 
-            oldState = Assignment7Support.MountainCarObservationToStateSpace(observation)
+            oldState = Assignment7Support.MountainCarObservationToStateSpace(observation, mountainCarBinsPerDimension)
             observation, reward, isDone, info = env.step(action)
-            newState = Assignment7Support.MountainCarObservationToStateSpace(observation)
+            newState = Assignment7Support.MountainCarObservationToStateSpace(observation, mountainCarBinsPerDimension)
 
             # learning rate scale
             qlearner.ObserveAction(oldState, action, newState, reward, learningRateScale=learningRateScale)
@@ -54,7 +54,7 @@ def qlearning(discountRate=0.98,
         for i in range(201):
             #renderDone = env.render()
 
-            currentState = Assignment7Support.MountainCarObservationToStateSpace(observation)
+            currentState = Assignment7Support.MountainCarObservationToStateSpace(observation, mountainCarBinsPerDimension=mountainCarBinsPerDimension)
             observation, reward, isDone, info = env.step(qlearner.GetAction(currentState, learningMode=False))
 
             totalReward += reward
@@ -73,6 +73,7 @@ def qlearning(discountRate=0.98,
 
 
 if __name__ == '__main__':
+
 
     for i in range(1):
         mountain_cart_md = os.path.join(report_path, 'mt_cart_{}.md'.format(i))
