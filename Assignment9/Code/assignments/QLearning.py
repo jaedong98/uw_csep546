@@ -2,6 +2,7 @@ import numpy as np
 import random
 random.seed(1)
 
+
 class QLearning(object):
 
     def __init__(self, stateSpaceShape, numActions, discountRate):
@@ -29,8 +30,6 @@ class QLearning(object):
 
         if learningMode:
             q_hats = self.q_table[tuple(currentState)]
-            # if q_hats[1] > 0.:
-            #     print('HERE')
             deno = sum([actionProbabilityBase**q_hat for q_hat in q_hats])
             prob = [actionProbabilityBase**q_hat / deno for q_hat in q_hats]
             if len(set(prob)) == 1:
@@ -54,8 +53,3 @@ class QLearning(object):
         alpha_n = 1. / (1 + learningRateScale * self.visit_n[tuple(oldState)][action])  # (13.11)
         updates = (1 - alpha_n) * self.q_table[tuple(oldState) + (action,)] + alpha_n * (reward + self._discountRate * np.max(self.q_table[tuple(newState)]))
         self.q_table[tuple(oldState) + (action,)] = updates
-        #self.visit_n[tuple(oldState)][action] += 1
-
-        #best_q = np.amax(self.q_table[oldState])
-        #self.q_table[tuple(oldState) + (action,)] += learningRateScale * (reward + self._discountRate * (best_q) - self.q_table[tuple(newState) + (action,)])
-
