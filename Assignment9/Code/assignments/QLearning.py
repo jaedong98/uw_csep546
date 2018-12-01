@@ -24,7 +24,7 @@ class QLearning(object):
         rand = random.random()
         if rand < randomActionRate:
             action = random.choice([x for x in range(self._numActions)])
-            self.visit_n[tuple(currentState), (action,)] += 1
+            self.visit_n[tuple(currentState)][action] += 1
             return action
 
         if learningMode:
@@ -33,12 +33,15 @@ class QLearning(object):
             #     print('HERE')
             deno = sum([actionProbabilityBase**q_hat for q_hat in q_hats])
             prob = [actionProbabilityBase**q_hat / deno for q_hat in q_hats]
-            action = np.argmax(prob)
-            self.visit_n[tuple(currentState), (action,)] += 1
+            if len(set(prob)) == 1:
+                action = random.choice([x for x in range(len(prob))])
+            else:
+                action = np.argmax(prob)
+            self.visit_n[tuple(currentState)][action] += 1
             return action
 
         action = np.argmax(self.q_table[tuple(currentState)])
-        self.visit_n[tuple(currentState), (action,)] += 1
+        self.visit_n[tuple(currentState)][action] += 1
         return action
 
     def ObserveAction(self,
@@ -48,10 +51,10 @@ class QLearning(object):
                       reward,
                       learningRateScale):
 
-        alpha_n = 1. / (1 + learningRateScale * self.visit_n[tuple(oldState) + (action,)])  # (13.11)
+        alpha_n = 1. / (1 + learningRateScale * self.visit_n[tuple(oldState)][action])  # (13.11)
         updates = (1 - alpha_n) * self.q_table[tuple(oldState) + (action,)] + alpha_n * (reward + self._discountRate * np.max(self.q_table[tuple(newState)]))
         self.q_table[tuple(oldState) + (action,)] = updates
-
+        #self.visit_n[tuple(oldState)][action] += 1
 
         #best_q = np.amax(self.q_table[oldState])
         #self.q_table[tuple(oldState) + (action,)] += learningRateScale * (reward + self._discountRate * (best_q) - self.q_table[tuple(newState) + (action,)])
