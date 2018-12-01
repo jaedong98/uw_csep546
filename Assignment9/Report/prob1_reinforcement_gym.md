@@ -41,6 +41,11 @@
   Given the results of paramter sweep data, I picked following configuration.
 
   ```python
-
+  discountRate = 0.9
+  actionProbabilityBase = 2.5
+  trainingIteration = 20000
+  BinsPerDimension = 26
   ```
-  And here is the results from 10 policy learning.
+  And here is the results from running 10 times policy learning.
+
+  ![](img/mt_cart_best_params.png)

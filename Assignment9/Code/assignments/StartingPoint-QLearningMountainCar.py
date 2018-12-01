@@ -15,7 +15,8 @@ def qlearning(discountRate=0.98,
               trainingIteration=20000,
               randomActionRate=0.01,  # Percent of time the next action selected by GetAction is totally random
               learningRateScale = 0.01,
-              mountainCarBinsPerDimension=20):
+              mountainCarBinsPerDimension=20,
+              md_file=None):
 
     qlearner = QLearning.QLearning(stateSpaceShape=Assignment7Support.MountainCarStateSpaceShape(mountainCarBinsPerDimension),
                                    numActions=env.action_space.n,
@@ -47,6 +48,7 @@ def qlearning(discountRate=0.98,
 
     n = 10
     totalRewards = []
+    data = []
     for runNumber in range(n):
         observation = env.reset()
         totalReward = 0
@@ -62,6 +64,7 @@ def qlearning(discountRate=0.98,
             if isDone:
                 #renderDone = env.render()
                 print(i, totalReward)
+                data.append((runNumber, totalReward))
                 totalRewards.append(totalReward)
                 break
 
@@ -69,13 +72,45 @@ def qlearning(discountRate=0.98,
     print("Your score:", sum(totalRewards) / float(len(totalRewards)))
     env.close()
     avg_score = sum(totalRewards) / float(len(totalRewards))
+
+    if md_file:
+        with open(md_file, 'w') as writer:
+            writer.write('| runNumber | Rewards |')
+            writer.write('\n|:-:|:-:|')
+            for row in data:
+                writer.write('\n|{}|{}|'.format(row[0], row[1]))
+            writer.write('\n| Average |{}|'.format(avg_score))
+
     return avg_score
 
 
 if __name__ == '__main__':
 
+    data = []
+    for i in range(10):
+        # best paramters
+        mt_cart_best_params_img_fname = os.path.join(report_path, r'img/mt_cart_best_params.png')
 
-    for i in range(1):
+        discountRate = 0.9  # Controls the discount rate for future rewards -- this is gamma from 13.10
+        actionProbabilityBase = 2.5  # This is k from the P(a_i|s) expression from section 13.3.5 and influences how random exploration is
+        trainingIteration = 20000
+        BinsPerDimension = 26
+        mountain_cart_md = os.path.join(report_path, 'mt_cart_{}.md'.format(i))
+
+        avg_score = qlearning(discountRate=discountRate,
+                              actionProbabilityBase=actionProbabilityBase,
+                              trainingIteration=trainingIteration,
+                              mountainCarBinsPerDimension=BinsPerDimension,
+                              md_file=mountain_cart_md)
+        data.append((i, avg_score))
+
+    draw_accuracies([data],
+                    'Run Numbers',
+                    'Avg. Score',
+                    'Independent Runs with Selected Parameters',
+                    mt_cart_best_params_img_fname, [], title_y=1.03)
+
+    for i in range(0):
         mountain_cart_md = os.path.join(report_path, 'mt_cart_{}.md'.format(i))
 
         discountRates = [0.5, 0.6, 0.7, 0.8, 0.9]  # Controls the discount rate for future rewards -- this is gamma from 13.10
@@ -84,43 +119,43 @@ if __name__ == '__main__':
         BinsPerDimensions = [10, 14, 18, 22, 26]
 
         # discount rates
-        # discountRates_img_fname = os.path.join(report_path, r'img/mt_cart_discountRate.png')
-        # data = []
-        # for discountRate in discountRates:
-        #     avg_score = qlearning(discountRate=discountRate)
-        #     data.append((discountRate, avg_score))
-        #
-        # draw_accuracies([data],
-        #                 'Discount Rates',
-        #                 'Avg. Score',
-        #                 'Param Sweep - Discount Rate',
-        #                 discountRates_img_fname, [], title_y=1.03)
+        discountRates_img_fname = os.path.join(report_path, r'img/mt_cart_discountRate.png')
+        data = []
+        for discountRate in discountRates:
+            avg_score = qlearning(discountRate=discountRate)
+            data.append((discountRate, avg_score))
+
+        draw_accuracies([data],
+                        'Discount Rates',
+                        'Avg. Score',
+                        'Param Sweep - Discount Rate',
+                        discountRates_img_fname, [], title_y=1.03)
 
         # actionProbabilityBases
-        # actionProbabilityBases_img_fname = os.path.join(report_path, r'img/mt_cart_actionProbabilityBases.png')
-        # data = []
-        # for actionProbabilityBase in actionProbabilityBases:
-        #     avg_score = qlearning(actionProbabilityBase=actionProbabilityBase)
-        #     data.append((actionProbabilityBase, avg_score))
-        #
-        # draw_accuracies([data],
-        #                 'Action Probability Bases',
-        #                 'Avg. Score',
-        #                 'Param Sweep - Action Probability Bases',
-        #                 actionProbabilityBases_img_fname, [], title_y=1.03)
+        actionProbabilityBases_img_fname = os.path.join(report_path, r'img/mt_cart_actionProbabilityBases.png')
+        data = []
+        for actionProbabilityBase in actionProbabilityBases:
+            avg_score = qlearning(actionProbabilityBase=actionProbabilityBase)
+            data.append((actionProbabilityBase, avg_score))
+
+        draw_accuracies([data],
+                        'Action Probability Bases',
+                        'Avg. Score',
+                        'Param Sweep - Action Probability Bases',
+                        actionProbabilityBases_img_fname, [], title_y=1.03)
 
         # trainingIterations
-        # trainingIterations_img_fname = os.path.join(report_path, r'img/mt_cart_trainingIterations.png')
-        # data = []
-        # for trainingIteration in trainingIterations:
-        #     avg_score = qlearning(trainingIteration=trainingIteration)
-        #     data.append((trainingIteration, avg_score))
-        #
-        # draw_accuracies([data],
-        #                 'Training Iterations',
-        #                 'Avg. Score',
-        #                 'Param Sweep - Training Iterations',
-        #                 trainingIterations_img_fname, [], title_y=1.03)
+        trainingIterations_img_fname = os.path.join(report_path, r'img/mt_cart_trainingIterations.png')
+        data = []
+        for trainingIteration in trainingIterations:
+            avg_score = qlearning(trainingIteration=trainingIteration)
+            data.append((trainingIteration, avg_score))
+
+        draw_accuracies([data],
+                        'Training Iterations',
+                        'Avg. Score',
+                        'Param Sweep - Training Iterations',
+                        trainingIterations_img_fname, [], title_y=1.03)
 
         # BinsPerDimensions
         BinsPerDimensions_img_fname = os.path.join(report_path, r'img/mt_cart_BinsPerDimensions.png')
